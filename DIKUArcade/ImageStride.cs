@@ -1,4 +1,4 @@
-﻿namespace DikuArcade
+﻿namespace DIKUArcade
 {
     /// <summary>
     /// Image stride to show animations

@@ -1,4 +1,4 @@
-﻿namespace DikuArcade.Physics
+﻿namespace DIKUArcade.Physics
 {
     public class Collision
     {

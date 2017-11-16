@@ -2,7 +2,7 @@
 using OpenTK.Input;
 using OpenTK.Graphics;
 
-namespace DikuArcade
+namespace DIKUArcade
 {
     public enum AspectRatio
     {

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace DikuArcade.Math
+namespace DIKUArcade.Math
 {
     
 }
