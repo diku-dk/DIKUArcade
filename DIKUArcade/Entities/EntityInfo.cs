@@ -1,7 +1,6 @@
-﻿using DikuArcade.Strategies;
-using DikuArcade.Graphics;
+﻿using DIKUArcade.Strategies;
 
-namespace DikuArcade.Entities
+namespace DIKUArcade.Entities
 {
     public class EntityInfo
     {

@@ -1,4 +1,4 @@
-﻿namespace DikuArcade.Math
+﻿namespace DIKUArcade.Math
 {
     public class Vec2f
     {

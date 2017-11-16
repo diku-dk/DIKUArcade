@@ -1,6 +1,6 @@
-﻿using DikuArcade.Entities;
+﻿using DIKUArcade.Entities;
 
-namespace DikuArcade.Physics
+namespace DIKUArcade.Physics
 {
     public class Collision
     {
@@ -10,7 +10,7 @@ namespace DikuArcade.Physics
         /// a static object first, such as to minimize confusion in
         /// movement order.
         /// </summary>
-        public static bool Aabb(DynamicEntity obj, StaticEntity sta)
+        public static bool Aabb(DynamicEntity obj, StationaryEntity sta)
         {
             throw new System.NotImplementedException("Aabb (dynamic, static)");
         }

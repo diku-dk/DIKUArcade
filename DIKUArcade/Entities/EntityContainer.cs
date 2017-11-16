@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using DikuArcade.Math;
-using DikuArcade.Strategies;
+using DIKUArcade.Math;
+using DIKUArcade.Strategies;
 
-namespace DikuArcade.Entities
+namespace DIKUArcade.Entities
 {
     public class GameObjectContainer
     {
@@ -17,7 +17,7 @@ namespace DikuArcade.Entities
         public void AddStaticEntity(Vec2f pos, Vec2f extent)
         {
             // TODO: find a way to provide a default (no-action) movement strategy
-            _entities.Add(new EntityInfo(new StaticEntity(pos, extent), new MovementStrategy()));
+            _entities.Add(new EntityInfo(new StationaryEntity(pos, extent), new MovementStrategy()));
         }
 
         public void AddDynamicEntity(Vec2f pos, Vec2f extent, Vec2f dir, MovementStrategy strat)
@@ -30,7 +30,7 @@ namespace DikuArcade.Entities
             
         }
 
-        public void RemoveStaticGameObject(StaticEntity obj)
+        public void RemoveStaticGameObject(StationaryEntity obj)
         {
             
         }

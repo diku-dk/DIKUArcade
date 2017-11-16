@@ -8,8 +8,8 @@
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DikuArcade</RootNamespace>
-    <AssemblyName>DikuArcade</AssemblyName>
+    <RootNamespace>DIKUArcade</RootNamespace>
+    <AssemblyName>DIKUArcade</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -46,7 +46,7 @@
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\EntityInfo.cs" />
     <Compile Include="Entities\EntityContainer.cs" />
-    <Compile Include="Entities\StaticEntity.cs" />
+    <Compile Include="Entities\StationaryEntity.cs" />
     <Compile Include="Graphics\Image.cs" />
     <Compile Include="Graphics\ImageStride.cs" />
     <Compile Include="Math\Vec2f.cs" />
