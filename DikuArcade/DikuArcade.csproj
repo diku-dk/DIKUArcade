@@ -42,11 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameObject.cs" />
-    <Compile Include="GameObjectContainer.cs" />
-    <Compile Include="IGameObject.cs" />
-    <Compile Include="Image.cs" />
-    <Compile Include="ImageStride.cs" />
+    <Compile Include="Entities\DynamicEntity.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\EntityInfo.cs" />
+    <Compile Include="Entities\EntityContainer.cs" />
+    <Compile Include="Entities\StaticEntity.cs" />
+    <Compile Include="Graphics\Image.cs" />
+    <Compile Include="Graphics\ImageStride.cs" />
     <Compile Include="Math\Vec2f.cs" />
     <Compile Include="Math\Vec2i.cs" />
     <Compile Include="Math\Vec3f.cs" />
@@ -55,7 +57,7 @@
     <Compile Include="Physics\Collision.cs" />
     <Compile Include="Physics\NewtonianForce.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StaticGameObject.cs" />
+    <Compile Include="Strategies\MovementStrategy.cs" />
     <Compile Include="Window.cs" />
   </ItemGroup>
   <ItemGroup>
