@@ -12,12 +12,6 @@
         }
         public Vec2i() : this(0, 0) {}
 
-        public void Move(Vec2i vec)
-        {
-            this.X += vec.X;
-            this.Y += vec.Y;
-        }
-        
         public static Vec2i operator+ (Vec2i v1, Vec2i v2)
         {
             return new Vec2i(v1.X + v2.X, v1.Y + v2.Y);
