@@ -1,6 +1,6 @@
-﻿using DikuArcade.Math;
+﻿using DIKUArcade.Math;
 
-namespace DikuArcade.Entities
+namespace DIKUArcade.Entities
 {
     /// <summary>
     /// Similar to DynamicEntity, but does not contain direction information,
