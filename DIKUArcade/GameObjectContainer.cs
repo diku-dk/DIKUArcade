@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DikuArcade
+namespace DIKUArcade
 {
     public class GameObjectContainer
     {

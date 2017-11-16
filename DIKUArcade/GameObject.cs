@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
-using DikuArcade.Math;
+using DIKUArcade.Math;
 
-namespace DikuArcade
+namespace DIKUArcade
 {
     public class GameObject : IGameObject // TODO: is this necessary/overcomplicated?
     {

@@ -1,4 +1,4 @@
-﻿namespace DikuArcade
+﻿namespace DIKUArcade
 {
     public interface IGameObject
     {

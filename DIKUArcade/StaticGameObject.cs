@@ -1,6 +1,6 @@
-﻿using DikuArcade.Math;
+﻿using DIKUArcade.Math;
 
-namespace DikuArcade
+namespace DIKUArcade
 {
     /// <summary>
     /// Similar to GameObject, but does not contain direction information,

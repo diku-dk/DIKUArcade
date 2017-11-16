@@ -1,4 +1,4 @@
-﻿namespace DikuArcade
+﻿namespace DIKUArcade
 {
     /// <summary>
     /// A wrapper for image (bitmap?)
