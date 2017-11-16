@@ -1,4 +1,4 @@
-﻿namespace DikuArcade.Graphics
+﻿namespace DIKUArcade.Graphics
 {
     /// <summary>
     /// Image stride to show animations

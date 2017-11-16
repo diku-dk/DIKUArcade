@@ -1,7 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-using DikuArcade.Math;
+﻿using DIKUArcade.Math;
 
-namespace DikuArcade.Entities
+namespace DIKUArcade.Entities
 {
     public class DynamicEntity : Entity
     {
@@ -27,9 +26,9 @@ namespace DikuArcade.Entities
             Direction = dir;
         }
         
-        public static explicit operator StaticEntity(DynamicEntity obj)
+        public static explicit operator StationaryEntity(DynamicEntity obj)
         {
-            return new StaticEntity(obj.Position, obj.Extent);
+            return new StationaryEntity(obj.Position, obj.Extent);
         }
     }
 }

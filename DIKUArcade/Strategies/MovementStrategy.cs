@@ -1,4 +1,4 @@
-﻿namespace DikuArcade.Strategies
+﻿namespace DIKUArcade.Strategies
 {
     public class MovementStrategy
     {

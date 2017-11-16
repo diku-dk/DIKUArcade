@@ -1,6 +1,6 @@
-﻿using DikuArcade.Math;
+﻿using DIKUArcade.Math;
 
-namespace DikuArcade.Physics
+namespace DIKUArcade.Physics
 {
     public class NewtonianForce
     {
