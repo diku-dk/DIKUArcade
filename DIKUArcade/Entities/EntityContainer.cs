@@ -35,7 +35,7 @@ namespace DIKUArcade.Entities
         {
             
         }
-        
+
         // TODO: Is it better to make this private instead?
         public delegate void IteratorMethod(EntityInfo entity);
 
@@ -46,7 +46,7 @@ namespace DIKUArcade.Entities
             {
                 iterator(entity);
             }
-            
+
             // TODO: Next do filtering, checking IsDeleted() for each entity in the collection!
         }
     }
