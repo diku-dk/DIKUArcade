@@ -6,11 +6,12 @@ namespace DIKUArcade.Entities
     {
         /// <summary>
         /// Basic Entity properties
+        /// TODO: Could (should) they be made private?
         /// </summary>
         public Vec2f Position;
         public Vec2f Direction; // TODO: move this elsewhere
         public Vec2f Extent;
-        
+
         /// <summary>
         /// Angle measured in radians.
         /// TODO: could be called Orientation?
@@ -32,21 +33,43 @@ namespace DIKUArcade.Entities
         {
             return _markedForDeletion;
         }
-        
+
+        // TODO: Should all manipulation methods (scale,translate,etc) be moved to EntityInfo class?
         public void Scale(Vec2f scalar)
         {
             // This is doing pairwise vector multiplication!
             Extent *= scalar;
         }
-
-        public void Move(Vec2f scalar)
+        public void ScaleX(float scale)
         {
-            Position += scalar;
+            Extent.X *= scale;
+        }
+        public void ScaleY(float scale)
+        {
+            Extent.Y *= scale;
+        }
+
+        public void Move(Vec2f mover)
+        {
+            Position += mover;
+        }
+        public void MoveX(float move)
+        {
+            Position.X += move;
+        }
+        public void MoveY(float move)
+        {
+            Position.Y += move;
         }
 
         public void Rotate(float angleRadians)
         {
             Angle += angleRadians;
+        }
+
+        public void MoveToPosition(Vec2f newPosition)
+        {
+            Position = newPosition;
         }
     }
 }
