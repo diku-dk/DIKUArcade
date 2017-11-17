@@ -53,7 +53,8 @@
     <Compile Include="Math\Vec2i.cs" />
     <Compile Include="Math\Vec3f.cs" />
     <Compile Include="Math\Vec3i.cs" />
-    <Compile Include="Math\Vector2D.cs" />
+    <Compile Include="Math\Vec4f.cs" />
+    <Compile Include="Math\Vec4i.cs" />
     <Compile Include="Physics\Collision.cs" />
     <Compile Include="Physics\NewtonianForce.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

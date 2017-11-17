@@ -1,4 +1,0 @@
-﻿namespace DIKUArcade.Math
-{
-    
-}

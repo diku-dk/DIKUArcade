@@ -22,18 +22,18 @@
             return new Vec2f(v1.X - v2.X, v1.Y - v2.Y);
         }
         // pairwise multiplication
-        public static Vec2f operator *(Vec2f v1, Vec2f v2)
+        public static Vec2f operator* (Vec2f v1, Vec2f v2)
         {
             return new Vec2f(v1.X * v2.X, v1.Y * v2.Y);
         }
         public static float Dot(Vec2f v1, Vec2f v2)
         {
-            return (v1.X * v2.X + v1.Y * v2.Y);
+            return (v1.X*v2.X + v1.Y*v2.Y);
         }
 
         public double Length()
         {
-            return System.Math.Sqrt((double) (X * X + Y * Y));
+            return System.Math.Sqrt((double) (X*X + Y*Y));
         }
     }
 }
