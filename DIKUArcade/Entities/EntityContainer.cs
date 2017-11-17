@@ -7,14 +7,14 @@ namespace DIKUArcade.Entities
     public class GameObjectContainer
     {
         // TODO: Consider using IEnumerable interface.. (better data structure?)
-        private List<EntityInfo> _entities;
+        private readonly List<EntityInfo> _entities;
         
         public GameObjectContainer()
         {
             _entities = new List<EntityInfo>();
         }
 
-        public void AddStaticEntity(Vec2f pos, Vec2f extent)
+        public void AddStationaryEntity(Vec2f pos, Vec2f extent)
         {
             // TODO: find a way to provide a default (no-action) movement strategy
             _entities.Add(new EntityInfo(new StationaryEntity(pos, extent), new MovementStrategy()));
@@ -25,22 +25,29 @@ namespace DIKUArcade.Entities
             _entities.Add(new EntityInfo(new DynamicEntity(pos, extent, dir), strat));
         }
         
+        // TODO: Should the input instead be an (integer) ID?
         public void RemoveGameObject(DynamicEntity obj)
         {
             
         }
 
-        public void RemoveStaticGameObject(StationaryEntity obj)
+        public void RemoveStationaryGameObject(StationaryEntity obj)
         {
             
         }
+        
+        // TODO: Is it better to make this private instead?
+        public delegate void IteratorMethod(EntityInfo entity);
 
-        public void IterateGameObjects(int someDelegateOrFunctionPointer)
+        public void IterateGameObjects(IteratorMethod iterator)
         {
-            foreach (var obj in _entities)
+            // iterate through entities
+            foreach (var entity in _entities)
             {
-                //someDelegateOrFunctionPointer(obj);
+                iterator(entity);
             }
+            
+            // TODO: Next do filtering, checking IsDeleted() for each entity in the collection!
         }
     }
 }
