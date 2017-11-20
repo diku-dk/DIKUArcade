@@ -7,7 +7,12 @@
     {
         public Image(string somePath)
         {
-            
+
+        }
+
+        void Render()
+        {
+
         }
     }
 }
