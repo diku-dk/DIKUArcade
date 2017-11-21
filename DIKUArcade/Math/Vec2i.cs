@@ -4,7 +4,7 @@
     {
         public int X;
         public int Y;
-        
+
         public Vec2i(int x, int y)
         {
             X = x;
@@ -33,6 +33,18 @@
         public double Length()
         {
             return System.Math.Sqrt((double) (X*X + Y*Y));
+        }
+
+        public override int GetHashCode()
+        {
+            // Source: http://stackoverflow.com/a/263416/5801152
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                hash = hash * 23 + X.GetHashCode();
+                hash = hash * 23 + Y.GetHashCode();
+                return hash;
+            }
         }
     }
 }
