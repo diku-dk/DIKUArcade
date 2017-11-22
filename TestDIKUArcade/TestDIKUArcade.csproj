@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A1E4E4DF-0967-4096-9E3C-FBC29B7D07DD}</ProjectGuid>
+    <ProjectGuid>{A8901ED0-36D9-4A14-A84D-14D27A6C00B4}</ProjectGuid>
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DIKUArcade</RootNamespace>
-    <AssemblyName>DIKUArcade</AssemblyName>
+    <RootNamespace>TestDIKUArcade</RootNamespace>
+    <AssemblyName>TestDIKUArcade</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,41 +33,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
-      <HintPath>..\packages\OpenTK.3.0.0-pre\lib\net20\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\DynamicEntity.cs" />
-    <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\EntityInfo.cs" />
-    <Compile Include="Entities\EntityContainer.cs" />
-    <Compile Include="Entities\StationaryEntity.cs" />
-    <Compile Include="Graphics\Image.cs" />
-    <Compile Include="Graphics\ImageStride.cs" />
-    <Compile Include="Math\Vec2f.cs" />
-    <Compile Include="Math\Vec2i.cs" />
-    <Compile Include="Math\Vec3f.cs" />
-    <Compile Include="Math\Vec3i.cs" />
-    <Compile Include="Math\Vec4f.cs" />
-    <Compile Include="Math\Vec4i.cs" />
-    <Compile Include="Physics\Collision.cs" />
-    <Compile Include="Physics\NewtonianForce.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="States\IState.cs" />
-    <Compile Include="States\StateMachine.cs" />
-    <Compile Include="States\States.cs" />
-    <Compile Include="Strategies\MovementStrategy.cs" />
-    <Compile Include="Window.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="OpenTK.dll.config" />
-    <None Include="packages.config" />
+    <ProjectReference Include="..\DIKUArcade\DIKUArcade.csproj">
+      <Project>{a1e4e4df-0967-4096-9e3c-fbc29b7d07dd}</Project>
+      <Name>DIKUArcade</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
