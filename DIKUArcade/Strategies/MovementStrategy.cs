@@ -1,10 +1,5 @@
-﻿namespace DIKUArcade.Strategies
-{
-    public class MovementStrategy
-    {
-        public virtual void Move()
-        {
-            return;
-        }
+﻿namespace DIKUArcade.Strategies {
+    public class MovementStrategy {
+        public virtual void Move() { }
     }
 }
