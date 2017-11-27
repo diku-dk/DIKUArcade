@@ -37,24 +37,24 @@ namespace DIKUArcade {
         // This is the signature for a key event handler:
         //private delegate void KeyEventHandler(object sender, KeyboardKeyEventArgs e);
 
-        private void AddKeyUpEventHandler(EventHandler<KeyboardKeyEventArgs> method) {
+        public void AddKeyUpEventHandler(EventHandler<KeyboardKeyEventArgs> method) {
             window.Keyboard.KeyUp += method;
         }
 
-        private void AddKeyDownEventHandler(EventHandler<KeyboardKeyEventArgs> method) {
+        public void AddKeyDownEventHandler(EventHandler<KeyboardKeyEventArgs> method) {
             window.Keyboard.KeyDown += method;
         }
 
-        private bool IsRunning() {
+        public bool IsRunning() {
             return isRunning;
         }
 
-        private void CloseWindow() {
+        public void CloseWindow() {
             isRunning = false;
             window.Close();
         }
 
         // TODO: Call this DoubleBuffer() instead?
-        private void SwapBuffers() { }
+        public void SwapBuffers() { }
     }
 }
