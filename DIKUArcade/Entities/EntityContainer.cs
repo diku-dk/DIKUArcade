@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using DIKUArcade.Strategies;
 using DIKUArcade.Math;
+using DIKUArcade.Strategies;
 
 namespace DIKUArcade.Entities {
     public class GameObjectContainer {
@@ -8,20 +8,20 @@ namespace DIKUArcade.Entities {
         public delegate void IteratorMethod(EntityInfo entity);
 
         // TODO: Consider using IEnumerable interface.. (better data structure?)
-        private readonly List<EntityInfo> _entities;
+        private readonly List<EntityInfo> entities;
 
         public GameObjectContainer() {
-            _entities = new List<EntityInfo>();
+            entities = new List<EntityInfo>();
         }
 
-        public void AddStationaryEntity(Vec2f pos, Vec2f extent) {
+        public void AddStationaryEntity(Vec2F pos, Vec2F extent) {
             // TODO: find a way to provide a default (no-action) movement strategy
-            _entities.Add(new EntityInfo(new StationaryEntity(pos, extent),
+            entities.Add(new EntityInfo(new StationaryEntity(pos, extent),
                 new MovementStrategy()));
         }
 
-        public void AddDynamicEntity(Vec2f pos, Vec2f extent, Vec2f dir, MovementStrategy strat) {
-            _entities.Add(new EntityInfo(new DynamicEntity(pos, extent, dir), strat));
+        public void AddDynamicEntity(Vec2F pos, Vec2F extent, Vec2F dir, MovementStrategy strat) {
+            entities.Add(new EntityInfo(new DynamicEntity(pos, extent, dir), strat));
         }
 
         // TODO: Should the input instead be an (integer) ID?
@@ -31,7 +31,7 @@ namespace DIKUArcade.Entities {
 
         public void IterateGameObjects(IteratorMethod iterator) {
             // iterate through entities
-            foreach (var entity in _entities) {
+            foreach (var entity in entities) {
                 iterator(entity);
             }
 
