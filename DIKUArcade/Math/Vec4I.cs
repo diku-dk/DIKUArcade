@@ -1,33 +1,33 @@
 ﻿namespace DIKUArcade.Math {
-    public class Vec4i {
+    public class Vec4I {
         public int W;
         public int X;
         public int Y;
         public int Z;
 
-        public Vec4i(int x, int y, int z, int w) {
+        public Vec4I(int x, int y, int z, int w) {
             X = x;
             Y = y;
             Z = z;
             W = w;
         }
 
-        public Vec4i() : this(0, 0, 0, 0) { }
+        public Vec4I() : this(0, 0, 0, 0) { }
 
-        public static Vec4i operator +(Vec4i v1, Vec4i v2) {
-            return new Vec4i(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z, v1.W + v2.W);
+        public static Vec4I operator +(Vec4I v1, Vec4I v2) {
+            return new Vec4I(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z, v1.W + v2.W);
         }
 
-        public static Vec4i operator -(Vec4i v1, Vec4i v2) {
-            return new Vec4i(v1.X - v2.X, v1.Y - v2.Y, v1.Z - v2.Z, v1.W - v2.W);
+        public static Vec4I operator -(Vec4I v1, Vec4I v2) {
+            return new Vec4I(v1.X - v2.X, v1.Y - v2.Y, v1.Z - v2.Z, v1.W - v2.W);
         }
 
         // pairwise multiplication
-        public static Vec4i operator *(Vec4i v1, Vec4i v2) {
-            return new Vec4i(v1.X * v2.X, v1.Y * v2.Y, v1.Z * v2.Z, v1.W * v2.W);
+        public static Vec4I operator *(Vec4I v1, Vec4I v2) {
+            return new Vec4I(v1.X * v2.X, v1.Y * v2.Y, v1.Z * v2.Z, v1.W * v2.W);
         }
 
-        public static int Dot(Vec4i v1, Vec4i v2) {
+        public static int Dot(Vec4I v1, Vec4I v2) {
             return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z + v1.W * v2.W;
         }
 
