@@ -9,6 +9,10 @@ using OpenTK.Input;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace DIKUArcade {
+    /// <summary>
+    /// Aspect ratio for a DIKUArcade.Window object, defining
+    /// width as a function of height.
+    /// </summary>
     public enum AspectRatio {
         R4X3,
         R16X9,
@@ -22,7 +26,7 @@ namespace DIKUArcade {
     public class Window {
         private static uint screenShotCounter;
 
-        private readonly GameWindow window;
+        private GameWindow window;
 
         // This is the signature for a key event handler:
         //private delegate void KeyEventHandler(object sender, KeyboardKeyEventArgs e);
@@ -33,17 +37,33 @@ namespace DIKUArcade {
         // TODO: Remove these?
         private uint width, height;
 
+        private string title;
+
+        private void ActivateThisWindowContext() {
+            window = new GameWindow((int) this.width, (int) this.height, GraphicsMode.Default,
+                this.title, GameWindowFlags.Default, DisplayDevice.Default,
+                3, 3, // OpenGL major and minor version
+                GraphicsContextFlags.ForwardCompatible);
+
+            GL.ClearDepth(1);
+            GL.ClearColor(Color.Black);
+
+            AddDefaultKeyEventHandler();
+
+            isRunning = true;
+            window.Context.MakeCurrent(window.WindowInfo);
+            window.Visible = true;
+        }
+
         public Window(string title, uint width, uint height)
         {
-            width = width;
-            height = height;
+            this.width = width;
+            this.height = height;
+            this.title = title;
             isRunning = true;
-
-            window = new OpenTK.GameWindow((int)width, (int)height,
-                GraphicsMode.Default, title);
-            AddDefaultKeyEventHandler();
-            window.Run();
+            ActivateThisWindowContext();
         }
+
         public Window(string title, uint height, AspectRatio aspect) {
             this.height = height;
             switch (aspect) {
@@ -59,44 +79,20 @@ namespace DIKUArcade {
             default:
                 throw new InvalidEnumArgumentException();
             }
-
-            window = new GameWindow((int) width, // initial width
-                (int) height, // initial height
-                GraphicsMode.Default,
-                title, // initial title
-                GameWindowFlags.Default,
-                DisplayDevice.Default,
-                3, // OpenGL major version
-                3, // OpenGL minor version
-                GraphicsContextFlags.ForwardCompatible);
-
-            //window = new GameWindow((int) width, (int) this.height);
-            //GraphicsMode.Default, title);
-            AddDefaultKeyEventHandler();
-            isRunning = true;
-            //window.Run();
-            //window.MakeCurrent();
-
-            window.Context.MakeCurrent(window.WindowInfo);
-            window.Visible = true;
+            ActivateThisWindowContext();
         }
 
+        // TODO: Do we want/need to make the window resizable?
         public bool Resizable { get; set; }
 
         private void AddDefaultKeyEventHandler() {
             defaultKeyHandler = delegate(object sender, KeyboardKeyEventArgs e) {
                 if (e.Key == Key.Escape) {
                     CloseWindow();
+                    return;
                 }
-                if (e.Key == Key.Down) {
-                    Console.WriteLine("press Down");
-                    //Console.Out.Flush();
-                }
-                if (e.Key == Key.C) {
-                    this.Clear();
-                }
-                if (e.Key == Key.S) {
-                    this.SwapBuffers();
+                if (e.Key == Key.F12) {
+                    SaveScreenShot();
                 }
             };
             window.Keyboard.KeyDown += defaultKeyHandler;
@@ -109,42 +105,94 @@ namespace DIKUArcade {
             }
         }
 
-        public void AddKeyUpEventHandler(EventHandler<KeyboardKeyEventArgs> method) {
+        /// <summary>
+        /// Add an event handler for when any keyboard key is pressed.
+        /// </summary>
+        /// <param name="method">Delegate method</param>
+        public void AddKeyPressEventHandler(EventHandler<KeyboardKeyEventArgs> method) {
             RemoveDefaultKeyEventHandler();
             window.Keyboard.KeyUp += method;
         }
 
-        public void AddKeyDownEventHandler(EventHandler<KeyboardKeyEventArgs> method) {
+        /// <summary>
+        /// Add an event handler for when any keyboard key is released.
+        /// </summary>
+        /// <param name="method">Delegate method</param>
+        public void AddKeyReleaseEventHandler(EventHandler<KeyboardKeyEventArgs> method) {
             RemoveDefaultKeyEventHandler();
             window.Keyboard.KeyDown += method;
         }
 
+        /// <summary>
+        /// Check if the Window is still running.
+        /// </summary>
         public bool IsRunning() {
             return isRunning;
         }
 
+        /// <summary>
+        /// Close the Window.
+        /// </summary>
         public void CloseWindow() {
             isRunning = false;
             window.Close();
         }
 
+        /// <summary>
+        /// Clear the Window with a uniform background color.
+        /// </summary>
         public void Clear() {
-            GL.ClearDepth(1);
-            GL.ClearColor(Color.Aquamarine);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            //_window.Context.
         }
 
-        // TODO: Call this DoubleBuffer() instead?
+        /// <summary>
+        /// Set color to be used as clear color when using the Window.Clear() method.
+        /// </summary>
+        /// <param name="vec">Vec3F containing the RGB color values.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Normalized color values must be
+        /// between 0 and 1.</exception>
+        public void SetClearColor(Math.Vec3F vec) {
+            if (vec.X < 0.0f || vec.X > 1.0f ||
+                vec.Y < 0.0f || vec.Y > 1.0f ||
+                vec.Z < 0.0f || vec.Z > 1.0f) {
+                throw new ArgumentOutOfRangeException($"RGB Color values must be between 0 and 1: {vec}");
+            }
+            GL.ClearColor(vec.X, vec.Y, vec.Z, 1.0f);
+        }
+
+        /// <summary>
+        /// Set color to be used as clear color when using the Window.Clear() method.
+        /// </summary>
+        /// <param name="vec">Vec3I containing the RGB color values.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Color values must be between 0 and 255.</exception>
+        public void SetClearColor(Math.Vec3I vec) {
+            if (vec.X < 0 || vec.X > 255 ||
+                vec.Y < 0 || vec.Y > 255 ||
+                vec.Z < 0 || vec.Z > 255) {
+                throw new ArgumentOutOfRangeException($"RGB Color values must be between 0 and 255: {vec}");
+            }
+            GL.ClearColor((float)vec.X / 255.0f, (float)vec.Y / 255.0f, (float)vec.Z / 255.0f, 1.0f);
+        }
+
+        /// <summary>
+        /// Swap double buffers for the Window.
+        /// </summary>
         public void SwapBuffers() {
             window.SwapBuffers();
             //window.Context.SwapBuffers();
         }
 
+        /// <summary>
+        /// Check for incoming keyboard or mouse events.
+        /// </summary>
         public void PollEvents() {
             window.ProcessEvents();
         }
 
+        /// <summary>
+        /// Save a screenshot of the Window's current state.
+        /// </summary>
+        /// <exception cref="GraphicsContextMissingException"></exception>
         public void SaveScreenShot() {
             if (GraphicsContext.CurrentContext == null) {
                 throw new GraphicsContextMissingException();
@@ -163,7 +211,5 @@ namespace DIKUArcade {
             bmp.Save($"screenShot_{Window.screenShotCounter}.bmp");
             Window.screenShotCounter++;
         }
-
-        public void PrintVersion() { }
     }
 }
