@@ -1,7 +1,7 @@
 ﻿using DIKUArcade.Strategies;
 
 namespace DIKUArcade.Entities {
-    public class EntityInfo {
+    public struct EntityInfo {
         public Entity Entity;
         public MovementStrategy MovementStrategy;
 

@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStructures\ObjectContainer.cs" />
     <Compile Include="Entities\DynamicEntity.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\EntityInfo.cs" />

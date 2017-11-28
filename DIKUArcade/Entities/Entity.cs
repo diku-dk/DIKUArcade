@@ -1,7 +1,7 @@
 ﻿using DIKUArcade.Math;
 
 namespace DIKUArcade.Entities {
-    public class Entity {
+    public struct Entity {
         /// <summary>
         ///     Used for GameObjectContainer.
         ///     TODO: Is this good software design principle?
