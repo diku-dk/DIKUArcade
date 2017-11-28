@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using DIKUArcade.Math;
 using DIKUArcade.Strategies;
+using DIKUArcade.DataStructures;
 
 namespace DIKUArcade.Entities {
     public class GameObjectContainer {
-        // TODO: Is it better to make this private instead?
-        public delegate void IteratorMethod(EntityInfo entity);
 
-        // TODO: Consider using IEnumerable interface.. (better data structure?)
-        private readonly List<EntityInfo> entities;
+        // TODO: A better data structure can be used here to minimize overhead when copying memory all the time.
+        private readonly ObjectContainer<EntityInfo> entities;
 
-        public GameObjectContainer() {
+        public GameObjectContainer(int size) {
             entities = new List<EntityInfo>();
         }
 
@@ -21,13 +20,10 @@ namespace DIKUArcade.Entities {
         }
 
         public void AddDynamicEntity(Vec2F pos, Vec2F extent, Vec2F dir, MovementStrategy strat) {
-            entities.Add(new EntityInfo(new DynamicEntity(pos, extent, dir), strat));
+            entitiesPendingForAdding.Add(new EntityInfo(new DynamicEntity(pos, extent, dir), strat));
         }
 
-        // TODO: Should the input instead be an (integer) ID?
-        public void RemoveGameObject(DynamicEntity obj) { }
-
-        public void RemoveStationaryGameObject(StationaryEntity obj) { }
+        public delegate void IteratorMethod(EntityInfo entity);
 
         public void IterateGameObjects(IteratorMethod iterator) {
             // iterate through entities
