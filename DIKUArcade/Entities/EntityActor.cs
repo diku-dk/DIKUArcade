@@ -1,11 +1,12 @@
 ﻿using DIKUArcade.Strategies;
+using DIKUArcade.Graphics;
 
 namespace DIKUArcade.Entities {
-    public struct EntityInfo {
+    public struct EntityActor {
         public Entity Entity;
         public MovementStrategy MovementStrategy;
 
-        public EntityInfo(Entity entity, MovementStrategy strat) {
+        public EntityActor(Entity entity, MovementStrategy strat) {
             Entity = entity;
             MovementStrategy = strat;
         }

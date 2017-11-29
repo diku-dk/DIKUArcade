@@ -1,9 +1,9 @@
 ﻿using DIKUArcade.Math;
 
 namespace DIKUArcade.Entities {
-    public struct Entity {
+    public class Entity {
         /// <summary>
-        ///     Used for GameObjectContainer.
+        ///     Used for EntityContainer.
         ///     TODO: Is this good software design principle?
         /// </summary>
         private bool markedForDeletion;
@@ -31,7 +31,7 @@ namespace DIKUArcade.Entities {
             return markedForDeletion;
         }
 
-        // TODO: Should all manipulation methods (scale,translate,etc) be moved to EntityInfo class?
+        // TODO: Should all manipulation methods (scale,translate,etc) be moved to EntityActor class?
         public void Scale(Vec2F scalar) {
             // This is doing pairwise vector multiplication!
             Extent *= scalar;
