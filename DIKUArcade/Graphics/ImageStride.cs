@@ -1,50 +1,66 @@
 ﻿using System;
-using System.Diagnostics;
+using DIKUArcade.Timers;
 
 namespace DIKUArcade.Graphics {
     /// <summary>
     ///     Image stride to show animations
     /// </summary>
-    public class ImageStride {
+    public class ImageStride : IBaseImage {
         private int animFrequency;
 
         private double lastTime;
+        private bool animate;
 
-        // TODO: Might be better to have static/singleton access to a global timer object
-        // avoid having multiple (read: many) instances!
-        private Stopwatch timer;
+        private DepthTexture texture;
 
         /// <summary>
+        ///
         /// </summary>
+        /// <param name="texture">Texture object.</param>
         /// <param name="milliseconds">Time between consecutive frames</param>
-        public ImageStride(int milliseconds) {
+        public ImageStride(DepthTexture texture, int milliseconds) {
             animFrequency = milliseconds;
-            timer = new Stopwatch();
-            // TODO: start the timer here?
+            animate = true;
+            this.texture = texture;
         }
 
-        public void StartAnimationTimer() {
-            timer.Restart();
-            lastTime = timer.ElapsedMilliseconds;
+        public void StartAnimation() {
+            animate = true;
+            lastTime = StaticTimer.GetCurrentTimeFrame();
         }
 
-        public void StopAnimationTimer() {
-            timer.Stop();
+        public void StopAnimation() {
+            animate = false;
         }
 
-        public void RenderNextFrame() {
-            double elapsed = timer.ElapsedMilliseconds;
+        public void Render() {
+            double elapsed = StaticTimer.GetCurrentTimeFrame();
 
             // the desired number of milliseconds has passed,
             // take some action (here: render next frame)
-            if (elapsed - lastTime > animFrequency) {
-                Console.Write("tic ");
+            if (animate && elapsed - lastTime > animFrequency) {
                 lastTime = elapsed;
+
+                throw new NotImplementedException("TODO: Render ImageStride using its texture data");
             }
             // otherwise render the current frame again
             else {
-                // do something...
+                throw new NotImplementedException("TODO: Render ImageStride using its texture data");
             }
+        }
+
+        /// <summary>
+        /// Change the active texture handle.
+        /// </summary>
+        /// <param name="tex"></param>
+        /// <exception cref="ArgumentException">If argument is not of type DepthTexture.</exception>
+        public void ChangeTexture(ITexture tex) {
+            // TODO: Is this comparison correct?
+            if (tex.GetType() != typeof(DepthTexture)) {
+                throw new ArgumentException($"Argument must be of type DepthTexture: {tex.GetType()}");
+            }
+            // this type cast should be okay
+            this.texture = (DepthTexture)tex;
         }
     }
 }
