@@ -3,10 +3,10 @@
 namespace DIKUArcade.Entities {
     public class Entity {
         /// <summary>
-        ///     Used for GameObjectContainer.
+        ///     Used for EntityContainer.
         ///     TODO: Is this good software design principle?
         /// </summary>
-        private bool _markedForDeletion;
+        private bool markedForDeletion;
 
         /// <summary>
         ///     Angle measured in radians.
@@ -14,25 +14,25 @@ namespace DIKUArcade.Entities {
         /// </summary>
         public float Angle;
 
-        public Vec2f Direction; // TODO: move this elsewhere
-        public Vec2f Extent;
+        public Vec2F Direction; // TODO: move this elsewhere
+        public Vec2F Extent;
 
         /// <summary>
         ///     Basic Entity properties
         ///     TODO: Could (should) they be made private?
         /// </summary>
-        public Vec2f Position;
+        public Vec2F Position;
 
         public void DeleteEntity() {
-            _markedForDeletion = true;
+            markedForDeletion = true;
         }
 
         public bool IsDeleted() {
-            return _markedForDeletion;
+            return markedForDeletion;
         }
 
-        // TODO: Should all manipulation methods (scale,translate,etc) be moved to EntityInfo class?
-        public void Scale(Vec2f scalar) {
+        // TODO: Should all manipulation methods (scale,translate,etc) be moved to EntityActor class?
+        public void Scale(Vec2F scalar) {
             // This is doing pairwise vector multiplication!
             Extent *= scalar;
         }
@@ -45,7 +45,7 @@ namespace DIKUArcade.Entities {
             Extent.Y *= scale;
         }
 
-        public void Move(Vec2f mover) {
+        public void Move(Vec2F mover) {
             Position += mover;
         }
 
@@ -61,7 +61,7 @@ namespace DIKUArcade.Entities {
             Angle += angleRadians;
         }
 
-        public void MoveToPosition(Vec2f newPosition) {
+        public void MoveToPosition(Vec2F newPosition) {
             Position = newPosition;
         }
     }

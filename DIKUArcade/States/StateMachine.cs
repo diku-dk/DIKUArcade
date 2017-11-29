@@ -3,17 +3,17 @@ using OpenTK.Input;
 
 namespace DIKUArcade.States {
     public class StateMachine {
-        private IState _activeState;
+        private IState activeState;
 
-        private IState _stateGamePaused;
+        private IState stateGamePaused;
 
         // TODO: Could use Dictionary as public data structure to dynamically add/remove states?
-        private IState _stateGameRunning;
+        private IState stateGameRunning;
 
-        private IState _stateMainMenu;
+        private IState stateMainMenu;
 
         public StateMachine() {
-            _activeState = _stateGamePaused;
+            activeState = stateGamePaused;
             // in this constructor, all internal state objects should be initialized,
             // as far that it is possible (desired) to do so.
         }
@@ -23,22 +23,22 @@ namespace DIKUArcade.States {
             if (key == Key.Escape) {
                 return ApplicationStates.Quit;
             }
-            switch (_activeState.HandleKeyEvent(key, action)) {
+            switch (activeState.HandleKeyEvent(key, action)) {
             case GameStates.QuitGame:
                 return ApplicationStates.Quit;
             case GameStates.Continue:
                 return ApplicationStates.Running;
 
             case GameStates.GamePaused:
-                _activeState = _stateGamePaused;
+                activeState = stateGamePaused;
                 return ApplicationStates.Running;
 
             case GameStates.GameRunning:
-                _activeState = _stateGameRunning;
+                activeState = stateGameRunning;
                 return ApplicationStates.Running;
 
             case GameStates.MainMenu:
-                _activeState = _stateMainMenu;
+                activeState = stateMainMenu;
                 return ApplicationStates.Running;
 
             default:
@@ -47,11 +47,11 @@ namespace DIKUArcade.States {
         }
 
         private void Render() {
-            _activeState.Render();
+            activeState.Render();
         }
 
         private void Update() {
-            _activeState.Update();
+            activeState.Update();
         }
     }
 }
