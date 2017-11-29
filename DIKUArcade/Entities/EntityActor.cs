@@ -3,12 +3,18 @@ using DIKUArcade.Graphics;
 
 namespace DIKUArcade.Entities {
     public struct EntityActor {
-        public Entity Entity;
-        public MovementStrategy MovementStrategy;
+        public Entity Entity { get; set; }
+        public MovementStrategy MovementStrategy { get; set; }
+        public IBaseImage Image { get; set; }
 
-        public EntityActor(Entity entity, MovementStrategy strat) {
+        public EntityActor(Entity entity, MovementStrategy strategy, IBaseImage image) {
             Entity = entity;
-            MovementStrategy = strat;
+            MovementStrategy = strategy;
+            Image = image;
+        }
+
+        public void RenderEntity() {
+            Image.Render();
         }
     }
 }

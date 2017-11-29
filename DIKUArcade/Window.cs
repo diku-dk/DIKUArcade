@@ -109,6 +109,7 @@ namespace DIKUArcade {
         /// Add an event handler for when any keyboard key is pressed.
         /// </summary>
         /// <param name="method">Delegate method</param>
+        // TODO: Find a way to add a method that only accepts a Key object!
         public void AddKeyPressEventHandler(EventHandler<KeyboardKeyEventArgs> method) {
             RemoveDefaultKeyEventHandler();
             window.Keyboard.KeyUp += method;
