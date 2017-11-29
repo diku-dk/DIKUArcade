@@ -4,18 +4,18 @@ namespace DIKUArcade.Entities {
     public class DynamicEntity : Entity {
         // TODO: Should width and height be given a texture (image) level instead?
         public DynamicEntity(int posX, int posY, int width, int height) {
-            Position = new Vec2f(posX, posY);
-            Direction = new Vec2f();
-            Extent = new Vec2f();
+            Position = new Vec2F(posX, posY);
+            Direction = new Vec2F();
+            Extent = new Vec2F();
         }
 
-        public DynamicEntity(Vec2f pos, Vec2f extent) {
+        public DynamicEntity(Vec2F pos, Vec2F extent) {
             Position = pos;
             Extent = extent;
-            Direction = new Vec2f();
+            Direction = new Vec2F();
         }
 
-        public DynamicEntity(Vec2f pos, Vec2f extent, Vec2f dir) {
+        public DynamicEntity(Vec2F pos, Vec2F extent, Vec2F dir) {
             Position = pos;
             Extent = extent;
             Direction = dir;

@@ -1,41 +1,61 @@
 ﻿using System.Collections.Generic;
-using DIKUArcade.Strategies;
 using DIKUArcade.Math;
+using DIKUArcade.Strategies;
+using DIKUArcade.DataStructures;
 
 namespace DIKUArcade.Entities {
-    public class GameObjectContainer {
-        // TODO: Is it better to make this private instead?
-        public delegate void IteratorMethod(EntityInfo entity);
+    public class EntityContainer {
 
-        // TODO: Consider using IEnumerable interface.. (better data structure?)
-        private readonly List<EntityInfo> _entities;
+        // TODO: A better data structure can be used here to minimize overhead when copying memory all the time.
+        private List<EntityActor> entities;
+        private readonly List<EntityActor> pendingEntities;
 
-        public GameObjectContainer() {
-            _entities = new List<EntityInfo>();
+        public EntityContainer(int size) {
+            entities = new List<EntityActor>(size);
+            pendingEntities = new List<EntityActor>(size);
         }
 
-        public void AddStationaryEntity(Vec2f pos, Vec2f extent) {
+        public EntityContainer() : this(100) { }
+
+        public void AddStationaryEntity(Vec2F pos, Vec2F extent) {
             // TODO: find a way to provide a default (no-action) movement strategy
-            _entities.Add(new EntityInfo(new StationaryEntity(pos, extent),
+            entities.Add(new EntityActor(new StationaryEntity(pos, extent),
                 new MovementStrategy()));
         }
 
-        public void AddDynamicEntity(Vec2f pos, Vec2f extent, Vec2f dir, MovementStrategy strat) {
-            _entities.Add(new EntityInfo(new DynamicEntity(pos, extent, dir), strat));
+        public void AddDynamicEntity(Vec2F pos, Vec2F extent, Vec2F dir, MovementStrategy strat) {
+            pendingEntities.Add(new EntityActor(new DynamicEntity(pos, extent, dir), strat));
         }
 
-        // TODO: Should the input instead be an (integer) ID?
-        public void RemoveGameObject(DynamicEntity obj) { }
+        private void TendToPending() {
+            var newList = new List<EntityActor>(entities.Count);
+            foreach (var ent in entities) {
+                if (!ent.Entity.IsDeleted()) {
+                    newList.Add(ent);
+                }
+            }
+            foreach (var ent in pendingEntities) {
+                newList.Add(ent);
+            }
+            entities = newList;
+        }
 
-        public void RemoveStationaryGameObject(StationaryEntity obj) { }
+        /// <summary>
+        /// Delegate method for iterating through an EntityContainer.
+        /// This function should return true if the entity should be
+        /// removed from the EntityContainer.
+        /// </summary>
+        /// <param name="entity"></param>
+        public delegate void IteratorMethod(EntityActor entity);
 
         public void IterateGameObjects(IteratorMethod iterator) {
+            var entitiesPendingForRemoval = new List<EntityActor>(entities.Count);
+
             // iterate through entities
-            foreach (var entity in _entities) {
+            foreach (var entity in entities) {
                 iterator(entity);
             }
-
-            // TODO: Next do filtering, checking IsDeleted() for each entity in the collection!
+            TendToPending();
         }
     }
 }

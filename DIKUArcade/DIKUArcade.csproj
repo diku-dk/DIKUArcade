@@ -45,16 +45,16 @@
   <ItemGroup>
     <Compile Include="Entities\DynamicEntity.cs" />
     <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\EntityInfo.cs" />
+    <Compile Include="Entities\EntityActor.cs" />
     <Compile Include="Entities\EntityContainer.cs" />
     <Compile Include="Entities\StationaryEntity.cs" />
     <Compile Include="Graphics\ImageStride.cs" />
-    <Compile Include="Math\Vec2f.cs" />
-    <Compile Include="Math\Vec2i.cs" />
-    <Compile Include="Math\Vec3f.cs" />
-    <Compile Include="Math\Vec3i.cs" />
-    <Compile Include="Math\Vec4f.cs" />
-    <Compile Include="Math\Vec4i.cs" />
+    <Compile Include="Math\Vec2F.cs" />
+    <Compile Include="Math\Vec2I.cs" />
+    <Compile Include="Math\Vec3F.cs" />
+    <Compile Include="Math\Vec3I.cs" />
+    <Compile Include="Math\Vec4F.cs" />
+    <Compile Include="Math\Vec4I.cs" />
     <Compile Include="Physics\NewtonianForce.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="States\IState.cs" />
