@@ -41,5 +41,9 @@
                 return hash;
             }
         }
+
+        public override string ToString() {
+            return $"Vec2F({X},{Y})";
+        }
     }
 }

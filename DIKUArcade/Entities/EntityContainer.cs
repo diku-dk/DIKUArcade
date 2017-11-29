@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using DIKUArcade.Graphics;
 using DIKUArcade.Math;
 using DIKUArcade.Strategies;
-using DIKUArcade.DataStructures;
 
 namespace DIKUArcade.Entities {
     public class EntityContainer {
@@ -18,13 +18,14 @@ namespace DIKUArcade.Entities {
         public EntityContainer() : this(100) { }
 
         public void AddStationaryEntity(Vec2F pos, Vec2F extent) {
-            // TODO: find a way to provide a default (no-action) movement strategy
+            // TODO: No strategy should be provided here!
             entities.Add(new EntityActor(new StationaryEntity(pos, extent),
-                new MovementStrategy()));
+                new MovementStrategy(), new Image(new Texture())));
         }
 
         public void AddDynamicEntity(Vec2F pos, Vec2F extent, Vec2F dir, MovementStrategy strat) {
-            pendingEntities.Add(new EntityActor(new DynamicEntity(pos, extent, dir), strat));
+            pendingEntities.Add(new EntityActor(new DynamicEntity(pos, extent, dir), strat,
+                new ImageStride(new DepthTexture(), 1000)));
         }
 
         private void TendToPending() {
