@@ -2,26 +2,18 @@
 
 namespace DIKUArcade.Entities {
     public class Entity {
-        /// <summary>
-        ///     Used for EntityContainer.
-        ///     TODO: Is this good software design principle?
-        /// </summary>
         private bool markedForDeletion;
 
         /// <summary>
-        ///     Angle measured in radians.
-        ///     TODO: could be called Orientation?
+        /// Entity's rotational angle measured in radians.
         /// </summary>
-        public float Angle;
-
-        public Vec2F Direction; // TODO: move this elsewhere
-        public Vec2F Extent;
+        public float Rotation { get; set; }
 
         /// <summary>
-        ///     Basic Entity properties
-        ///     TODO: Could (should) they be made private?
+        /// Basic Entity properties
         /// </summary>
         public Vec2F Position;
+        public Vec2F Extent { get; set; }
 
         public void DeleteEntity() {
             markedForDeletion = true;
@@ -31,7 +23,6 @@ namespace DIKUArcade.Entities {
             return markedForDeletion;
         }
 
-        // TODO: Should all manipulation methods (scale,translate,etc) be moved to EntityActor class?
         public void Scale(Vec2F scalar) {
             // This is doing pairwise vector multiplication!
             Extent *= scalar;
@@ -43,6 +34,13 @@ namespace DIKUArcade.Entities {
 
         public void ScaleY(float scale) {
             Extent.Y *= scale;
+        }
+
+        /// <summary>
+        /// Default Move method which does nothing.
+        /// </summary>
+        public virtual void Move() {
+            return;
         }
 
         public void Move(Vec2F mover) {
@@ -57,8 +55,17 @@ namespace DIKUArcade.Entities {
             Position.Y += move;
         }
 
+        public void Move(float x, float y) {
+            this.MoveX(x);
+            this.MoveY(y);
+        }
+
         public void Rotate(float angleRadians) {
-            Angle += angleRadians;
+            Rotation += angleRadians;
+        }
+
+        public void SetRotation(float angleRadians) {
+            Rotation = angleRadians;
         }
 
         public void MoveToPosition(Vec2F newPosition) {

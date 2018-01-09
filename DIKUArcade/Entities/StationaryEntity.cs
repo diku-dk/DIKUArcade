@@ -2,8 +2,8 @@
 
 namespace DIKUArcade.Entities {
     /// <summary>
-    ///     Similar to DynamicEntity, but does not contain direction information,
-    ///     since a static object os not meant to be affected by game physics.
+    /// Similar to DynamicEntity, but does not contain direction information,
+    /// since a static object os not meant to be affected by game physics.
     /// </summary>
     public class StationaryEntity : Entity {
         // TODO: Should width and height be given a texture (image) level instead?

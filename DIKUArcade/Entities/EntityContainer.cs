@@ -17,15 +17,13 @@ namespace DIKUArcade.Entities {
 
         public EntityContainer() : this(100) { }
 
-        public void AddStationaryEntity(Vec2F pos, Vec2F extent) {
+        public void AddStationaryEntity(StationaryEntity ent, IBaseImage img) {
             // TODO: No strategy should be provided here!
-            entities.Add(new EntityActor(new StationaryEntity(pos, extent),
-                new MovementStrategy(), new Image(new Texture())));
+            entities.Add(new EntityActor(ent, new MovementStrategy(), img));
         }
 
-        public void AddDynamicEntity(Vec2F pos, Vec2F extent, Vec2F dir, MovementStrategy strat) {
-            pendingEntities.Add(new EntityActor(new DynamicEntity(pos, extent, dir), strat,
-                new ImageStride(new DepthTexture(), 1000)));
+        public void AddDynamicEntity(DynamicEntity ent, MovementStrategy strat, IBaseImage img) {
+            pendingEntities.Add(new EntityActor(ent, strat, img));
         }
 
         private void TendToPending() {
@@ -57,6 +55,15 @@ namespace DIKUArcade.Entities {
                 iterator(entity);
             }
             TendToPending();
+        }
+
+        /// <summary>
+        /// Render all entities in this EntityContainer
+        /// </summary>
+        public void RenderEntities() {
+            foreach (var entity in entities) {
+                entity.Image.Render();
+            }
         }
     }
 }

@@ -2,7 +2,11 @@
 
 namespace DIKUArcade.Entities {
     public class DynamicEntity : Entity {
-        // TODO: Should width and height be given a texture (image) level instead?
+        /// <summary>
+        /// Only dynamic entities carry a direction vector.
+        /// </summary>
+        public Vec2F Direction;
+
         public DynamicEntity(int posX, int posY, int width, int height) {
             Position = new Vec2F(posX, posY);
             Direction = new Vec2F();
@@ -19,6 +23,20 @@ namespace DIKUArcade.Entities {
             Position = pos;
             Extent = extent;
             Direction = dir;
+        }
+
+        // TODO: Think better about how this could be done!
+        public void ChangeDirection(Vec2F dir) {
+            this.Direction = dir;
+        }
+
+
+        /// <summary>
+        /// Overrides the default Entity.Move() method to add
+        /// this object's direction to its position.
+        /// </summary>
+        public override void Move() {
+            this.Position += this.Direction;
         }
 
         public static explicit operator StationaryEntity(DynamicEntity obj) {
