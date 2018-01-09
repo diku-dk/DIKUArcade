@@ -1,5 +1,5 @@
 ﻿namespace DIKUArcade.Graphics {
-    public interface ITexture {
+    public class Sprite {
         
     }
 }

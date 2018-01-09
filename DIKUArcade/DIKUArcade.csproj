@@ -48,12 +48,12 @@
     <Compile Include="Entities\EntityActor.cs" />
     <Compile Include="Entities\EntityContainer.cs" />
     <Compile Include="Entities\StationaryEntity.cs" />
-    <Compile Include="Graphics\DepthTexture.cs" />
+    <Compile Include="Graphics\IBaseImage.cs" />
     <Compile Include="Graphics\Image.cs" />
     <Compile Include="Graphics\ImageStride.cs" />
-    <Compile Include="Graphics\IBaseImage.cs" />
-    <Compile Include="Graphics\ITexture.cs" />
+    <Compile Include="Graphics\Text.cs" />
     <Compile Include="Graphics\Texture.cs" />
+    <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Math\Vec2F.cs" />
     <Compile Include="Math\Vec2I.cs" />
     <Compile Include="Math\Vec3F.cs" />

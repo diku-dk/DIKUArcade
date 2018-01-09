@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using DIKUArcade.Timers;
 
 namespace DIKUArcade.Graphics {
     /// <summary>
-    ///     Image stride to show animations
+    /// Image stride to show animations based on a list of textures
     /// </summary>
     public class ImageStride : IBaseImage {
         private int animFrequency;
@@ -11,17 +13,30 @@ namespace DIKUArcade.Graphics {
         private double lastTime;
         private bool animate;
 
-        private DepthTexture texture;
+        private List<Texture> textures;
+        private readonly int maxImageCount;
+        private int currentImageCount = 0;
 
         /// <summary>
         ///
         /// </summary>
-        /// <param name="texture">Texture object.</param>
+        /// <param name="imageFiles">List of image files to include in strides</param>
         /// <param name="milliseconds">Time between consecutive frames</param>
-        public ImageStride(DepthTexture texture, int milliseconds) {
+        public ImageStride(int milliseconds, params string[] imageFiles) {
+            if (milliseconds < 0) {
+                throw new ArgumentException("milliseconds must be a positive integer");
+            }
             animFrequency = milliseconds;
             animate = true;
-            this.texture = texture;
+
+            int imgs = imageFiles.Length;
+            maxImageCount = imgs;
+
+            textures = new List<Texture>(imgs);
+            foreach (string imgFile in imageFiles)
+            {
+                textures.Add(new Texture(imgFile));
+            }
         }
 
         public void StartAnimation() {
@@ -33,34 +48,34 @@ namespace DIKUArcade.Graphics {
             animate = false;
         }
 
-        public void Render() {
-            double elapsed = StaticTimer.GetCurrentTimeFrame();
-
-            // the desired number of milliseconds has passed,
-            // take some action (here: render next frame)
-            if (animate && elapsed - lastTime > animFrequency) {
-                lastTime = elapsed;
-
-                throw new NotImplementedException("TODO: Render ImageStride using its texture data");
+        public void SetAnimationFrequency(int milliseconds) {
+            if (milliseconds < 0) {
+                throw new ArgumentException("milliseconds must be a positive integer");
             }
-            // otherwise render the current frame again
-            else {
-                throw new NotImplementedException("TODO: Render ImageStride using its texture data");
+            animFrequency = milliseconds;
+        }
+
+        public void ChangeAnimationFrequency(int millisecondsChange) {
+            animFrequency += millisecondsChange;
+            if (animFrequency < 0) {
+                animFrequency = 0;
             }
         }
 
-        /// <summary>
-        /// Change the active texture handle.
-        /// </summary>
-        /// <param name="tex"></param>
-        /// <exception cref="ArgumentException">If argument is not of type DepthTexture.</exception>
-        public void ChangeTexture(ITexture tex) {
-            // TODO: Is this comparison correct?
-            if (tex.GetType() != typeof(DepthTexture)) {
-                throw new ArgumentException($"Argument must be of type DepthTexture: {tex.GetType()}");
+        public void Render() {
+            // measure elapsed time
+            double elapsed = StaticTimer.GetCurrentTimeFrame();
+
+            // the desired number of milliseconds has passed, change texture stride
+            if (animFrequency > 0 && animate && elapsed - lastTime > animFrequency) {
+                lastTime = elapsed;
+
+                currentImageCount =
+                    (currentImageCount >= maxImageCount) ? 0 : currentImageCount + 1;
             }
-            // this type cast should be okay
-            this.texture = (DepthTexture)tex;
+
+            // render the current texture object
+            textures[currentImageCount].Render();
         }
     }
 }
