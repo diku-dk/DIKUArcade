@@ -53,7 +53,6 @@
     <Compile Include="Graphics\ImageStride.cs" />
     <Compile Include="Graphics\Text.cs" />
     <Compile Include="Graphics\Texture.cs" />
-    <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Math\Vec2F.cs" />
     <Compile Include="Math\Vec2I.cs" />
     <Compile Include="Math\Vec3F.cs" />
