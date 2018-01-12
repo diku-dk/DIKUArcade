@@ -53,10 +53,13 @@
     <Compile Include="Graphics\ImageStride.cs" />
     <Compile Include="Graphics\Text.cs" />
     <Compile Include="Graphics\Texture.cs" />
+    <Compile Include="Math\Vec2D.cs" />
     <Compile Include="Math\Vec2F.cs" />
     <Compile Include="Math\Vec2I.cs" />
+    <Compile Include="Math\Vec3D.cs" />
     <Compile Include="Math\Vec3F.cs" />
     <Compile Include="Math\Vec3I.cs" />
+    <Compile Include="Math\Vec4D.cs" />
     <Compile Include="Math\Vec4F.cs" />
     <Compile Include="Math\Vec4I.cs" />
     <Compile Include="Physics\NewtonianForce.cs" />
