@@ -30,7 +30,8 @@ namespace DIKUArcade {
 
         // This is the signature for a key event handler:
         //private delegate void KeyEventHandler(object sender, KeyboardKeyEventArgs e);
-        private EventHandler<KeyboardKeyEventArgs> defaultKeyHandler;
+        private EventHandler<KeyboardKeyEventArgs> defaultKeyHandler = null;
+        private EventHandler<EventArgs> defaultResizeHandler = null;
 
         private bool isRunning;
 
@@ -49,6 +50,7 @@ namespace DIKUArcade {
             GL.ClearColor(Color.Black);
 
             AddDefaultKeyEventHandler();
+            AddDefaultResizeHandler();
 
             isRunning = true;
             window.Context.MakeCurrent(window.WindowInfo);
@@ -82,10 +84,52 @@ namespace DIKUArcade {
             ActivateThisWindowContext();
         }
 
-        // TODO: Do we want/need to make the window resizable?
-        public bool Resizable { get; set; }
+        private bool resizable = true;
+
+        /// <summary>
+        /// Get or set if this Window instance should be resizable.
+        /// </summary>
+        public bool Resizable {
+            get {
+                return resizable;
+            }
+            set {
+                if (value) {
+                    RemoveDefaultResizeHandler();
+                } else {
+                    AddDefaultResizeHandler();
+                }
+            }
+        }
+
+        private void AddDefaultResizeHandler() {
+            if (defaultResizeHandler != null) {
+                return;
+            }
+
+            defaultResizeHandler = delegate(object sender, EventArgs args) {
+                GL.Viewport(0, 0, window.Width, window.Height);
+
+                GL.MatrixMode(MatrixMode.Projection);
+                GL.LoadIdentity();
+                //GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
+                GL.Ortho(0.0,1.0,0.0,1.0, 0.0, 4.0);
+                };
+            window.Resize += defaultResizeHandler;
+        }
+
+        private void RemoveDefaultResizeHandler() {
+            if (defaultResizeHandler != null) {
+                window.Resize -= defaultResizeHandler;
+                defaultResizeHandler = null;
+            }
+        }
 
         private void AddDefaultKeyEventHandler() {
+            if (defaultKeyHandler != null) {
+                return;
+            }
+
             defaultKeyHandler = delegate(object sender, KeyboardKeyEventArgs e) {
                 if (e.Key == Key.Escape) {
                     CloseWindow();
@@ -173,6 +217,14 @@ namespace DIKUArcade {
                 throw new ArgumentOutOfRangeException($"RGB Color values must be between 0 and 255: {vec}");
             }
             GL.ClearColor((float)vec.X / 255.0f, (float)vec.Y / 255.0f, (float)vec.Z / 255.0f, 1.0f);
+        }
+
+        /// <summary>
+        /// Set color to be used as clear color when using the Window.Clear() method.
+        /// </summary>
+        /// <param name="color">System.Drawing.Color object containing color channel values.</param>
+        public void SetClearColor(System.Drawing.Color color) {
+            SetClearColor(new Math.Vec3I((int) color.R, (int) color.G, (int) color.B));
         }
 
         /// <summary>
