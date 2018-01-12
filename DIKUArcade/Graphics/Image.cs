@@ -1,4 +1,5 @@
 ﻿using System;
+using DIKUArcade.Entities;
 
 namespace DIKUArcade.Graphics {
     public class Image : IBaseImage {
@@ -9,8 +10,8 @@ namespace DIKUArcade.Graphics {
             this.texture = new Texture(imageFile);
         }
 
-        public void Render() {
-            texture.Render();
+        public void Render(Entity entity) {
+            texture.Render(entity);
         }
     }
 }

@@ -61,8 +61,8 @@ namespace DIKUArcade.Entities {
         /// Render all entities in this EntityContainer
         /// </summary>
         public void RenderEntities() {
-            foreach (var entity in entities) {
-                entity.Image.Render();
+            foreach (EntityActor actor in entities) {
+                actor.Image.Render(actor.Entity);
             }
         }
     }
