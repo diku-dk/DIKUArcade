@@ -1,5 +1,7 @@
-﻿namespace DIKUArcade.Graphics {
+﻿using DIKUArcade.Entities;
+
+namespace DIKUArcade.Graphics {
     public interface IBaseImage {
-        void Render();
+        void Render(Entity entity);
     }
 }

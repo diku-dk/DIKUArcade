@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using DIKUArcade.Timers;
+using DIKUArcade.Entities;
 
 namespace DIKUArcade.Graphics {
     /// <summary>
@@ -62,7 +63,7 @@ namespace DIKUArcade.Graphics {
             }
         }
 
-        public void Render() {
+        public void Render(Entity entity) {
             // measure elapsed time
             double elapsed = StaticTimer.GetCurrentTimeFrame();
 
@@ -75,7 +76,7 @@ namespace DIKUArcade.Graphics {
             }
 
             // render the current texture object
-            textures[currentImageCount].Render();
+            textures[currentImageCount].Render(entity);
         }
     }
 }
