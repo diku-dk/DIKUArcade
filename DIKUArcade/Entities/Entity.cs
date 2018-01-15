@@ -23,6 +23,10 @@ namespace DIKUArcade.Entities {
             return markedForDeletion;
         }
 
+        public void Scale(float scale) {
+            Extent *= scale;
+        }
+
         public void Scale(Vec2F scalar) {
             // This is doing pairwise vector multiplication!
             Extent *= scalar;

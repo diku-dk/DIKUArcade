@@ -25,6 +25,14 @@
             return new Vec3D(v1.X * v2.X, v1.Y * v2.Y, v1.Z * v2.Z);
         }
 
+        public static Vec3D operator *(Vec3D v, double s) {
+            return new Vec3D(v.X * s, v.Y * s, v.Z * s);
+        }
+
+        public static Vec3D operator *(double s, Vec3D v) {
+            return new Vec3D(v.X * s, v.Y * s, v.Z * s);
+        }
+
         public static double Dot(Vec3D v1, Vec3D v2) {
             return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
         }

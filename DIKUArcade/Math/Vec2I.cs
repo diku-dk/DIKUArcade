@@ -23,6 +23,14 @@
             return new Vec2I(v1.X * v2.X, v1.Y * v2.Y);
         }
 
+        public static Vec2I operator *(Vec2I v, int s) {
+            return new Vec2I(v.X * s, v.Y * s);
+        }
+
+        public static Vec2I operator *(int s, Vec2I v) {
+            return new Vec2I(v.X * s, v.Y * s);
+        }
+
         public static int Dot(Vec2I v1, Vec2I v2) {
             return v1.X * v2.X + v1.Y * v2.Y;
         }
