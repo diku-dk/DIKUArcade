@@ -11,7 +11,7 @@ namespace SimpleSpaceShuttle {
         private readonly Window window;
         private DIKUArcade.Entities.EntityContainer entities;
 
-        private DIKUArcade.Entities.EntityActor player;
+        private DIKUArcade.Entities.Entity player;
         private const float PLAYER_VELOCITY = 0.001f;
 
         private bool[] keyPressed;
@@ -25,21 +25,21 @@ namespace SimpleSpaceShuttle {
         }
         private void KeyReleaseHandler(object o, OpenTK.Input.KeyboardKeyEventArgs args) {
             keyPressed[(int)args.Key] = false;
-            Console.WriteLine(player.Entity.Position);
+            Console.WriteLine(player.Shape.Position);
         }
 
         private void MovePlayer() {
             if (keyPressed[(int)Key.Up]) {
-                player.Entity.Position.Y -= SpaceShuttleGame.PLAYER_VELOCITY;
+                player.Shape.Position.Y -= SpaceShuttleGame.PLAYER_VELOCITY;
             }
             if (keyPressed[(int)Key.Down]) {
-                player.Entity.Position.Y += SpaceShuttleGame.PLAYER_VELOCITY;
+                player.Shape.Position.Y += SpaceShuttleGame.PLAYER_VELOCITY;
             }
             if (keyPressed[(int)Key.Left]) {
-                player.Entity.Position.X -= SpaceShuttleGame.PLAYER_VELOCITY;
+                player.Shape.Position.X -= SpaceShuttleGame.PLAYER_VELOCITY;
             }
             if (keyPressed[(int)Key.Right]) {
-                player.Entity.Position.X += SpaceShuttleGame.PLAYER_VELOCITY;
+                player.Shape.Position.X += SpaceShuttleGame.PLAYER_VELOCITY;
             }
         }
 
@@ -50,8 +50,8 @@ namespace SimpleSpaceShuttle {
             window.AddKeyReleaseEventHandler(KeyReleaseHandler);
 
             entities = new EntityContainer();
-            player = new EntityActor(new Entity(), new MovementStrategy(), new Image(new Texture()));
-            player.Entity.MoveToPosition(new Vec2F());
+            player = new Entity(new Shape(), new MovementStrategy(), new Image(new Texture()));
+            player.Shape.MoveToPosition(new Vec2F());
 
             keyPressed = new bool[512];
             for (int i = 0; i < 512; i++) {
