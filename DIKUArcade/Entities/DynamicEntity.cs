@@ -25,7 +25,6 @@ namespace DIKUArcade.Entities {
             Direction = dir;
         }
 
-        // TODO: Think better about how this could be done!
         public void ChangeDirection(Vec2F dir) {
             this.Direction = dir;
         }

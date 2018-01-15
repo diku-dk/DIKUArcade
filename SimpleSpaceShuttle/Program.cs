@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using DIKUArcade;
 
-// TODO: No game project should ever need to reference OpenTK! (OpenTK.Input...)
-
 namespace SimpleSpaceShuttle {
     internal class Program {
         public static void Main(string[] args) {

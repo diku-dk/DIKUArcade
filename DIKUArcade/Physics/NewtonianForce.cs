@@ -2,7 +2,7 @@
 
 namespace DIKUArcade.Physics {
     public class NewtonianForce {
-        private Vec2I center; // TODO: Use Vec2f instead?
+        private Vec2I center; // TODO: Use Vec2F/Vec2D instead?
 
         private float falloff;
 

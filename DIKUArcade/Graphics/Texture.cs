@@ -33,7 +33,7 @@ namespace DIKUArcade.Graphics {
             }
 
             // load image file
-            var path = dir + "/" + filename;
+            var path = Path.Combine(dir.ToString(), filename);
             if (!System.IO.File.Exists(path)) {
                 //Console.WriteLine($"filename is {path}");
                 //Console.WriteLine($"DirectoryName: {System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)}");
@@ -92,7 +92,7 @@ namespace DIKUArcade.Graphics {
             this.BindTexture();
 
             // draw this texture
-            //throw new NotImplementedException("TODO: Render Texture object");
+            // TODO: Render Texture object");
             Matrix4 modelViewMatrix = CreateMatrix(entity);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref modelViewMatrix);
@@ -102,8 +102,8 @@ namespace DIKUArcade.Graphics {
 
             GL.TexCoord2(0, 1); GL.Vertex2(0.0f, 0.0f);                       // Top Left
             GL.TexCoord2(0, 0); GL.Vertex2(0.0f, entity.Extent.Y);            // Bottom Left
-            GL.TexCoord2(1, 0); GL.Vertex2(entity.Extent.X, entity.Extent.Y); // Top Right
-            GL.TexCoord2(1, 1); GL.Vertex2(entity.Extent.X, 0.0f);            // Bottom Right
+            GL.TexCoord2(1, 0); GL.Vertex2(entity.Extent.X, entity.Extent.Y); // Bottom Right
+            GL.TexCoord2(1, 1); GL.Vertex2(entity.Extent.X, 0.0f);            // Top Right
 
             GL.End();
 
