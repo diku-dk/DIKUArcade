@@ -35,16 +35,16 @@ namespace DIKUArcade {
 
         private bool isRunning;
 
-        // TODO: Remove these?
         private uint width, height;
 
         private string title;
 
         private void ActivateThisWindowContext() {
-            window = new GameWindow((int) this.width, (int) this.height, GraphicsMode.Default,
-                this.title, GameWindowFlags.Default, DisplayDevice.Default,
-                3, 3, // OpenGL major and minor version
-                GraphicsContextFlags.ForwardCompatible);
+            //window = new GameWindow((int) this.width, (int) this.height, GraphicsMode.Default,
+            //    this.title, GameWindowFlags.Default, DisplayDevice.Default,
+            //    3, 3, // OpenGL major and minor version
+            //    GraphicsContextFlags.ForwardCompatible);
+            window = new GameWindow((int) this.width, (int) this.height);
 
             GL.ClearDepth(1);
             GL.ClearColor(Color.Black);
@@ -109,6 +109,8 @@ namespace DIKUArcade {
 
             defaultResizeHandler = delegate(object sender, EventArgs args) {
                 GL.Viewport(0, 0, window.Width, window.Height);
+                width = (uint) window.Width;
+                height = (uint) window.Height;
 
                 GL.MatrixMode(MatrixMode.Projection);
                 GL.LoadIdentity();
@@ -150,13 +152,20 @@ namespace DIKUArcade {
         }
 
         /// <summary>
+        /// Function signature for a key event handler method.
+        /// </summary>
+        /// <param name="keyArgs">OpenTK.Input.KeyboardKeyEventArgs</param>
+        public delegate void WindowKeyHandler(KeyboardKeyEventArgs keyArgs);
+
+        /// <summary>
         /// Add an event handler for when any keyboard key is pressed.
         /// </summary>
-        /// <param name="method">Delegate method</param>
-        // TODO: Find a way to add a method that only accepts a Key object!
-        public void AddKeyPressEventHandler(EventHandler<KeyboardKeyEventArgs> method) {
-            RemoveDefaultKeyEventHandler();
-            window.Keyboard.KeyUp += method;
+        /// <param name="method">Method with the signature of a Window.WindowKeyHandler delegate.</param>
+        public void AddKeyPressEventHandler(WindowKeyHandler method) {
+            //RemoveDefaultKeyEventHandler();
+            window.Keyboard.KeyUp += delegate(object sender, KeyboardKeyEventArgs args) {
+                method(args);
+            };
         }
 
         /// <summary>
@@ -164,7 +173,7 @@ namespace DIKUArcade {
         /// </summary>
         /// <param name="method">Delegate method</param>
         public void AddKeyReleaseEventHandler(EventHandler<KeyboardKeyEventArgs> method) {
-            RemoveDefaultKeyEventHandler();
+            //RemoveDefaultKeyEventHandler();
             window.Keyboard.KeyDown += method;
         }
 
