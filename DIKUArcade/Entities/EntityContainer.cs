@@ -6,7 +6,6 @@ using DIKUArcade.Strategies;
 namespace DIKUArcade.Entities {
     public class EntityContainer {
 
-        // TODO: A better data structure can be used here to minimize overhead when copying memory all the time.
         private List<EntityActor> entities;
         private readonly List<EntityActor> pendingEntities;
 

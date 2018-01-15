@@ -6,7 +6,6 @@ namespace DIKUArcade.Entities {
     /// since a static object os not meant to be affected by game physics.
     /// </summary>
     public class StationaryEntity : Entity {
-        // TODO: Should width and height be given a texture (image) level instead?
         public StationaryEntity(int posX, int posY, int width, int height) {
             Position = new Vec2F(posX, posY);
             Extent = new Vec2F();
