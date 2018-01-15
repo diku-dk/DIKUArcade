@@ -41,6 +41,10 @@
             return System.Math.Sqrt(X * X + Y * Y + Z * Z);
         }
 
+        public Vec3D Copy() {
+            return new Vec3D(X, Y, Z);
+        }
+
         public override int GetHashCode() {
             // Source: http://stackoverflow.com/a/263416/5801152
             unchecked // Overflow is fine, just wrap

@@ -39,6 +39,10 @@
             return System.Math.Sqrt(X * X + Y * Y);
         }
 
+        public Vec2F Copy() {
+            return new Vec2F(X, Y);
+        }
+
         public override int GetHashCode() {
             // Source: http://stackoverflow.com/a/263416/5801152
             unchecked // Overflow is fine, just wrap
