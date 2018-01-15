@@ -43,6 +43,10 @@
             return System.Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
         }
 
+        public Vec4F Copy() {
+            return new Vec4F(X, Y, Z, W);
+        }
+
         public override int GetHashCode() {
             // Source: http://stackoverflow.com/a/263416/5801152
             unchecked // Overflow is fine, just wrap
