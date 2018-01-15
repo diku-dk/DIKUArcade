@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using DIKUArcade.Timers;
 using DIKUArcade.Entities;
+using DIKUArcade.Utilities;
 
 namespace DIKUArcade.Graphics {
     /// <summary>
@@ -31,12 +32,38 @@ namespace DIKUArcade.Graphics {
             animate = true;
 
             int imgs = imageFiles.Length;
-            maxImageCount = imgs;
+            if (imgs == 0) {
+                throw new ArgumentNullException("at least one image file must be specified");
+            }
+            maxImageCount = imgs - 1;
+            currentImageCount = RandomGenerator.Generator.Next(imgs);
 
             textures = new List<Texture>(imgs);
             foreach (string imgFile in imageFiles)
             {
                 textures.Add(new Texture(imgFile));
+            }
+        }
+
+        public ImageStride(int milliseconds, params Image[] images) {
+            if (milliseconds < 0) {
+                throw new ArgumentException("milliseconds must be a positive integer");
+            }
+            animFrequency = milliseconds;
+            animate = true;
+
+            int imgs = images.Length;
+            if (imgs == 0) {
+                throw new ArgumentNullException("at least one image file must be specified");
+            }
+
+            maxImageCount = imgs - 1;
+            currentImageCount = RandomGenerator.Generator.Next(imgs);
+
+            textures = new List<Texture>(imgs);
+            foreach (Image img in images)
+            {
+                textures.Add(img.GetTexture());
             }
         }
 
@@ -63,7 +90,7 @@ namespace DIKUArcade.Graphics {
             }
         }
 
-        public void Render(Entity entity) {
+        public void Render(Shape shape) {
             // measure elapsed time
             double elapsed = StaticTimer.GetCurrentTimeFrame();
 
@@ -76,7 +103,7 @@ namespace DIKUArcade.Graphics {
             }
 
             // render the current texture object
-            textures[currentImageCount].Render(entity);
+            textures[currentImageCount].Render(shape);
         }
     }
 }

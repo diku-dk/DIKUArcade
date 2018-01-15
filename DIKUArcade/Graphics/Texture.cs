@@ -80,20 +80,20 @@ namespace DIKUArcade.Graphics {
             GL.BindTexture(TextureTarget.Texture2D, 0); // 0 is invalid texture id
         }
 
-        private Matrix4 CreateMatrix(Entity entity)
+        private Matrix4 CreateMatrix(Shape shape)
         {
             return  Matrix4.CreateScale(1f, 1f, 1f)*
-                    Matrix4.CreateRotationZ(entity.Rotation)*
-                    Matrix4.CreateTranslation(entity.Position.X, entity.Position.Y, 0.0f);
+                    Matrix4.CreateRotationZ(shape.Rotation)*
+                    Matrix4.CreateTranslation(shape.Position.X, shape.Position.Y, 0.0f);
         }
 
-        public void Render(Entity entity) {
+        public void Render(Shape shape) {
             // bind this texture
             this.BindTexture();
 
             // draw this texture
             // TODO: Render Texture object");
-            Matrix4 modelViewMatrix = CreateMatrix(entity);
+            Matrix4 modelViewMatrix = CreateMatrix(shape);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref modelViewMatrix);
 
@@ -101,9 +101,9 @@ namespace DIKUArcade.Graphics {
             GL.Begin(PrimitiveType.Quads);
 
             GL.TexCoord2(0, 1); GL.Vertex2(0.0f, 0.0f);                       // Top Left
-            GL.TexCoord2(0, 0); GL.Vertex2(0.0f, entity.Extent.Y);            // Bottom Left
-            GL.TexCoord2(1, 0); GL.Vertex2(entity.Extent.X, entity.Extent.Y); // Bottom Right
-            GL.TexCoord2(1, 1); GL.Vertex2(entity.Extent.X, 0.0f);            // Top Right
+            GL.TexCoord2(0, 0); GL.Vertex2(0.0f, shape.Extent.Y);            // Bottom Left
+            GL.TexCoord2(1, 0); GL.Vertex2(shape.Extent.X, shape.Extent.Y); // Bottom Right
+            GL.TexCoord2(1, 1); GL.Vertex2(shape.Extent.X, 0.0f);            // Top Right
 
             GL.End();
 
