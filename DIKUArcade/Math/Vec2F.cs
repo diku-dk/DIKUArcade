@@ -23,6 +23,14 @@
             return new Vec2F(v1.X * v2.X, v1.Y * v2.Y);
         }
 
+        public static Vec2F operator *(Vec2F v, float s) {
+            return new Vec2F(v.X * s, v.Y * s);
+        }
+
+        public static Vec2F operator *(float s, Vec2F v) {
+            return new Vec2F(v.X * s, v.Y * s);
+        }
+
         public static float Dot(Vec2F v1, Vec2F v2) {
             return v1.X * v2.X + v1.Y * v2.Y;
         }

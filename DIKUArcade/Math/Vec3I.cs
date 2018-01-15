@@ -25,6 +25,14 @@
             return new Vec3I(v1.X * v2.X, v1.Y * v2.Y, v1.Z * v2.Z);
         }
 
+        public static Vec3I operator *(Vec3I v, int s) {
+            return new Vec3I(v.X * s, v.Y * s, v.Z * s);
+        }
+
+        public static Vec3I operator *(int s, Vec3I v) {
+            return new Vec3I(v.X * s, v.Y * s, v.Z * s);
+        }
+
         public static int Dot(Vec3I v1, Vec3I v2) {
             return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
         }

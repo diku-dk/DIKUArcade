@@ -27,6 +27,14 @@
             return new Vec4F(v1.X * v2.X, v1.Y * v2.Y, v1.Z * v2.Z, v1.W * v2.W);
         }
 
+        public static Vec4F operator *(Vec4F v, float s) {
+            return new Vec4F(v.X * s, v.Y * s, v.Z * s, v.W * s);
+        }
+
+        public static Vec4F operator *(float s, Vec4F v) {
+            return new Vec4F(v.X * s, v.Y * s, v.Z * s, v.W * s);
+        }
+
         public static float Dot(Vec4F v1, Vec4F v2) {
             return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z + v1.W * v2.W;
         }
