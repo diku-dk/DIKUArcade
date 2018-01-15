@@ -6,29 +6,28 @@ using DIKUArcade.Strategies;
 namespace DIKUArcade.Entities {
     public class EntityContainer {
 
-        private List<EntityActor> entities;
-        private readonly List<EntityActor> pendingEntities;
+        private List<Entity> entities;
+        private readonly List<Entity> pendingEntities;
 
         public EntityContainer(int size) {
-            entities = new List<EntityActor>(size);
-            pendingEntities = new List<EntityActor>(size);
+            entities = new List<Entity>(size);
+            pendingEntities = new List<Entity>(size);
         }
 
         public EntityContainer() : this(100) { }
 
-        public void AddStationaryEntity(StationaryEntity ent, IBaseImage img) {
-            // TODO: No strategy should be provided here!
-            entities.Add(new EntityActor(ent, new MovementStrategy(), img));
+        public void AddStationaryEntity(StationaryShape ent, IBaseImage img) {
+            entities.Add(new Entity(ent, img));
         }
 
-        public void AddDynamicEntity(DynamicEntity ent, MovementStrategy strat, IBaseImage img) {
-            pendingEntities.Add(new EntityActor(ent, strat, img));
+        public void AddDynamicEntity(DynamicShape ent, IBaseImage img) {
+            entities.Add(new Entity(ent, img));
         }
 
         private void TendToPending() {
-            var newList = new List<EntityActor>(entities.Count);
+            var newList = new List<Entity>(entities.Count);
             foreach (var ent in entities) {
-                if (!ent.Entity.IsDeleted()) {
+                if (!ent.Shape.IsDeleted()) {
                     newList.Add(ent);
                 }
             }
@@ -40,14 +39,15 @@ namespace DIKUArcade.Entities {
 
         /// <summary>
         /// Delegate method for iterating through an EntityContainer.
-        /// This function should return true if the entity should be
+        /// This function should return true if the shape should be
         /// removed from the EntityContainer.
         /// </summary>
         /// <param name="entity"></param>
-        public delegate void IteratorMethod(EntityActor entity);
+        public delegate void IteratorMethod(Entity entity);
 
-        public void IterateGameObjects(IteratorMethod iterator) {
-            var entitiesPendingForRemoval = new List<EntityActor>(entities.Count);
+        // TODO: Rename to 'Iterate'
+        public void Iterate(IteratorMethod iterator) {
+            var entitiesPendingForRemoval = new List<Entity>(entities.Count);
 
             // iterate through entities
             foreach (var entity in entities) {
@@ -60,8 +60,8 @@ namespace DIKUArcade.Entities {
         /// Render all entities in this EntityContainer
         /// </summary>
         public void RenderEntities() {
-            foreach (EntityActor actor in entities) {
-                actor.Image.Render(actor.Entity);
+            foreach (Entity entity in entities) {
+                entity.Image.Render(entity.Shape);
             }
         }
     }

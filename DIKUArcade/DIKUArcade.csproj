@@ -43,11 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\DynamicEntity.cs" />
+    <Compile Include="Entities\DynamicShape.cs" />
+    <Compile Include="Entities\Shape.cs" />
     <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\EntityActor.cs" />
     <Compile Include="Entities\EntityContainer.cs" />
-    <Compile Include="Entities\StationaryEntity.cs" />
+    <Compile Include="Entities\StationaryShape.cs" />
     <Compile Include="Graphics\IBaseImage.cs" />
     <Compile Include="Graphics\Image.cs" />
     <Compile Include="Graphics\ImageStride.cs" />
@@ -69,6 +69,7 @@
     <Compile Include="States\States.cs" />
     <Compile Include="Strategies\MovementStrategy.cs" />
     <Compile Include="Timers\StaticTimer.cs" />
+    <Compile Include="Utilities\RandomGenerator.cs" />
     <Compile Include="Window.cs" />
   </ItemGroup>
   <ItemGroup>
