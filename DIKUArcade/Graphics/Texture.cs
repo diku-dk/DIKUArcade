@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
@@ -80,19 +81,21 @@ namespace DIKUArcade.Graphics {
             GL.BindTexture(TextureTarget.Texture2D, 0); // 0 is invalid texture id
         }
 
-        private Matrix4 CreateMatrix(Shape shape)
-        {
-            return  Matrix4.CreateScale(1f, 1f, 1f)*
-                    Matrix4.CreateRotationZ(shape.Rotation)*
-                    Matrix4.CreateTranslation(shape.Position.X, shape.Position.Y, 0.0f);
+        private Matrix4 CreateMatrix(Shape shape) {
+            var halfX = shape.Extent.X / 2.0f;
+            var halfY = shape.Extent.Y / 2.0f;
+
+            return Matrix4.CreateTranslation(-halfX, -halfY, 0.0f) *
+                   Matrix4.CreateRotationZ(shape.Rotation) *
+                   Matrix4.CreateTranslation(shape.Position.X + halfX, shape.Position.Y + halfY,
+                       0.0f);
         }
 
         public void Render(Shape shape) {
             // bind this texture
             this.BindTexture();
 
-            // draw this texture
-            // TODO: Render Texture object");
+            // render this texture
             Matrix4 modelViewMatrix = CreateMatrix(shape);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref modelViewMatrix);
@@ -100,9 +103,9 @@ namespace DIKUArcade.Graphics {
             GL.Color4(1f,1f,1f,1f);
             GL.Begin(PrimitiveType.Quads);
 
-            GL.TexCoord2(0, 1); GL.Vertex2(0.0f, 0.0f);                       // Top Left
+            GL.TexCoord2(0, 1); GL.Vertex2(0.0f, 0.0f);                      // Top Left
             GL.TexCoord2(0, 0); GL.Vertex2(0.0f, shape.Extent.Y);            // Bottom Left
-            GL.TexCoord2(1, 0); GL.Vertex2(shape.Extent.X, shape.Extent.Y); // Bottom Right
+            GL.TexCoord2(1, 0); GL.Vertex2(shape.Extent.X, shape.Extent.Y);  // Bottom Right
             GL.TexCoord2(1, 1); GL.Vertex2(shape.Extent.X, 0.0f);            // Top Right
 
             GL.End();

@@ -6,7 +6,7 @@ using DIKUArcade.Math;
 using OpenTK.Input;
 
 namespace TestDIKUArcade {
-    public class Test0 {
+    public class TestSimpleEntityRendering {
         public static void MainFunction() {
             var win = new Window("hej", 500, AspectRatio.R1X1);
             win.SetClearColor(System.Drawing.Color.Brown);
