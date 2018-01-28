@@ -5,14 +5,14 @@
     /// </summary>
     public enum GameEventType
     {
-        PlayerEntityEvent,
-        NonPlayerEntityEvent,
+        PlayerEvent,
+        NonPlayerEvent,
         GraphicsEvent,
         InputEvent,
         ControlEvent, //?
+        MovementEvent,
         SoundEvent,
         StatusEvent,
-        GameStateEvent,
-        NetworkEvent
+        GameStateEvent
     }
 }
