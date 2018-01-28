@@ -48,6 +48,13 @@
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\EntityContainer.cs" />
     <Compile Include="Entities\StationaryShape.cs" />
+    <Compile Include="EventBus\GameEvent.cs" />
+    <Compile Include="EventBus\GameEventBus.cs" />
+    <Compile Include="EventBus\GameEventBusInterface.cs" />
+    <Compile Include="EventBus\GameEventFactory.cs" />
+    <Compile Include="EventBus\GameEventProcessor.cs" />
+    <Compile Include="EventBus\GameEventQueue.cs" />
+    <Compile Include="EventBus\GameEventType.cs" />
     <Compile Include="Graphics\IBaseImage.cs" />
     <Compile Include="Graphics\Image.cs" />
     <Compile Include="Graphics\ImageStride.cs" />
