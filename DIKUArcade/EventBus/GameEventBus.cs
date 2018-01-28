@@ -4,10 +4,26 @@ using System.Threading.Tasks;
 
 namespace DIKUArcade.EventBus
 {
+    /// <summary>
+    /// GameEventBus is the core module for processing events in the DIKUArcade game engine. Modules can register events and
+    /// add them to the queues. Events are distinguished by event types to improve processing performance. Event processor 
+    /// can register/subscribe themself to receive events of a certain event type. For a single event, all processors are 
+    /// called with this event (broadcast semantic). 
+    /// </summary>
+    /// <typeparam name="T">Parameter type of game entities.</typeparam>
     public class GameEventBus<T> : IGameEventBus<T>
     {
+        /// <summary>
+        /// Dictionary of registered event processors for a given game event type.
+        /// </summary>
         private Dictionary<GameEventType, ICollection<IGameEventProcessor<T>>> _eventProcessors;
+        /// <summary>
+        /// Dictionary of game event queues for different game event types.
+        /// </summary>
         private Dictionary<GameEventType, GameEventQueue<GameEvent<T>>> _eventQueues;
+        /// <summary>
+        /// Stops processing the pipeline, e.g. needed due real-time constraints.
+        /// </summary>
         private bool _breakExecution = false;
 
         public void InitializeEventBus(ICollection<GameEventType> eventTypeList)
@@ -68,22 +84,51 @@ namespace DIKUArcade.EventBus
             {
                 if (_eventQueues != null)
                 {
-                    var currentEvent = _eventQueues[eventType].Dequeue();
-                    if (_eventProcessors != null)
-                        foreach (var eventProcessor in _eventProcessors[eventType])
-                        {
-                            eventProcessor.ProcessEvent(eventType, currentEvent);
-                            if(_breakExecution)
-                                loopState.Break();
-                        }
+                    while (!_eventQueues[eventType].IsEmpty())
+                    {
+                        var currentEvent = _eventQueues[eventType].Dequeue();
+                        if (_eventProcessors != null)
+                            foreach (var eventProcessor in _eventProcessors[eventType])
+                            {
+                                eventProcessor.ProcessEvent(eventType, currentEvent);
+                                if (_breakExecution)
+                                    loopState.Break();
+                            }
+                    }
                 }
             }
                 ));
         }
 
+        public void ProcessEventsSequentially(IEnumerable<GameEventType> processOrder)
+        {
+            foreach(GameEventType eventType in processOrder)
+                {
+                    if (_eventQueues != null)
+                    {
+                        while (!_eventQueues[eventType].IsEmpty())
+                        {
+                            var currentEvent = _eventQueues[eventType].Dequeue();
+                            if (_eventProcessors != null)
+                                foreach (var eventProcessor in _eventProcessors[eventType])
+                                {
+                                    eventProcessor.ProcessEvent(eventType, currentEvent);
+                                    if (_breakExecution)
+                                        return;
+                                }
+                        }
+                    }
+                }
+        }
+
         public void ProcessEvents()
         {
             if (_eventQueues != null) ProcessEvents(_eventQueues.Keys);
+        }
+
+        public void ProcessEventsSequentially()
+        {
+            if (_eventQueues != null) ProcessEventsSequentially(_eventQueues.Keys);
         }
 
         public void BreakProcessing()
