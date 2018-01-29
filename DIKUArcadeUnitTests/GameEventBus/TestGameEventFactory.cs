@@ -1,7 +1,7 @@
 ﻿using DIKUArcade.EventBus;
 using NUnit.Framework;
 
-namespace GameEventBusTestProject
+namespace GameEventBusTestProject.GameEventBus
 {
     [TestFixture]
     class TestGameEventFactory
