@@ -42,11 +42,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestEventQueue.cs" />
-    <Compile Include="TestGameEventFactory.cs" />
+    <Compile Include="GameEventBus\TestEventQueue.cs" />
+    <Compile Include="GameEventBus\TestGameEventFactory.cs" />
+    <Compile Include="GameEventBus\TestsEventBus.cs" />
     <Compile Include="Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestsEventBus.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DIKUArcade\DIKUArcade.csproj">
