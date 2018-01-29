@@ -98,6 +98,8 @@ namespace DIKUArcade.EventBus
                 }
             }
                 ));
+
+            // semantic of Parallel.ForEach is it blocks until all parallel threads are finished
         }
 
         public void ProcessEventsSequentially(IEnumerable<GameEventType> processOrder)
