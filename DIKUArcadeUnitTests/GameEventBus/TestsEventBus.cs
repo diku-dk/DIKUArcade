@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
 using DIKUArcade.EventBus;
 using NUnit.Framework;
 
-namespace GameEventBusTestProject
+namespace GameEventBusTestProject.GameEventBus
 {
     [TestFixture]
     public class TestsEventBus
