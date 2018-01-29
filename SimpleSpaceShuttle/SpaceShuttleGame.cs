@@ -16,7 +16,7 @@ namespace SimpleSpaceShuttle {
 
         private bool[] keyPressed;
 
-        private void KeyPressHandler(object o, OpenTK.Input.KeyboardKeyEventArgs args) {
+        private void KeyPressHandler(OpenTK.Input.KeyboardKeyEventArgs args) {
             if (args.Key == Key.Escape) {
                 window.CloseWindow();
                 return;
@@ -50,7 +50,7 @@ namespace SimpleSpaceShuttle {
             window.AddKeyReleaseEventHandler(KeyReleaseHandler);
 
             entities = new EntityContainer();
-            player = new Entity(new Shape(), new MovementStrategy(), new Image(new Texture()));
+            player = new Entity(new Shape(), new Image("hej"));
             player.Shape.MoveToPosition(new Vec2F());
 
             keyPressed = new bool[512];
