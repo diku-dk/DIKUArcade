@@ -5,12 +5,6 @@ namespace DIKUArcade.EventBus
     public interface IGameEventBus<T>
     {
         /// <summary>
-        /// Initialize the game event bus with a list of event types that need to be processed. 
-        /// The architecture is static and does not allow additional event types after the initialization.
-        /// </summary>
-        /// <param name="eventTypeList">List of events which shall be processed by the game event bus.</param>
-        void InitializeEventBus(ICollection<GameEventType> eventTypeList);
-        /// <summary>
         /// Subscribe a game event processor to process events of eventType.
         /// </summary>
         /// <param name="eventType">Type of events which a processors wants to process, e.g. sound events.</param>
@@ -28,6 +22,16 @@ namespace DIKUArcade.EventBus
         /// <see cref=""/>
         /// <param name="gameEvent">Game event to be processed.</param>
         void RegisterEvent(GameEvent<T> gameEvent);
+    }
+    
+    public interface IGameEventBusController<T>
+    {
+        /// <summary>
+        /// Initialize the game event bus with a list of event types that need to be processed. 
+        /// The architecture is static and does not allow additional event types after the initialization.
+        /// </summary>
+        /// <param name="eventTypeList">List of events which shall be processed by the game event bus.</param>
+        void InitializeEventBus(ICollection<GameEventType> eventTypeList);
         /// <summary>
         /// Process events contained in the event queues in parallel. All event processors are called for events that they registered for.
         /// </summary>

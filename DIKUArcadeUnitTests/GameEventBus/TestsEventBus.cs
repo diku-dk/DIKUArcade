@@ -2,7 +2,7 @@
 using DIKUArcade.EventBus;
 using NUnit.Framework;
 
-namespace GameEventBusTestProject
+namespace GameEventBusTestProject.GameEventBus
 {
     [TestFixture]
     public class TestsEventBus
@@ -25,7 +25,7 @@ namespace GameEventBusTestProject
             }
         }
 
-        [OneTimeSetUp]
+        [SetUp]
         public void SetupEventBusForTests()
         {
             _eb=new GameEventBus<object>();
@@ -65,6 +65,34 @@ namespace GameEventBusTestProject
             _eb.RegisterEvent(_eventControl);
 
             _eb.ProcessEvents();
+
+            Assert.That(_simpleEventProcessor.EventCounterControl == 2);
+            Assert.That(_simpleEventProcessor.EventCounterSound == 1);
+        }
+
+        [Test]
+        public void TestEventBusSimpleCount5TestSeq()
+        {
+            _eb.RegisterEvent(_eventControl);
+            _eb.RegisterEvent(_eventSound);
+            _eb.RegisterEvent(_eventControl);
+            _eb.RegisterEvent(_eventControl);
+            _eb.RegisterEvent(_eventSound);
+
+            _eb.ProcessEventsSequentially();
+
+            Assert.That(_simpleEventProcessor.EventCounterControl == 3);
+            Assert.That(_simpleEventProcessor.EventCounterSound == 2);
+        }
+        
+        [Test]
+        public void TestEventBusSimpleCount3TestSeq()
+        {
+            _eb.RegisterEvent(_eventControl);
+            _eb.RegisterEvent(_eventSound);
+            _eb.RegisterEvent(_eventControl);
+
+            _eb.ProcessEventsSequentially();
 
             Assert.That(_simpleEventProcessor.EventCounterControl == 2);
             Assert.That(_simpleEventProcessor.EventCounterSound == 1);

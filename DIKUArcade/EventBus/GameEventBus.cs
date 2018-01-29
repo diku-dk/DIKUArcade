@@ -11,7 +11,7 @@ namespace DIKUArcade.EventBus
     /// called with this event (broadcast semantic). 
     /// </summary>
     /// <typeparam name="T">Parameter type of game entities.</typeparam>
-    public class GameEventBus<T> : IGameEventBus<T>
+    public class GameEventBus<T> : IGameEventBus<T>, IGameEventBusController<T>
     {
         /// <summary>
         /// Dictionary of registered event processors for a given game event type.
