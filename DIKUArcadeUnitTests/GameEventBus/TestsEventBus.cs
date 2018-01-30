@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DIKUArcade.EventBus;
 using NUnit.Framework;
 
@@ -12,6 +13,7 @@ namespace GameEventBusTestProject.GameEventBus
         private SimpleEventProcessor _simpleEventProcessor;
         private GameEvent<object> _eventControl;
         private GameEvent<object> _eventSound;
+        
         public class SimpleEventProcessor : IGameEventProcessor<object>
         {
             public int EventCounterControl;
@@ -97,6 +99,60 @@ namespace GameEventBusTestProject.GameEventBus
             Assert.That(_simpleEventProcessor.EventCounterControl == 2);
             Assert.That(_simpleEventProcessor.EventCounterSound == 1);
         }
+        
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(8)]
+        [TestCase(16)]
+        [TestCase(32)]
+        [TestCase(47)]
+        [TestCase(64)]
+        [TestCase(128)]
+        [TestCase(199)]
+        [TestCase(1024)]
+        [TestCase(2048)]
+        public void TestEventBusSimpleCountParametricTest(int numEventGroups)
+        {
+            for (int iter=0; iter < numEventGroups; iter++)
+            {
+                _eb.RegisterEvent(_eventControl);
+                _eb.RegisterEvent(_eventSound);
+                _eb.RegisterEvent(_eventControl);
+            }
+
+            _eb.ProcessEvents();
+
+            Assert.That(_simpleEventProcessor.EventCounterControl == 2*numEventGroups);
+            Assert.That(_simpleEventProcessor.EventCounterSound == 1*numEventGroups);
+        }
+        
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(8)]
+        [TestCase(16)]
+        [TestCase(32)]
+        [TestCase(47)]
+        [TestCase(64)]
+        [TestCase(128)]
+        [TestCase(199)]
+        [TestCase(1024)]
+        [TestCase(2048)]
+        public void TestEventBusSimpleCountParametricTestSequentially(int numEventGroups)
+        {
+            for (int iter=0; iter < numEventGroups; iter++)
+            {
+                _eb.RegisterEvent(_eventControl);
+                _eb.RegisterEvent(_eventSound);
+                _eb.RegisterEvent(_eventControl);
+            }
+
+            _eb.ProcessEventsSequentially();
+
+            Assert.That(_simpleEventProcessor.EventCounterControl == 2*numEventGroups);
+            Assert.That(_simpleEventProcessor.EventCounterSound == 1*numEventGroups);
+        }
 
         [TestCase(2)]
         [TestCase(3)]
@@ -164,6 +220,24 @@ namespace GameEventBusTestProject.GameEventBus
                 Assert.That(processor.EventCounterControl == 2);
                 Assert.That(processor.EventCounterSound == 1);
             }
+        }
+
+        [Test]
+        public void TestSubscribeGameEventProcessorArgumentNotNullException()
+        {
+            Assert.Throws<ArgumentNullException>(delegate
+                {
+                    _eb.Subscribe(GameEventType.ControlEvent, default(IGameEventProcessor<object>));
+                });
+        }
+        
+        [Test]
+        public void TestUnsubscribeGameEventProcessorArgumentNotNullException()
+        {
+            Assert.Throws<ArgumentNullException>(delegate
+            {
+                _eb.Subscribe(GameEventType.ControlEvent, default(IGameEventProcessor<object>));
+            });
         }
     }
 }
