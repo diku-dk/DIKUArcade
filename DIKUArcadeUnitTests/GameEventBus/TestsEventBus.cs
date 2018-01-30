@@ -98,5 +98,72 @@ namespace GameEventBusTestProject.GameEventBus
             Assert.That(_simpleEventProcessor.EventCounterSound == 1);
         }
 
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(6)]
+        [TestCase(8)]
+        [TestCase(10)]
+        [TestCase(20)]
+        [TestCase(256)]
+        public void TestConcurrentListeners(int numListeners)
+        {
+            _eb.RegisterEvent(_eventControl);
+            _eb.RegisterEvent(_eventSound);
+            _eb.RegisterEvent(_eventControl);
+
+            List<SimpleEventProcessor> listOfProcessors= new List<SimpleEventProcessor>();
+            for (int iter = 0; iter < numListeners; iter++)
+            {
+                var processor= new SimpleEventProcessor();
+                listOfProcessors.Add(processor);
+                _eb.Subscribe(GameEventType.ControlEvent, processor);
+                _eb.Subscribe(GameEventType.SoundEvent, processor);
+            }
+            
+            _eb.ProcessEvents();
+
+            Assert.That(_simpleEventProcessor.EventCounterControl == 2);
+            Assert.That(_simpleEventProcessor.EventCounterSound == 1);
+            foreach (var processor in listOfProcessors)
+            {
+                Assert.That(processor.EventCounterControl == 2);
+                Assert.That(processor.EventCounterSound == 1);
+            }
+        }
+        
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(6)]
+        [TestCase(8)]
+        [TestCase(10)]
+        [TestCase(20)]
+        [TestCase(256)]
+        public void TestConcurrentListenersSequentially(int numListeners)
+        {
+            _eb.RegisterEvent(_eventControl);
+            _eb.RegisterEvent(_eventSound);
+            _eb.RegisterEvent(_eventControl);
+
+            List<SimpleEventProcessor> listOfProcessors= new List<SimpleEventProcessor>();
+            for (int iter = 0; iter < numListeners; iter++)
+            {
+                var processor= new SimpleEventProcessor();
+                listOfProcessors.Add(processor);
+                _eb.Subscribe(GameEventType.ControlEvent, processor);
+                _eb.Subscribe(GameEventType.SoundEvent, processor);
+            }
+            
+            _eb.ProcessEventsSequentially();
+
+            Assert.That(_simpleEventProcessor.EventCounterControl == 2);
+            Assert.That(_simpleEventProcessor.EventCounterSound == 1);
+            foreach (var processor in listOfProcessors)
+            {
+                Assert.That(processor.EventCounterControl == 2);
+                Assert.That(processor.EventCounterSound == 1);
+            }
+        }
     }
 }
