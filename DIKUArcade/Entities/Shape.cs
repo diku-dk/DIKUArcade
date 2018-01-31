@@ -63,7 +63,6 @@ namespace DIKUArcade.Entities {
         /// <summary>
         /// Default Move method which does nothing.
         /// </summary>
-        /// // TODO: If we remove MovementStrategy, this method will no longer be needed?
         public virtual void Move() {
             return;
         }
@@ -93,8 +92,7 @@ namespace DIKUArcade.Entities {
             Rotation = angleRadians;
         }
 
-        // TODO: Rename to 'SetPosition' for more consistency
-        public void MoveToPosition(Vec2F newPosition) {
+        public void SetPosition(Vec2F newPosition) {
             Position = newPosition;
         }
     }
