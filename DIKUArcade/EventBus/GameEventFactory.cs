@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices.WindowsRuntime;
-
-namespace DIKUArcade.EventBus
+﻿namespace DIKUArcade.EventBus
 {
     /// <summary>
     /// Factory methods to generate game events.
