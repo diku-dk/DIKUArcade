@@ -7,7 +7,6 @@ namespace DIKUArcade.States {
 
         private IState stateGamePaused;
 
-        // TODO: Could use Dictionary as public data structure to dynamically add/remove states?
         private IState stateGameRunning;
 
         private IState stateMainMenu;
