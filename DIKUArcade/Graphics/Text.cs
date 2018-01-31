@@ -20,6 +20,11 @@ namespace DIKUArcade.Graphics {
         private string text;
 
         /// <summary>
+        /// The font size for the text string
+        /// </summary>
+        private int fontSize;
+
+        /// <summary>
         /// The position and size of the text
         /// </summary>
         private StationaryShape shape;
@@ -33,6 +38,7 @@ namespace DIKUArcade.Graphics {
             this.text = text;
             shape = new StationaryShape(pos, extent);
             color = System.Drawing.Color.Black;
+            fontSize = 50;
 
             // create a texture id
             textureId = GL.GenTexture();
@@ -74,7 +80,8 @@ namespace DIKUArcade.Graphics {
             using (System.Drawing.Graphics gfx = System.Drawing.Graphics.FromImage(text_bmp))
             {
                 gfx.Clear(Color.Transparent);
-                Font drawFont = new Font("Arial", 48);
+                // TODO: Could create an enumeration for choosing btw different font families!
+                Font drawFont = new Font("Arial", fontSize);
                 SolidBrush drawBrush = new SolidBrush(color);
                 PointF drawPoint = new PointF(shape.Position.X, shape.Position.Y);
 
@@ -98,28 +105,33 @@ namespace DIKUArcade.Graphics {
             GL.BindTexture(TextureTarget.Texture2D, 0); // 0 is invalid texture id
         }
 
+        public StationaryShape GetShape() {
+            return shape;
+        }
+
         #region ChangeTextProperties
 
-        private void ChangeTextColor() {
-            BindTexture();
-
-            UnbindTexture();
-        }
-
-        private void ChangeTextString() {
-            BindTexture();
-
-            UnbindTexture();
-        }
-
+        /// <summary>
+        /// Set the text string for this Text object.
+        /// </summary>
+        /// <param name="newText">The new text string</param>
         public void SetText(string newText) {
             text = newText;
-            //ChangeTextString();
             CreateBitmapTexture();
         }
 
-        public StationaryShape GetShape() {
-            return shape;
+        /// <summary>
+        /// Set the font size for this Text object.
+        /// </summary>
+        /// <param name="newSize">The new font size</param>
+        /// <exception cref="ArgumentOutOfRangeException">Font size must be a
+        /// positive integer.</exception>
+        public void SetFontSize(int newSize) {
+            if (newSize < 0) {
+                throw  new ArgumentOutOfRangeException("Font size must be a positive integer");
+            }
+            fontSize = newSize;
+            CreateBitmapTexture();
         }
 
         /// <summary>
@@ -134,9 +146,7 @@ namespace DIKUArcade.Graphics {
                 vec.Z < 0.0f || vec.Z > 1.0f) {
                 throw new ArgumentOutOfRangeException($"RGB Color values must be between 0 and 1: {vec}");
             }
-
             color = Color.FromArgb((int)vec.X * 255, (int)vec.Y * 255, (int)vec.Z * 255);
-            //ChangeTextColor();
             CreateBitmapTexture();
         }
 
@@ -152,9 +162,7 @@ namespace DIKUArcade.Graphics {
                 vec.Z < 0 || vec.Z > 255) {
                 throw new ArgumentOutOfRangeException($"RGB Color values must be between 0 and 255: {vec}");
             }
-
             color = Color.FromArgb(vec.X, vec.Y, vec.Z);
-            //ChangeTextColor();
             CreateBitmapTexture();
         }
 
@@ -164,16 +172,21 @@ namespace DIKUArcade.Graphics {
         /// <param name="newColor">System.Drawing.Color containing new color channel values.</param>
         public void SetColor(System.Drawing.Color newColor) {
             color = newColor;
-            //ChangeTextColor();
             CreateBitmapTexture();
         }
 
         #endregion
 
         private Matrix4 CreateMatrix() {
-            return  Matrix4.CreateScale(1f, 1f, 1f)*
-                    Matrix4.CreateRotationZ(shape.Rotation)*
-                    Matrix4.CreateTranslation(shape.Position.X, shape.Position.Y, 0.0f);
+            // ensure that rotation is performed around the center of the shape
+            // instead of the bottom-left corner
+            var halfX = shape.Extent.X / 2.0f;
+            var halfY = shape.Extent.Y / 2.0f;
+
+            return Matrix4.CreateTranslation(-halfX, -halfY, 0.0f) *
+                   Matrix4.CreateRotationZ(shape.Rotation) *
+                   Matrix4.CreateTranslation(shape.Position.X + halfX, shape.Position.Y + halfY,
+                       0.0f);
         }
 
         public void RenderText() {
