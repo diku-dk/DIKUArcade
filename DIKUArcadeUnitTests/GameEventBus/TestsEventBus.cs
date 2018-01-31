@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DIKUArcade.EventBus;
 using NUnit.Framework;
 
-namespace GameEventBusTestProject.GameEventBus
+namespace DIKUArcadeUnitTests.GameEventBus
 {
     [TestFixture]
     public class TestsEventBus
@@ -14,12 +14,23 @@ namespace GameEventBusTestProject.GameEventBus
         private GameEvent<object> _eventControl;
         private GameEvent<object> _eventSound;
         
+        /// <summary>
+        /// SimpleGameProcessor is a mock-up processor for testing purposes.
+        /// </summary>
         public class SimpleEventProcessor : IGameEventProcessor<object>
         {
+            /// <summary>
+            /// Counter for number of processes control events.
+            /// </summary>
             public int EventCounterControl;
+            /// <summary>
+            /// Counter for number of processes sound events.
+            /// </summary>
             public int EventCounterSound;
+            
             public void ProcessEvent(GameEventType eventType, GameEvent<object> gameEvent)
             {
+                // Count events using integer fields
                 if(eventType==GameEventType.ControlEvent)
                     EventCounterControl++;
                 if (eventType == GameEventType.SoundEvent)
@@ -27,6 +38,9 @@ namespace GameEventBusTestProject.GameEventBus
             }
         }
 
+        /// <summary>
+        /// Setup event processor mock-up and events.
+        /// </summary>
         [SetUp]
         public void SetupEventBusForTests()
         {
@@ -43,7 +57,10 @@ namespace GameEventBusTestProject.GameEventBus
             _eventSound = GameEventFactory<object>.CreateGameEventForAllProcessors(GameEventType.SoundEvent, this, "Test2", "test",
                 "test");
         }
-
+        
+        /// <summary>
+        /// Generate five events and process them in parallel. Afterwards check the counts of events.
+        /// </summary>
         [Test]
         public void TestEventBusSimpleCount5Test()
         {
@@ -59,6 +76,9 @@ namespace GameEventBusTestProject.GameEventBus
             Assert.That(_simpleEventProcessor.EventCounterSound == 2);
         }
 
+        /// <summary>
+        /// Generate three events and process them in parallel. Afterwards check the counts of events.
+        /// </summary>
         [Test]
         public void TestEventBusSimpleCount3Test()
         {
@@ -72,6 +92,9 @@ namespace GameEventBusTestProject.GameEventBus
             Assert.That(_simpleEventProcessor.EventCounterSound == 1);
         }
 
+        /// <summary>
+        /// Generate five events and process them sequentially. Afterwards check the counts of events.
+        /// </summary>
         [Test]
         public void TestEventBusSimpleCount5TestSeq()
         {
@@ -87,6 +110,9 @@ namespace GameEventBusTestProject.GameEventBus
             Assert.That(_simpleEventProcessor.EventCounterSound == 2);
         }
         
+        /// <summary>
+        /// Generate three events and process them sequentially. Afterwards check the counts of events.
+        /// </summary>
         [Test]
         public void TestEventBusSimpleCount3TestSeq()
         {
@@ -100,6 +126,10 @@ namespace GameEventBusTestProject.GameEventBus
             Assert.That(_simpleEventProcessor.EventCounterSound == 1);
         }
         
+        /// <summary>
+        /// Generate numEventGroups groups of three events and process them in parallel. Afterwards check the counts of events.
+        /// </summary>
+        /// <param name="numEventGroups">Number of event groups used for the test case.</param>
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(3)]
@@ -127,6 +157,10 @@ namespace GameEventBusTestProject.GameEventBus
             Assert.That(_simpleEventProcessor.EventCounterSound == 1*numEventGroups);
         }
         
+        /// <summary>
+        /// Generate numEventGroups groups of three events and process them sequentially. Afterwards check the counts of events.
+        /// </summary>
+        /// <param name="numEventGroups">Number of event groups used for the test case.</param>
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(3)]
@@ -154,6 +188,10 @@ namespace GameEventBusTestProject.GameEventBus
             Assert.That(_simpleEventProcessor.EventCounterSound == 1*numEventGroups);
         }
 
+        /// <summary>
+        /// Generate a fixed number of listeners subscribing to a game event bus and process three events in parallel. Check afterwards that all event have been processed.
+        /// </summary>
+        /// <param name="numListeners">Number of listeners.</param>
         [TestCase(2)]
         [TestCase(3)]
         [TestCase(4)]
@@ -187,7 +225,11 @@ namespace GameEventBusTestProject.GameEventBus
                 Assert.That(processor.EventCounterSound == 1);
             }
         }
-        
+     
+        /// <summary>
+        /// Generate a fixed number of listeners subscribing to a game event bus and process three events sequentially. Check afterwards that all event have been processed.
+        /// </summary>
+        /// <param name="numListeners">Number of listeners.</param>  
         [TestCase(2)]
         [TestCase(3)]
         [TestCase(4)]
@@ -222,6 +264,9 @@ namespace GameEventBusTestProject.GameEventBus
             }
         }
 
+        /// <summary>
+        /// Checks that exceptions are raised if the processor reference is null. Absence of undesired behavior.
+        /// </summary>
         [Test]
         public void TestSubscribeGameEventProcessorArgumentNotNullException()
         {
@@ -231,6 +276,9 @@ namespace GameEventBusTestProject.GameEventBus
                 });
         }
         
+        /// <summary>
+        /// Checks that exceptions are raised if the processor reference is null. Absence of undesired behavior.
+        /// </summary>
         [Test]
         public void TestUnsubscribeGameEventProcessorArgumentNotNullException()
         {
