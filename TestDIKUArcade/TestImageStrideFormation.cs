@@ -22,7 +22,6 @@ namespace TestDIKUArcade {
                 //entities.AddDynamicEntity(shape, img1);
             }
 
-            // TODO: Can we somehow avoid students creating references to OpenTK ??
             win.AddKeyPressEventHandler(delegate(OpenTK.Input.KeyboardKeyEventArgs keyArgs) {
                 if (keyArgs.Key == Key.Left) {
                     entities.Iterate(delegate(Entity entity) {
