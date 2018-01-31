@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using OpenTK.Platform.Windows;
 
 namespace DIKUArcade.EventBus
 {
@@ -41,6 +42,9 @@ namespace DIKUArcade.EventBus
         
         public void Subscribe(GameEventType eventType, IGameEventProcessor<T> gameEventProcessor)
         {
+            if (gameEventProcessor == default(IGameEventProcessor<T>))
+                throw new ArgumentNullException("Parameter gameEventProcessor must not be null.");
+            
             try
             {
                 _eventProcessors?[eventType].Add(gameEventProcessor);
@@ -53,6 +57,9 @@ namespace DIKUArcade.EventBus
 
         public void Unsubscribe(GameEventType eventType, IGameEventProcessor<T> gameEventProcessor)
         {
+            if (gameEventProcessor == default(IGameEventProcessor<T>))
+                throw new ArgumentNullException("Parameter gameEventProcessor must not be null.");
+            
             try
             {
                 _eventProcessors?[eventType].Remove(gameEventProcessor);
@@ -78,7 +85,8 @@ namespace DIKUArcade.EventBus
 
         public void ProcessEvents(IEnumerable<GameEventType> processOrder)
         {
-            if (processOrder == null) return;
+            if(processOrder==default(IEnumerable<GameEventType>))
+                throw new ArgumentNullException();
 
             Parallel.ForEach<GameEventType>(processOrder, new Action<GameEventType, ParallelLoopState>((eventType, loopState) =>
             {
@@ -104,6 +112,9 @@ namespace DIKUArcade.EventBus
 
         public void ProcessEventsSequentially(IEnumerable<GameEventType> processOrder)
         {
+            if(processOrder==default(IEnumerable<GameEventType>))
+                throw new ArgumentNullException();
+            
             foreach(GameEventType eventType in processOrder)
                 {
                     if (_eventQueues != null)
