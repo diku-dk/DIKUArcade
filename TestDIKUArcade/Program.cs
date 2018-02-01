@@ -16,7 +16,8 @@ namespace TestDIKUArcade {
 
             //TestSimpleEntityRendering.MainFunction();
             //TestImageStrideFormation.MainFunction();
-            TestEntityRotation.MainFunction();
+            //TestEntityRotation.MainFunction();
+            TestRenderText.MainFunction();
         }
     }
 }

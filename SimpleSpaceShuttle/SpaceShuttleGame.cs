@@ -51,7 +51,7 @@ namespace SimpleSpaceShuttle {
 
             entities = new EntityContainer();
             player = new Entity(new Shape(), new Image("hej"));
-            player.Shape.MoveToPosition(new Vec2F());
+            player.Shape.SetPosition(new Vec2F());
 
             keyPressed = new bool[512];
             for (int i = 0; i < 512; i++) {
