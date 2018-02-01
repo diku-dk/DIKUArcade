@@ -1,8 +1,5 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
-using System.Drawing.Text;
 using System.IO;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -82,6 +79,8 @@ namespace DIKUArcade.Graphics {
         }
 
         private Matrix4 CreateMatrix(Shape shape) {
+            // ensure that rotation is performed around the center of the shape
+            // instead of the bottom-left corner
             var halfX = shape.Extent.X / 2.0f;
             var halfY = shape.Extent.Y / 2.0f;
 

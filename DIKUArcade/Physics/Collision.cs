@@ -2,8 +2,7 @@
 
 namespace DIKUArcade.Physics {
 
-    // TODO: Rename to 'Collide'?
-    public class CheckCollision {
+    public class Collision {
         public static CollisionData Aabb(DynamicShape actor, Shape shape) {
             var data = new CollisionData();
 

@@ -45,7 +45,6 @@ namespace DIKUArcade.Entities {
         /// <param name="entity"></param>
         public delegate void IteratorMethod(Entity entity);
 
-        // TODO: Rename to 'Iterate'
         public void Iterate(IteratorMethod iterator) {
             var entitiesPendingForRemoval = new List<Entity>(entities.Count);
 
