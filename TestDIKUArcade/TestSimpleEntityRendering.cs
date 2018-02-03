@@ -25,7 +25,6 @@ namespace TestDIKUArcade {
             Entity actor = new Entity(ent, imgs1);
             Entity actor2 = new Entity(ent2, imgs2);
 
-            // TODO: Can we somehow avoid students creating references to OpenTK ??
             win.AddKeyPressEventHandler(delegate(OpenTK.Input.KeyboardKeyEventArgs keyArgs) {
                 if (keyArgs.Key == Key.A) {
                     win.SetClearColor(System.Drawing.Color.Red);

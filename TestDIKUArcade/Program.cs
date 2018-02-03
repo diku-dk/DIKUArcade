@@ -17,7 +17,9 @@ namespace TestDIKUArcade {
             //TestSimpleEntityRendering.MainFunction();
             //TestImageStrideFormation.MainFunction();
             //TestEntityRotation.MainFunction();
-            //var prog = new TestEventBusInputEvents(); { prog.GameLoop(); }
+            //TestRenderText.MainFunction();
+            var prog = new TestEventBusInputEvents(); { prog.GameLoop(); }
+
         }
     }
 }
