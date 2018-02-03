@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
+using DIKUArcade.EventBus;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -26,6 +27,10 @@ namespace DIKUArcade {
     public class Window {
         private static uint screenShotCounter;
 
+        /// <summary>
+        /// Every DIKUArcade.Window instance has its own private
+        /// OpenTK.GameWindow object.
+        /// </summary>
         private GameWindow window;
 
         // This is the signature for a key event handler:
@@ -39,11 +44,9 @@ namespace DIKUArcade {
 
         private string title;
 
+        private GameEventBus<object> eventBus;
+
         private void ActivateThisWindowContext() {
-            //window = new GameWindow((int) this.width, (int) this.height, GraphicsMode.Default,
-            //    this.title, GameWindowFlags.Default, DisplayDevice.Default,
-            //    3, 3, // OpenGL major and minor version
-            //    GraphicsContextFlags.ForwardCompatible);
             window = new GameWindow((int) this.width, (int) this.height);
 
             GL.ClearDepth(1);
@@ -83,6 +86,33 @@ namespace DIKUArcade {
             }
             ActivateThisWindowContext();
         }
+
+        /// <summary>
+        /// Register an event bus to this window instance. The specified
+        /// bus will be used for capturing input events, such as keyboard presses.
+        /// </summary>
+        /// <param name="bus">A GameEventBus to register for this window</param>
+        /// <returns>False if an event bus was already registered, true otherwise.</returns>
+        public bool RegisterEventBus(GameEventBus<object> bus) {
+            if (eventBus != null) {
+                // an event bus was already registered!
+                // TODO: Should it be possible to swap event bus?
+                return false;
+            }
+            eventBus = bus;
+            window.KeyDown += RegisterEvent;
+            window.KeyUp += RegisterEvent;
+            RemoveDefaultKeyEventHandler();
+            return true;
+        }
+
+        private void RegisterEvent(object sender, KeyboardKeyEventArgs e) {
+            var newEvent = GameEventFactory<object>.CreateGameEventForAllProcessors(
+                GameEventType.InputEvent, this, Input.KeyTransformer.GetKeyString(e.Key), "", "");
+            eventBus.RegisterEvent(newEvent);
+        }
+
+        #region WINDOW_RESIZE
 
         private bool resizable = true;
 
@@ -126,6 +156,10 @@ namespace DIKUArcade {
                 defaultResizeHandler = null;
             }
         }
+
+        #endregion WINDOW_RESIZE
+
+        #region KEY_EVENT_HANDLERS
 
         private void AddDefaultKeyEventHandler() {
             if (defaultKeyHandler != null) {
@@ -176,6 +210,8 @@ namespace DIKUArcade {
             //RemoveDefaultKeyEventHandler();
             window.Keyboard.KeyDown += method;
         }
+
+        #endregion KEY_EVENT_HANDLERS
 
         /// <summary>
         /// Check if the Window is still running.
