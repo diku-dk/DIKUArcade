@@ -60,6 +60,7 @@
     <Compile Include="Graphics\ImageStride.cs" />
     <Compile Include="Graphics\Text.cs" />
     <Compile Include="Graphics\Texture.cs" />
+    <Compile Include="Input\KeyTransformer.cs" />
     <Compile Include="Math\Vec2D.cs" />
     <Compile Include="Math\Vec2F.cs" />
     <Compile Include="Math\Vec2I.cs" />
