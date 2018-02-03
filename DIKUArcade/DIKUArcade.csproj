@@ -70,7 +70,7 @@
     <Compile Include="Math\Vec4D.cs" />
     <Compile Include="Math\Vec4F.cs" />
     <Compile Include="Math\Vec4I.cs" />
-    <Compile Include="Physics\CheckCollision.cs" />
+    <Compile Include="Physics\Collision.cs" />
     <Compile Include="Physics\CollisionData.cs" />
     <Compile Include="Physics\NewtonianForce.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
