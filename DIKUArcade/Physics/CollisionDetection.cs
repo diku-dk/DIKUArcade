@@ -14,22 +14,21 @@ namespace DIKUArcade.Physics {
             var InvEntry = new Vec2F();
             var InvExit = new Vec2F();
 
-            //glm::vec2 dynLowerLeft(dyn->pos.x, dyn->pos.y - dyn->height);
-            //glm::vec2 dynUpperRight(dyn->pos.x + dyn->width, dyn->pos.y);
             var dynLowerLeft = new Vec2F(actor.Position.X, actor.Position.Y);
             var dynUpperRight = new Vec2F(actor.Position.X + actor.Extent.X,
                 actor.Position.Y + actor.Extent.Y);
 
-            //glm::vec2 staLowerLeft(sta->pos.x, sta->pos.y - sta->height);
-            //glm::vec2 staUpperRight(sta->pos.x + sta->width, sta->pos.y);
             var staLowerLeft = new Vec2F(shape.Position.X, shape.Position.Y);
             var staUpperRight = new Vec2F(shape.Position.X + shape.Extent.X,
                 shape.Position.Y + shape.Extent.Y);
 
+            // inactive movement in both x- and y-direction
             if(System.Math.Abs(actor.Direction.X) < 1e-6f && System.Math.Abs(actor.Direction.Y) < 1e-6f)
             {
                 return data;
             }
+
+            // inactive movement in x-direction
             else if(System.Math.Abs(actor.Direction.X) < 1e-6f)
             {
                 float entryDistanceY, exitDistanceY;
@@ -43,7 +42,7 @@ namespace DIKUArcade.Physics {
                 {
                     entryDistanceY = staLowerLeft.Y - dynUpperRight.Y;
                     exitDistanceY = staUpperRight.Y - dynLowerLeft.Y;
-                    //data.CollisionDir = CollisionDirection.CollisionDirUp;
+                    data.CollisionDir = CollisionDirection.CollisionDirUp;
                 }
 
                 var entryTimeY = entryDistanceY / actor.Direction.Y;
@@ -62,6 +61,7 @@ namespace DIKUArcade.Physics {
                     return data;
                 }
             }
+            // inactive movement in y-direction
             else if(System.Math.Abs(actor.Direction.Y) < 1e-6f)
             {
                 float entryDistanceX, exitDistanceX;
@@ -75,7 +75,7 @@ namespace DIKUArcade.Physics {
                 {
                     entryDistanceX = staLowerLeft.X - dynUpperRight.X;
                     exitDistanceX = staUpperRight.X - dynLowerLeft.X;
-                    //data.CollisionDir = CollisionDirection.CollisionDirRight;
+                    data.CollisionDir = CollisionDirection.CollisionDirRight;
                 }
 
                 float entryTimeX = entryDistanceX / actor.Direction.X;
@@ -90,6 +90,7 @@ namespace DIKUArcade.Physics {
                 }
                 return data;
             }
+            // active movement in both x- and y-direction
             else
             {
                 var entryDistance = new Vec2F();
