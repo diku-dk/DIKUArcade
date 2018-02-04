@@ -45,6 +45,7 @@
     <Compile Include="GameEventBus\TestEventQueue.cs" />
     <Compile Include="GameEventBus\TestGameEventFactory.cs" />
     <Compile Include="GameEventBus\TestsEventBus.cs" />
+    <Compile Include="Physics\TestAabbCollision.cs" />
     <Compile Include="Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -38,7 +38,7 @@ namespace TestDIKUArcade {
             ((DynamicShape) player.Shape).Direction = dir;
             var collide = CollisionDetection.Aabb((DynamicShape) player.Shape, wall.Shape);
             if (collide.Collision) {
-                Console.WriteLine("CollisionDetection occured");
+                Console.WriteLine($"CollisionDetection occured in direction {collide.CollisionDir}");
                 dir *= collide.DirectionFactor;
             }
             player.Shape.Position += dir;
