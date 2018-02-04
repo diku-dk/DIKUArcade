@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using OpenTK.Input;
 
 namespace DIKUArcade.Input {
@@ -80,50 +79,73 @@ namespace DIKUArcade.Input {
                 ret = "KEY_F12";
                 break;
             case Key.F13:
+                ret = "KEY_F13";
                 break;
             case Key.F14:
+                ret = "KEY_F14";
                 break;
             case Key.F15:
+                ret = "KEY_F15";
                 break;
             case Key.F16:
+                ret = "KEY_F16";
                 break;
             case Key.F17:
+                ret = "KEY_F17";
                 break;
             case Key.F18:
+                ret = "KEY_F18";
                 break;
             case Key.F19:
+                ret = "KEY_F19";
                 break;
             case Key.F20:
+                ret = "KEY_F20";
                 break;
             case Key.F21:
+                ret = "KEY_F21";
                 break;
             case Key.F22:
+                ret = "KEY_F22";
                 break;
             case Key.F23:
+                ret = "KEY_F23";
                 break;
             case Key.F24:
+                ret = "KEY_F24";
                 break;
             case Key.F25:
+                ret = "KEY_F25";
                 break;
             case Key.F26:
+                ret = "KEY_F26";
                 break;
             case Key.F27:
+                ret = "KEY_F27";
                 break;
             case Key.F28:
+                ret = "KEY_F28";
                 break;
             case Key.F29:
+                ret = "KEY_F29";
                 break;
             case Key.F30:
+                ret = "KEY_F30";
                 break;
             case Key.F31:
+                ret = "KEY_F31";
                 break;
             case Key.F32:
+                ret = "KEY_F32";
                 break;
             case Key.F33:
+                ret = "KEY_F33";
                 break;
             case Key.F34:
+                ret = "KEY_F34";
                 break;
             case Key.F35:
+                ret = "KEY_F35";
                 break;
             case Key.Up:
                 ret = "KEY_UP";

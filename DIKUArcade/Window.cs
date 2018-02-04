@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using DIKUArcade.EventBus;
 using OpenTK;
 using OpenTK.Graphics;
@@ -107,8 +108,9 @@ namespace DIKUArcade {
         }
 
         private void RegisterEvent(object sender, KeyboardKeyEventArgs e) {
+            var keyAction = (e.Keyboard.IsKeyDown(e.Key)) ? "KEY_PRESS" : "KEY_RELEASE";
             var newEvent = GameEventFactory<object>.CreateGameEventForAllProcessors(
-                GameEventType.InputEvent, this, Input.KeyTransformer.GetKeyString(e.Key), "", "");
+                GameEventType.InputEvent, this, Input.KeyTransformer.GetKeyString(e.Key), keyAction, "");
             eventBus.RegisterEvent(newEvent);
         }
 
@@ -306,8 +308,25 @@ namespace DIKUArcade {
             bmp.UnlockBits(data);
 
             bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            bmp.Save($"screenShot_{Window.screenShotCounter}.bmp");
-            Window.screenShotCounter++;
+
+            // save screenshot, not in bin/Debug (et sim.), but in a logical place
+            var dir = new DirectoryInfo(Path.GetDirectoryName(
+                System.Reflection.Assembly.GetExecutingAssembly().Location));
+
+            while (dir.Parent.Name != "DIKUArcade") {
+                dir = dir.Parent;
+            }
+
+            // build the save path
+            var saveName = $"screenShot_{Window.screenShotCounter++}.bmp";
+            var folder = Path.Combine(dir.ToString(), "screenShots");
+            var path = Path.Combine(folder, saveName);
+
+            if (!Directory.Exists(folder)) {
+                Directory.CreateDirectory(folder);
+            }
+
+            bmp.Save(path);
         }
     }
 }
