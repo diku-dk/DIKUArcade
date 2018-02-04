@@ -35,6 +35,9 @@ namespace TestDIKUArcade {
             if (type != GameEventType.InputEvent) {
                 throw new InvalidEnumArgumentException("type must be a GameEventType.InputEvent!");
             }
+            if (gameEvent.Parameter1 == "KEY_RELEASE") {
+                return;
+            }
 
             switch (gameEvent.Message) {
             case "KEY_ESCAPE":
@@ -45,6 +48,10 @@ namespace TestDIKUArcade {
                 break;
             case "KEY_RIGHT":
                 win.SetClearColor(Color.ForestGreen);
+                break;
+            case "KEY_F12":
+                Console.WriteLine("F12 pressed");
+                win.SaveScreenShot();
                 break;
             default:
                 break;
