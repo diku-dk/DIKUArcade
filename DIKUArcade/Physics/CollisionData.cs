@@ -12,12 +12,12 @@ namespace DIKUArcade.Physics {
         /// direction vector to get the closest position to the
         /// incident object.
         /// </summary>
-        public float DirectionFactor { get; set; }
+        public Vec2F DirectionFactor { get; set; }
 
         /// <summary>
         /// The surface normal of the incident object, indicating
         /// from which direction a collision has occured.
         /// </summary>
-        public Vec2F SurfaceNormal { get; set; } // might sometimes be useful!
+        public CollisionDirection CollisionDir { get; set; } // might sometimes be useful!
     }
 }

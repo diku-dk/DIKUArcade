@@ -18,7 +18,8 @@ namespace TestDIKUArcade {
             //TestImageStrideFormation.MainFunction();
             //TestEntityRotation.MainFunction();
             //TestRenderText.MainFunction();
-            var prog = new TestEventBusInputEvents(); { prog.GameLoop(); }
+            //var prog = new TestEventBusInputEvents(); { prog.GameLoop(); }
+            var prog = new TestAabbCollision(); { prog.GameLoop(); }
         }
     }
 }
