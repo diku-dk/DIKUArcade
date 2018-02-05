@@ -15,6 +15,7 @@
         MovementEvent,
         SoundEvent,
         StatusEvent,
-        GameStateEvent
+        GameStateEvent,
+        WindowEvent
     }
 }
