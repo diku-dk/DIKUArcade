@@ -15,3 +15,5 @@ _Always do this whenever the original is changed._
 This repository is meant to be private. __NEVER MAKE IT PUBLIC__.
 Also, invite only people, who can be trusted and who has already passed the SoftwareDevelopment course
 at DIKU.
+
+All changes to the game engine __MUST__ be issued to the original, via a pull request.
