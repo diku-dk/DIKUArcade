@@ -12,8 +12,6 @@ namespace DIKUArcade.Input {
             var ret = "";
             switch (key) {
             case Key.Unknown:
-                // TODO: Should this system be able to throw exceptions?
-                throw new InvalidEnumArgumentException($"Key unknown: {key}");
                 break;
             case Key.ShiftLeft:
                 ret = "KEY_SHIFT_LEFT";
@@ -196,7 +194,6 @@ namespace DIKUArcade.Input {
                 ret = "KEY_CAPSLOCK";
                 break;
             case Key.ScrollLock:
-                // TODO: "KEY_SCROLLLOCK" ?
                 ret = "KEY_SCROLL_LOCK";
                 break;
             case Key.PrintScreen:
@@ -404,15 +401,13 @@ namespace DIKUArcade.Input {
                 ret = "KEY_BACKSLASH";
                 break;
             case Key.NonUSBackSlash:
-                throw new InvalidEnumArgumentException($"What is Key NonUSBackSlash??: {key}");
                 ret = "KEY_NONUSBACKSLASH";
                 break;
             case Key.LastKey:
-                throw new InvalidEnumArgumentException($"What is Key LastKey??: {key}");
                 ret = "KEY_LASTKEY";
                 break;
             default:
-                throw new InvalidEnumArgumentException($"Key currently not supported: {key}");
+                break;
             }
 
             return ret;
