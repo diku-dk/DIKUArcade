@@ -1,13 +1,10 @@
-﻿using System.ComponentModel;
-using OpenTK.Input;
+﻿using OpenTK.Input;
 
 namespace DIKUArcade.Input {
     public class KeyTransformer {
         /// <summary>
         /// Transform an OpenTK input key to a DIKUArcade key string
         /// </summary>
-        /// <exception cref="InvalidEnumArgumentException">If a key is not
-        /// registered as a valid key</exception>
         public static string GetKeyString(Key key) {
             var ret = "";
             switch (key) {
