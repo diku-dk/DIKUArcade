@@ -1,5 +1,4 @@
-﻿using DIKUArcade.Strategies;
-using DIKUArcade.Graphics;
+﻿using DIKUArcade.Graphics;
 
 namespace DIKUArcade.Entities {
     public struct Entity {
