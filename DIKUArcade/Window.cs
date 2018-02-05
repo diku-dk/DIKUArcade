@@ -101,8 +101,8 @@ namespace DIKUArcade {
                 return false;
             }
             eventBus = bus;
-            window.KeyDown += RegisterEvent;
-            window.KeyUp += RegisterEvent;
+            window.Keyboard.KeyDown += RegisterEvent;
+            window.Keyboard.KeyUp += RegisterEvent;
             RemoveDefaultKeyEventHandler();
             return true;
         }
@@ -313,8 +313,20 @@ namespace DIKUArcade {
             var dir = new DirectoryInfo(Path.GetDirectoryName(
                 System.Reflection.Assembly.GetExecutingAssembly().Location));
 
-            while (dir.Parent.Name != "DIKUArcade") {
+            // TODO: Place this functionality elsewhere!
+            var loop = true;
+            while (loop) {
                 dir = dir.Parent;
+                foreach (var d in dir.Parent.GetDirectories()) {
+                    if (d.Name == "DIKUArcade") {
+                        loop = false;
+                        break;
+                    }
+                }
+                //Console.WriteLine($"DIR:        {dir}");
+                //Console.WriteLine($"DIR.Name:   {dir.Name}");
+                //Console.WriteLine($"DIR.Parent: {dir.Parent}");
+                //Console.WriteLine($"DIR.Root:   {dir.Root}");
             }
 
             // build the save path

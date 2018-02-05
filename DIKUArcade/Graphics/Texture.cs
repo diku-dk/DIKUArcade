@@ -4,6 +4,8 @@ using System.IO;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using DIKUArcade.Entities;
+using System;
+using System.Linq;
 
 namespace DIKUArcade.Graphics {
     public class Texture {
@@ -22,21 +24,30 @@ namespace DIKUArcade.Graphics {
             // find base path
             var dir = new DirectoryInfo(Path.GetDirectoryName(
                 System.Reflection.Assembly.GetExecutingAssembly().Location));
-            //Console.WriteLine($"DIR:        {dir}");
-            //Console.WriteLine($"DIR.Name:   {dir.Name}");
-            //Console.WriteLine($"DIR.Parent: {dir.Parent}");
-            //Console.WriteLine($"DIR.Root:   {dir.Root}");
-            while (dir.Parent.Name != "DIKUArcade") {
+
+            // TODO: Place this functionality elsewhere!
+            var loop = true;
+            while (loop) {
                 dir = dir.Parent;
+                foreach (var d in dir.Parent.GetDirectories()) {
+                    if (d.Name == "DIKUArcade") {
+                        loop = false;
+                        break;
+                    }
+                }
+                //Console.WriteLine($"DIR:        {dir}");
+                //Console.WriteLine($"DIR.Name:   {dir.Name}");
+                //Console.WriteLine($"DIR.Parent: {dir.Parent}");
+                //Console.WriteLine($"DIR.Root:   {dir.Root}");
             }
 
             // load image file
             var path = Path.Combine(dir.ToString(), filename);
             if (!System.IO.File.Exists(path)) {
-                //Console.WriteLine($"filename is {path}");
-                //Console.WriteLine($"DirectoryName: {System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)}");
-                //Console.WriteLine($"Location: {System.Reflection.Assembly.GetExecutingAssembly().Location}");
-                //Console.WriteLine($"Codebase: {System.Reflection.Assembly.GetExecutingAssembly().CodeBase}");
+                Console.WriteLine($"filename is {path}");
+                Console.WriteLine($"DirectoryName: {System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)}");
+                Console.WriteLine($"Location: {System.Reflection.Assembly.GetExecutingAssembly().Location}");
+                Console.WriteLine($"Codebase: {System.Reflection.Assembly.GetExecutingAssembly().CodeBase}");
                 throw new FileNotFoundException($"Error: The file \"{filename}\" does not exist.");
             }
             Bitmap image = new Bitmap(path);
