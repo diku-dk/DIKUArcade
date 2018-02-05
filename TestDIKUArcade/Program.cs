@@ -1,12 +1,4 @@
-﻿using System;
-using DIKUArcade;
-using DIKUArcade.Entities;
-using DIKUArcade.Graphics;
-using DIKUArcade.Math;
-using DIKUArcade.Strategies;
-using OpenTK.Input;
-
-namespace TestDIKUArcade {
+﻿namespace TestDIKUArcade {
     internal class Program {
         public static void Main(string[] args) {
 
@@ -17,7 +9,10 @@ namespace TestDIKUArcade {
             //TestSimpleEntityRendering.MainFunction();
             //TestImageStrideFormation.MainFunction();
             //TestEntityRotation.MainFunction();
-            TestRenderText.MainFunction();
+            //TestRenderText.MainFunction();
+            //var prog = new TestEventBusInputEvents(); { prog.GameLoop(); }
+            //var prog = new TestAabbCollision(); { prog.GameLoop(); }
+            TestGameTimer.MainFunction();
         }
     }
 }

@@ -8,12 +8,14 @@ namespace DIKUArcadeUnitTests.GameEventBus
     [TestFixture]
     public class TestsEventBus
     {
-        private readonly List<GameEventType> _registeredEvents= new List<GameEventType>() { GameEventType.ControlEvent, GameEventType.SoundEvent, GameEventType.StatusEvent};
+        private readonly List<GameEventType> _registeredEvents= new List<GameEventType>() {
+            GameEventType.ControlEvent, GameEventType.SoundEvent, GameEventType.StatusEvent
+        };
         private GameEventBus<object> _eb;
         private SimpleEventProcessor _simpleEventProcessor;
         private GameEvent<object> _eventControl;
         private GameEvent<object> _eventSound;
-        
+
         /// <summary>
         /// SimpleGameProcessor is a mock-up processor for testing purposes.
         /// </summary>
@@ -27,7 +29,7 @@ namespace DIKUArcadeUnitTests.GameEventBus
             /// Counter for number of processes sound events.
             /// </summary>
             public int EventCounterSound;
-            
+
             public void ProcessEvent(GameEventType eventType, GameEvent<object> gameEvent)
             {
                 // Count events using integer fields
@@ -52,12 +54,12 @@ namespace DIKUArcadeUnitTests.GameEventBus
             _eb.Subscribe(GameEventType.ControlEvent, _simpleEventProcessor);
             _eb.Subscribe(GameEventType.SoundEvent, _simpleEventProcessor);
 
-            _eventControl = GameEventFactory<object>.CreateGameEventForAllProcessors(GameEventType.ControlEvent, this, "Test1", "test",
-                "test");
-            _eventSound = GameEventFactory<object>.CreateGameEventForAllProcessors(GameEventType.SoundEvent, this, "Test2", "test",
-                "test");
+            _eventControl = GameEventFactory<object>.CreateGameEventForAllProcessors(
+                GameEventType.ControlEvent, this, "Test1", "test", "test");
+            _eventSound = GameEventFactory<object>.CreateGameEventForAllProcessors(
+                GameEventType.SoundEvent, this, "Test2", "test", "test");
         }
-        
+
         /// <summary>
         /// Generate five events and process them in parallel. Afterwards check the counts of events.
         /// </summary>
@@ -109,7 +111,7 @@ namespace DIKUArcadeUnitTests.GameEventBus
             Assert.That(_simpleEventProcessor.EventCounterControl == 3);
             Assert.That(_simpleEventProcessor.EventCounterSound == 2);
         }
-        
+
         /// <summary>
         /// Generate three events and process them sequentially. Afterwards check the counts of events.
         /// </summary>
@@ -125,7 +127,7 @@ namespace DIKUArcadeUnitTests.GameEventBus
             Assert.That(_simpleEventProcessor.EventCounterControl == 2);
             Assert.That(_simpleEventProcessor.EventCounterSound == 1);
         }
-        
+
         /// <summary>
         /// Generate numEventGroups groups of three events and process them in parallel. Afterwards check the counts of events.
         /// </summary>
@@ -156,7 +158,7 @@ namespace DIKUArcadeUnitTests.GameEventBus
             Assert.That(_simpleEventProcessor.EventCounterControl == 2*numEventGroups);
             Assert.That(_simpleEventProcessor.EventCounterSound == 1*numEventGroups);
         }
-        
+
         /// <summary>
         /// Generate numEventGroups groups of three events and process them sequentially. Afterwards check the counts of events.
         /// </summary>
@@ -214,7 +216,7 @@ namespace DIKUArcadeUnitTests.GameEventBus
                 _eb.Subscribe(GameEventType.ControlEvent, processor);
                 _eb.Subscribe(GameEventType.SoundEvent, processor);
             }
-            
+
             _eb.ProcessEvents();
 
             Assert.That(_simpleEventProcessor.EventCounterControl == 2);
@@ -225,11 +227,11 @@ namespace DIKUArcadeUnitTests.GameEventBus
                 Assert.That(processor.EventCounterSound == 1);
             }
         }
-     
+
         /// <summary>
         /// Generate a fixed number of listeners subscribing to a game event bus and process three events sequentially. Check afterwards that all event have been processed.
         /// </summary>
-        /// <param name="numListeners">Number of listeners.</param>  
+        /// <param name="numListeners">Number of listeners.</param>
         [TestCase(2)]
         [TestCase(3)]
         [TestCase(4)]
@@ -252,7 +254,7 @@ namespace DIKUArcadeUnitTests.GameEventBus
                 _eb.Subscribe(GameEventType.ControlEvent, processor);
                 _eb.Subscribe(GameEventType.SoundEvent, processor);
             }
-            
+
             _eb.ProcessEventsSequentially();
 
             Assert.That(_simpleEventProcessor.EventCounterControl == 2);
@@ -275,7 +277,7 @@ namespace DIKUArcadeUnitTests.GameEventBus
                     _eb.Subscribe(GameEventType.ControlEvent, default(IGameEventProcessor<object>));
                 });
         }
-        
+
         /// <summary>
         /// Checks that exceptions are raised if the processor reference is null. Absence of undesired behavior.
         /// </summary>
