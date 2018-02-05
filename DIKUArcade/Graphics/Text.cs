@@ -201,7 +201,6 @@ namespace DIKUArcade.Graphics {
             GL.Color4(1f,1f,1f,1f);
             GL.Begin(PrimitiveType.Quads);
 
-            // TODO: Should y-values be inverted?
             GL.TexCoord2(0, 1); GL.Vertex2(0.0f, 0.0f);                      // Top Left
             GL.TexCoord2(0, 0); GL.Vertex2(0.0f, shape.Extent.Y);            // Bottom Left
             GL.TexCoord2(1, 0); GL.Vertex2(shape.Extent.X, shape.Extent.Y);  // Bottom Right

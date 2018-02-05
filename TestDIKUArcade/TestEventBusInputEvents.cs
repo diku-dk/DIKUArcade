@@ -6,7 +6,7 @@ using DIKUArcade;
 using DIKUArcade.EventBus;
 
 namespace TestDIKUArcade {
-    public class TestEventBusInputEvents : DIKUArcade.EventBus.IGameEventProcessor<object> {
+    public class TestEventBusInputEvents : IGameEventProcessor<object> {
         private Window win;
         private GameEventBus<object> bus;
 
