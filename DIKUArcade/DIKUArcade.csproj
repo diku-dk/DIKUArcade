@@ -60,6 +60,7 @@
     <Compile Include="Graphics\ImageStride.cs" />
     <Compile Include="Graphics\Text.cs" />
     <Compile Include="Graphics\Texture.cs" />
+    <Compile Include="Input\KeyTransformer.cs" />
     <Compile Include="Math\Vec2D.cs" />
     <Compile Include="Math\Vec2F.cs" />
     <Compile Include="Math\Vec2I.cs" />
@@ -69,14 +70,12 @@
     <Compile Include="Math\Vec4D.cs" />
     <Compile Include="Math\Vec4F.cs" />
     <Compile Include="Math\Vec4I.cs" />
-    <Compile Include="Physics\Collision.cs" />
+    <Compile Include="Physics\CollisionDetection.cs" />
     <Compile Include="Physics\CollisionData.cs" />
+    <Compile Include="Physics\CollisionDirection.cs" />
     <Compile Include="Physics\NewtonianForce.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="States\IState.cs" />
-    <Compile Include="States\StateMachine.cs" />
-    <Compile Include="States\States.cs" />
-    <Compile Include="Strategies\MovementStrategy.cs" />
+    <Compile Include="Timers\GameTimer.cs" />
     <Compile Include="Timers\StaticTimer.cs" />
     <Compile Include="Utilities\RandomGenerator.cs" />
     <Compile Include="Window.cs" />
