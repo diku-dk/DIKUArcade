@@ -9,6 +9,7 @@ using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 namespace DIKUArcade.Graphics {
     public class Text {
+        // TODO: Add method for centering text (vertically, horizontally) within its shape!
         /// <summary>
         /// OpenGL texture handle
         /// </summary>
@@ -83,6 +84,8 @@ namespace DIKUArcade.Graphics {
                 // TODO: Could create an enumeration for choosing btw different font families!
                 Font drawFont = new Font("Arial", fontSize);
                 SolidBrush drawBrush = new SolidBrush(color);
+
+                // TODO: Maybe we should not use shape.Position here, because different coordinate system !!?
                 PointF drawPoint = new PointF(shape.Position.X, shape.Position.Y);
 
                 gfx.DrawString(text, drawFont, drawBrush, drawPoint); // Draw as many strings as you need
@@ -146,7 +149,7 @@ namespace DIKUArcade.Graphics {
                 vec.Z < 0.0f || vec.Z > 1.0f) {
                 throw new ArgumentOutOfRangeException($"RGB Color values must be between 0 and 1: {vec}");
             }
-            color = Color.FromArgb((int)vec.X * 255, (int)vec.Y * 255, (int)vec.Z * 255);
+            color = Color.FromArgb((int)(vec.X * 255.0f), (int)(vec.Y * 255.0f), (int)(vec.Z * 255.0f));
             CreateBitmapTexture();
         }
 
