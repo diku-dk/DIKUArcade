@@ -22,8 +22,8 @@ namespace DIKUArcade {
     }
 
     /// <summary>
-    ///     Create an OpenTK window wrapper, where we only show
-    ///     relevant data members and hide unneeded functionality.
+    /// Create an OpenTK window wrapper, where we only show
+    /// relevant data members and hide unneeded functionality.
     /// </summary>
     public class Window {
         private static uint screenShotCounter;
