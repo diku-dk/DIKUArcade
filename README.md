@@ -1,19 +1,21 @@
-# DIKUArcade-solutions
-Contains a DIKUArcade clone, as well as reference solutions for games used in SoftwareDevelopment course at DIKU.
+# DIKUArcade
 
-### Reference Games
-* Galaga
-* SpaceTaxi (yet to be added)
+DIKUArcade is the Game Engine, specifially created for the SoftwareDevelopment course at DIKU 2018.
 
-## Rules:
-By using the command `git push public <branch>`, stuff can be publised to the original DIKUArcade
-at https://github.com/diku-dk/DIKUArcade/. __THIS IS HIGHLY DISCOURAGED__
+### Features
 
-By using the command `git pull public master`, the latest changes from the engine can be fetched.
-_Always do this whenever the original is changed._
+* A comprehensible API, designed for students with minimal programming experience
+* An event-bus system, designed for issuing commands in parallel
+* 2D-rendering using OpenGL 2.0's fixed-function pipeline
 
-This repository is meant to be private. __NEVER MAKE IT PUBLIC__.
-Also, invite only people, who can be trusted and who has already passed the SoftwareDevelopment course
-at DIKU.
+### Development
 
-All changes to the game engine __MUST__ be issued to the original, via a pull request.
+DIKUArcade is still in development, but regarded fully-functional and ready-for-use.
+If you run into a problem, or wish for a feature to be added, feel free to post an issue.
+
+### List of contributors
+
+Boris Düdder
+Oleksandr Shturmov
+Alexander Christensen
+(you?)
