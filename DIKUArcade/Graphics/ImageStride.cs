@@ -18,7 +18,7 @@ namespace DIKUArcade.Graphics {
 
         private List<Texture> textures;
         private readonly int maxImageCount;
-        private int currentImageCount = 0;
+        private int currentImageCount;
 
         /// <summary>
         /// This value is only added for random animation offset,
@@ -42,7 +42,8 @@ namespace DIKUArcade.Graphics {
 
             int imgs = imageFiles.Length;
             if (imgs == 0) {
-                throw new ArgumentNullException("at least one image file must be specified");
+                // ReSharper disable once NotResolvedInText
+                throw new ArgumentNullException("At least one image file must be specified");
             }
             maxImageCount = imgs - 1;
             currentImageCount = RandomGenerator.Generator.Next(imgs);
@@ -69,6 +70,7 @@ namespace DIKUArcade.Graphics {
 
             int imgs = images.Length;
             if (imgs == 0) {
+                // ReSharper disable once NotResolvedInText
                 throw new ArgumentNullException("at least one image file must be specified");
             }
 

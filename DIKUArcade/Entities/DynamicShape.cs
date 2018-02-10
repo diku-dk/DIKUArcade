@@ -7,10 +7,16 @@ namespace DIKUArcade.Entities {
         /// </summary>
         public Vec2F Direction;
 
-        public DynamicShape(int posX, int posY, int width, int height) {
+        public DynamicShape(float posX, float posY, float width, float height) {
             Position = new Vec2F(posX, posY);
             Direction = new Vec2F();
-            Extent = new Vec2F();
+            Extent = new Vec2F(width, height);
+        }
+
+        public DynamicShape(float posX, float posY, float width, float height,
+            float dirX, float dirY) : this(posX, posY, width, height) {
+            Direction.X = dirX;
+            Direction.Y = dirY;
         }
 
         public DynamicShape(Vec2F pos, Vec2F extent) {
@@ -26,7 +32,7 @@ namespace DIKUArcade.Entities {
         }
 
         public void ChangeDirection(Vec2F dir) {
-            this.Direction = dir;
+            Direction = dir;
         }
 
 
@@ -35,7 +41,7 @@ namespace DIKUArcade.Entities {
         /// this object's direction to its position.
         /// </summary>
         public override void Move() {
-            this.Position += this.Direction;
+            Position += Direction;
         }
 
         public static explicit operator StationaryShape(DynamicShape obj) {

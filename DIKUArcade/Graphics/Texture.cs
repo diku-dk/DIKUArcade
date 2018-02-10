@@ -43,9 +43,9 @@ namespace DIKUArcade.Graphics {
 
             // load image file
             var path = Path.Combine(dir.ToString(), filename);
-            if (!System.IO.File.Exists(path)) {
+            if (!File.Exists(path)) {
                 Console.WriteLine($"filename is {path}");
-                Console.WriteLine($"DirectoryName: {System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)}");
+                Console.WriteLine($"DirectoryName: {Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)}");
                 Console.WriteLine($"Location: {System.Reflection.Assembly.GetExecutingAssembly().Location}");
                 Console.WriteLine($"Codebase: {System.Reflection.Assembly.GetExecutingAssembly().CodeBase}");
                 throw new FileNotFoundException($"Error: The file \"{filename}\" does not exist.");
@@ -82,7 +82,7 @@ namespace DIKUArcade.Graphics {
         }
 
         private void BindTexture() {
-            GL.BindTexture(TextureTarget.Texture2D, this.textureId);
+            GL.BindTexture(TextureTarget.Texture2D, textureId);
         }
 
         private void UnbindTexture() {
@@ -103,7 +103,7 @@ namespace DIKUArcade.Graphics {
 
         public void Render(Shape shape) {
             // bind this texture
-            this.BindTexture();
+            BindTexture();
 
             // render this texture
             Matrix4 modelViewMatrix = CreateMatrix(shape);
@@ -121,7 +121,7 @@ namespace DIKUArcade.Graphics {
             GL.End();
 
             // unbind this texture
-            this.UnbindTexture();
+            UnbindTexture();
         }
     }
 }

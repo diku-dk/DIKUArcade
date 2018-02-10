@@ -11,9 +11,6 @@ namespace DIKUArcade.Physics {
                 CollisionDir = CollisionDirection.CollisionDirUnchecked
             };
 
-            var InvEntry = new Vec2F();
-            var InvExit = new Vec2F();
-
             var dynLowerLeft = new Vec2F(actor.Position.X, actor.Position.Y);
             var dynUpperRight = new Vec2F(actor.Position.X + actor.Extent.X,
                 actor.Position.Y + actor.Extent.Y);

@@ -25,7 +25,7 @@ namespace TestDIKUArcade {
             Entity actor = new Entity(ent, imgs1);
             Entity actor2 = new Entity(ent2, imgs2);
 
-            win.AddKeyPressEventHandler(delegate(OpenTK.Input.KeyboardKeyEventArgs keyArgs) {
+            win.AddKeyPressEventHandler(delegate(KeyboardKeyEventArgs keyArgs) {
                 if (keyArgs.Key == Key.A) {
                     win.SetClearColor(System.Drawing.Color.Red);
                 }

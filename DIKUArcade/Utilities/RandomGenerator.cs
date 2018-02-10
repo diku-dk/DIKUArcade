@@ -2,7 +2,7 @@
 
 namespace DIKUArcade.Utilities {
     public class RandomGenerator {
-        public static System.Random Generator { get; private set; }
+        public static Random Generator { get; private set; }
 
         static RandomGenerator() {
             if (RandomGenerator.Generator == null) {

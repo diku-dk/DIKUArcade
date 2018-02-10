@@ -7,9 +7,9 @@ namespace TestDIKUArcade {
     public class TestRenderText {
 
         public static void MainFunction() {
-            var win = new DIKUArcade.Window("TestRenderText", 500, AspectRatio.R1X1);
+            var win = new Window("TestRenderText", 500, AspectRatio.R1X1);
             //win.SetClearColor(new Vec3I(128, 56, 173));
-            win.SetClearColor(System.Drawing.Color.DarkOliveGreen);
+            win.SetClearColor(Color.DarkOliveGreen);
 
             var text = new Text("MIN TEXT", new Vec2F(0.25f, 0.25f), new Vec2F(0.25f, 0.25f));
             text.SetColor(Color.Crimson);
