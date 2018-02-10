@@ -7,7 +7,7 @@ namespace DIKUArcade.Graphics {
         private Texture texture;
 
         public Image(string imageFile) {
-            this.texture = new Texture(imageFile);
+            texture = new Texture(imageFile);
         }
 
         public void Render(Shape shape) {

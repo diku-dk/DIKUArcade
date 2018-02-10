@@ -29,7 +29,7 @@
             this.fps = fps;
             this.ups = ups;
 
-            timeLimit = 1.0 / (double) fps;
+            timeLimit = 1.0 / fps;
             lastTime = StaticTimer.GetCurrentTimeFrame();
             timer = lastTime;
             deltaTime = 0.0;

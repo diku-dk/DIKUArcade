@@ -33,12 +33,12 @@ namespace DIKUArcade.Graphics {
         /// <summary>
         /// The color for the text
         /// </summary>
-        private System.Drawing.Color color;
+        private Color color;
 
         public Text(string text, Vec2F pos, Vec2F extent) {
             this.text = text;
             shape = new StationaryShape(pos, extent);
-            color = System.Drawing.Color.Black;
+            color = Color.Black;
             fontSize = 50;
 
             // create a texture id
@@ -72,13 +72,13 @@ namespace DIKUArcade.Graphics {
         private void CreateBitmapTexture() {
             BindTexture();
 
-            Bitmap text_bmp = new Bitmap(500, 500); // match window size
+            Bitmap textBmp = new Bitmap(500, 500); // match window size
 
             // just allocate memory, so we can update efficiently using TexSubImage2D
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, text_bmp.Width, text_bmp.Height, 0,
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, textBmp.Width, textBmp.Height, 0,
                 PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
 
-            using (System.Drawing.Graphics gfx = System.Drawing.Graphics.FromImage(text_bmp))
+            using (System.Drawing.Graphics gfx = System.Drawing.Graphics.FromImage(textBmp))
             {
                 gfx.Clear(Color.Transparent);
                 // TODO: Could create an enumeration for choosing btw different font families!
@@ -91,17 +91,17 @@ namespace DIKUArcade.Graphics {
                 gfx.DrawString(text, drawFont, drawBrush, drawPoint); // Draw as many strings as you need
             }
 
-            BitmapData data = text_bmp.LockBits(new Rectangle(0, 0, text_bmp.Width, text_bmp.Height),
+            BitmapData data = textBmp.LockBits(new Rectangle(0, 0, textBmp.Width, textBmp.Height),
                 ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, text_bmp.Width, text_bmp.Height, 0,
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, textBmp.Width, textBmp.Height, 0,
                 PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
-            text_bmp.UnlockBits(data);
+            textBmp.UnlockBits(data);
 
             UnbindTexture();
         }
 
         private void BindTexture() {
-            GL.BindTexture(TextureTarget.Texture2D, this.textureId);
+            GL.BindTexture(TextureTarget.Texture2D, textureId);
         }
 
         private void UnbindTexture() {
@@ -131,6 +131,7 @@ namespace DIKUArcade.Graphics {
         /// positive integer.</exception>
         public void SetFontSize(int newSize) {
             if (newSize < 0) {
+                // ReSharper disable once NotResolvedInText
                 throw  new ArgumentOutOfRangeException("Font size must be a positive integer");
             }
             fontSize = newSize;
@@ -143,7 +144,7 @@ namespace DIKUArcade.Graphics {
         /// <param name="vec">Vec3F containing the RGB color values.</param>
         /// <exception cref="ArgumentOutOfRangeException">Normalized color values must be
         /// between 0 and 1.</exception>
-        public void SetColor(Math.Vec3F vec) {
+        public void SetColor(Vec3F vec) {
             if (vec.X < 0.0f || vec.X > 1.0f ||
                 vec.Y < 0.0f || vec.Y > 1.0f ||
                 vec.Z < 0.0f || vec.Z > 1.0f) {
@@ -159,7 +160,7 @@ namespace DIKUArcade.Graphics {
         /// <param name="vec">Vec3I containing the RGB color values.</param>
         /// <exception cref="ArgumentOutOfRangeException">Color values must be
         /// between 0 and 255.</exception>
-        public void SetColor(Math.Vec3I vec) {
+        public void SetColor(Vec3I vec) {
             if (vec.X < 0 || vec.X > 255 ||
                 vec.Y < 0 || vec.Y > 255 ||
                 vec.Z < 0 || vec.Z > 255) {

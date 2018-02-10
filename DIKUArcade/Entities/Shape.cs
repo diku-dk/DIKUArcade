@@ -63,9 +63,7 @@ namespace DIKUArcade.Entities {
         /// <summary>
         /// Default Move method which does nothing.
         /// </summary>
-        public virtual void Move() {
-            return;
-        }
+        public virtual void Move() {}
 
         public void Move(Vec2F mover) {
             Position += mover;
@@ -80,8 +78,8 @@ namespace DIKUArcade.Entities {
         }
 
         public void Move(float x, float y) {
-            this.MoveX(x);
-            this.MoveY(y);
+            MoveX(x);
+            MoveY(y);
         }
 
         public void Rotate(float angleRadians) {

@@ -9,7 +9,7 @@ using DIKUArcade.Math;
 using DIKUArcade.Physics;
 
 namespace TestDIKUArcade {
-    public class TestAabbCollision : DIKUArcade.EventBus.IGameEventProcessor<object> {
+    public class TestAabbCollision : IGameEventProcessor<object> {
         private Window win;
         private GameEventBus<object> bus;
         private Entity player;

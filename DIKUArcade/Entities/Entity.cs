@@ -11,7 +11,7 @@ namespace DIKUArcade.Entities {
         }
 
         public void RenderEntity() {
-            Image.Render(this.Shape);
+            Image.Render(Shape);
         }
     }
 }

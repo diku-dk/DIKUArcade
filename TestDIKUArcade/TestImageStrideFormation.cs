@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using DIKUArcade;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
@@ -17,12 +16,12 @@ namespace TestDIKUArcade {
 
             var entities = new EntityContainer(10);
             for (int i = 0; i < 10; i++) {
-                var shape = new DynamicShape(new Vec2F((float)i * 0.1f, 0.9f), new Vec2F(0.1f, 0.1f));
+                var shape = new DynamicShape(new Vec2F(i * 0.1f, 0.9f), new Vec2F(0.1f, 0.1f));
                 entities.AddDynamicEntity(shape, new ImageStride(250, img1, img2));
                 //entities.AddDynamicEntity(shape, img1);
             }
 
-            win.AddKeyPressEventHandler(delegate(OpenTK.Input.KeyboardKeyEventArgs keyArgs) {
+            win.AddKeyPressEventHandler(delegate(KeyboardKeyEventArgs keyArgs) {
                 if (keyArgs.Key == Key.Left) {
                     entities.Iterate(delegate(Entity entity) {
                         entity.Shape.MoveX(-0.05f);

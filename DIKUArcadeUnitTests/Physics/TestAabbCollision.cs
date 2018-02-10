@@ -2,7 +2,6 @@
 using DIKUArcade.Math;
 using DIKUArcade.Physics;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace DIKUArcadeUnitTests.Physics {
     [TestFixture]

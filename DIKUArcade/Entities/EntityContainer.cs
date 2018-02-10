@@ -5,14 +5,12 @@ namespace DIKUArcade.Entities {
     public class EntityContainer {
 
         private List<Entity> entities;
-        private readonly List<Entity> pendingEntities;
 
         public EntityContainer(int size) {
             entities = new List<Entity>(size);
-            pendingEntities = new List<Entity>(size);
         }
 
-        public EntityContainer() : this(100) { }
+        public EntityContainer() : this(50) { }
 
         public void AddStationaryEntity(StationaryShape ent, IBaseImage img) {
             entities.Add(new Entity(ent, img));
@@ -29,9 +27,6 @@ namespace DIKUArcade.Entities {
                     newList.Add(ent);
                 }
             }
-            foreach (var ent in pendingEntities) {
-                newList.Add(ent);
-            }
             entities = newList;
         }
 
@@ -44,8 +39,6 @@ namespace DIKUArcade.Entities {
         public delegate void IteratorMethod(Entity entity);
 
         public void Iterate(IteratorMethod iterator) {
-            var entitiesPendingForRemoval = new List<Entity>(entities.Count);
-
             // iterate through entities
             foreach (var entity in entities) {
                 iterator(entity);
