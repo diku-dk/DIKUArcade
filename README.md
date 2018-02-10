@@ -17,7 +17,9 @@ DIKUArcade is a simple 2D Game Engine, created specifically for the SoftwareDeve
 ### Development
 
 DIKUArcade is still in development, but regarded fully-functional and ready-for-use.
-If you run into a problem, or wish for a feature to be added, feel free to post an [issue](https://github.com/diku-dk/DIKUArcade/issues).
+If you run into a problem, or wish for a feature to be added, feel free to post an
+[issue](https://github.com/diku-dk/DIKUArcade/issues).
+Pull-requests are also very welcome.
 
 ### List of contributors
 
