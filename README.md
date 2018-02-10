@@ -1,12 +1,18 @@
 # DIKUArcade
 
-DIKUArcade is the Game Engine, specifially created for the SoftwareDevelopment course at DIKU 2018.
+DIKUArcade is a simple 2D Game Engine, created specifically for the SoftwareDevelopment course at DIKU 2018.
 
 ### Features
 
 * A comprehensible API, designed for students with minimal programming experience
 * An event-bus system, designed for issuing commands in parallel
 * 2D-rendering using OpenGL 2.0's fixed-function pipeline
+
+### Planned features
+
+* An audio engine for effects and music
+* Support for OpenGL 3.3 for a more optimized rendering pipeline
+* Newtonian force functions for artificial gravity
 
 ### Development
 
@@ -15,7 +21,7 @@ If you run into a problem, or wish for a feature to be added, feel free to post 
 
 ### List of contributors
 
-Boris Düdder
-Oleksandr Shturmov
-Alexander Christensen
-(you?)
+Boris Düdder<br>
+Oleksandr Shturmov<br>
+Alexander Christensen<br>
+_(your name here.. ?)_
