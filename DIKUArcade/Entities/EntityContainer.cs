@@ -54,5 +54,12 @@ namespace DIKUArcade.Entities {
                 entity.Image.Render(entity.Shape);
             }
         }
+
+        /// <summary>
+        /// Remove all entities from this container
+        /// </summary>
+        public void ClearContainer() {
+            entities.Clear();
+        }
     }
 }
