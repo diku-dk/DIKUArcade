@@ -13,6 +13,7 @@ DIKUArcade is a simple 2D Game Engine, created specifically for the SoftwareDeve
 * An audio engine for effects and music
 * Support for OpenGL 3.3 for a more optimized rendering pipeline
 * Newtonian force functions for artificial gravity
+* More throrough unit-testing
 
 ### Development
 
