@@ -26,4 +26,4 @@ Pull-requests are also very welcome.
 Boris Düdder<br>
 Oleksandr Shturmov<br>
 Alexander Christensen<br>
-_(your name here.. ?)_
+_(your name here... ?)_
