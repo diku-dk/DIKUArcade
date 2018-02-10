@@ -50,8 +50,8 @@ namespace DIKUArcade {
 
         private GameEventBus<object> eventBus;
 
-        private void ActivateThisWindowContext() {
-            window = new GameWindow((int) width, (int) height);
+        private void ActivateThisWindowContext(string title) {
+            window = new GameWindow((int) width, (int) height) {Title = title};
 
             GL.ClearDepth(1);
             GL.ClearColor(Color.Black);
@@ -68,14 +68,12 @@ namespace DIKUArcade {
         {
             this.width = width;
             this.height = height;
-            Title = title;
             isRunning = true;
-            ActivateThisWindowContext();
+            ActivateThisWindowContext(title);
         }
 
         public Window(string title, uint height, AspectRatio aspect) {
             this.height = height;
-            Title = title;
             switch (aspect) {
             case AspectRatio.R1X1:
                 width = this.height;
@@ -89,7 +87,7 @@ namespace DIKUArcade {
             default:
                 throw new InvalidEnumArgumentException();
             }
-            ActivateThisWindowContext();
+            ActivateThisWindowContext(title);
         }
 
         /// <summary>
