@@ -36,19 +36,22 @@ namespace DIKUArcade {
 
         // This is the signature for a key event handler:
         //private delegate void KeyEventHandler(object sender, KeyboardKeyEventArgs e);
-        private EventHandler<KeyboardKeyEventArgs> defaultKeyHandler = null;
-        private EventHandler<EventArgs> defaultResizeHandler = null;
+        private EventHandler<KeyboardKeyEventArgs> defaultKeyHandler;
+        private EventHandler<EventArgs> defaultResizeHandler;
 
         private bool isRunning;
 
         private uint width, height;
 
-        private string title;
+        public string Title {
+            get { return window.Title; }
+            set { window.Title = value; }
+        }
 
         private GameEventBus<object> eventBus;
 
         private void ActivateThisWindowContext() {
-            window = new GameWindow((int) this.width, (int) this.height);
+            window = new GameWindow((int) width, (int) height);
 
             GL.ClearDepth(1);
             GL.ClearColor(Color.Black);
@@ -65,13 +68,14 @@ namespace DIKUArcade {
         {
             this.width = width;
             this.height = height;
-            this.title = title;
+            Title = title;
             isRunning = true;
             ActivateThisWindowContext();
         }
 
         public Window(string title, uint height, AspectRatio aspect) {
             this.height = height;
+            Title = title;
             switch (aspect) {
             case AspectRatio.R1X1:
                 width = this.height;
@@ -139,7 +143,7 @@ namespace DIKUArcade {
                 return;
             }
 
-            defaultResizeHandler = delegate(object sender, EventArgs args) {
+            defaultResizeHandler = delegate {
                 GL.Viewport(0, 0, window.Width, window.Height);
                 width = (uint) window.Width;
                 height = (uint) window.Height;
@@ -237,6 +241,8 @@ namespace DIKUArcade {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
+        #region SET_CLEAR_COLOR
+
         /// <summary>
         /// Set color to be used as clear color when using the Window.Clear() method.
         /// </summary>
@@ -247,9 +253,27 @@ namespace DIKUArcade {
             if (vec.X < 0.0f || vec.X > 1.0f ||
                 vec.Y < 0.0f || vec.Y > 1.0f ||
                 vec.Z < 0.0f || vec.Z > 1.0f) {
-                throw new ArgumentOutOfRangeException($"RGB Color values must be between 0 and 1: {vec}");
+                throw new ArgumentOutOfRangeException(
+                    $"Normalized RGB Color values must be between 0 and 1: {vec}");
             }
             GL.ClearColor(vec.X, vec.Y, vec.Z, 1.0f);
+        }
+
+        /// <summary>
+        /// Set color to be used as clear color when using the Window.Clear() method.
+        /// </summary>
+        /// <param name="vec">Vec4F containing the RGB color values.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Normalized color values must be
+        /// between 0 and 1.</exception>
+        public void SetClearColor(Math.Vec4F vec) {
+            if (vec.X < 0.0f || vec.X > 1.0f ||
+                vec.Y < 0.0f || vec.Y > 1.0f ||
+                vec.Z < 0.0f || vec.Z > 1.0f ||
+                vec.W < 0.0f || vec.W > 1.0f) {
+                throw new ArgumentOutOfRangeException(
+                    $"Normalized RGBA Color values must be between 0 and 1: {vec}");
+            }
+            GL.ClearColor(vec.X, vec.Y, vec.Z, vec.W);
         }
 
         /// <summary>
@@ -261,18 +285,111 @@ namespace DIKUArcade {
             if (vec.X < 0 || vec.X > 255 ||
                 vec.Y < 0 || vec.Y > 255 ||
                 vec.Z < 0 || vec.Z > 255) {
-                throw new ArgumentOutOfRangeException($"RGB Color values must be between 0 and 255: {vec}");
+                throw new ArgumentOutOfRangeException(
+                    $"RGB Color values must be between 0 and 255: {vec}");
             }
-            GL.ClearColor((float)vec.X / 255.0f, (float)vec.Y / 255.0f, (float)vec.Z / 255.0f, 1.0f);
+            GL.ClearColor(vec.X / 255.0f, vec.Y / 255.0f, vec.Z / 255.0f, 1.0f);
+        }
+
+        /// <summary>
+        /// Set color to be used as clear color when using the Window.Clear() method.
+        /// </summary>
+        /// <param name="vec">Vec4I containing the RGB color values.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Color values must be between 0 and 255.</exception>
+        public void SetClearColor(Math.Vec4I vec) {
+            if (vec.X < 0 || vec.X > 255 ||
+                vec.Y < 0 || vec.Y > 255 ||
+                vec.Z < 0 || vec.Z > 255 ||
+                vec.W < 0 || vec.W > 255) {
+                throw new ArgumentOutOfRangeException(
+                    $"RGBA Color values must be between 0 and 255: {vec}");
+            }
+            GL.ClearColor(vec.X / 255.0f, vec.Y / 255.0f, vec.Z / 255.0f, vec.W / 255.0f);
+        }
+
+        /// <summary>
+        /// Set color to be used as clear color when using the Window.Clear() method.
+        /// </summary>
+        /// <param name="r">red channel value</param>
+        /// <param name="g">green channel value</param>
+        /// <param name="b">blue channel value</param>
+        /// <exception cref="ArgumentOutOfRangeException">Normalized color values must be
+        /// between 0 and 1.</exception>
+        public void SetClearColor(float r, float g, float b) {
+            if (r < 0.0f || r > 1.0f ||
+                g < 0.0f || g > 1.0f ||
+                b < 0.0f || b > 1.0f) {
+                throw new ArgumentOutOfRangeException(
+                    $"Normalized RGB Color values must be between 0 and 1: ({r},{g},{b})");
+            }
+            GL.ClearColor(r, g, b, 1.0f);
+        }
+
+        /// <summary>
+        /// Set color to be used as clear color when using the Window.Clear() method.
+        /// </summary>
+        /// <param name="r">red channel value</param>
+        /// <param name="g">green channel value</param>
+        /// <param name="b">blue channel value</param>
+        /// <param name="a">alpha channel value</param>
+        /// <exception cref="ArgumentOutOfRangeException">Normalized color values must be
+        /// between 0 and 1.</exception>
+        public void SetClearColor(float r, float g, float b, float a) {
+            if (r < 0.0f || r > 1.0f ||
+                g < 0.0f || g > 1.0f ||
+                b < 0.0f || b > 1.0f ||
+                a < 0.0f || a > 1.0f) {
+                throw new ArgumentOutOfRangeException(
+                    $"Normalized RGBA Color values must be between 0 and 1: ({r},{g},{b},{a})");
+            }
+            GL.ClearColor(r, g, b, 1.0f);
+        }
+
+        /// <summary>
+        /// Set color to be used as clear color when using the Window.Clear() method.
+        /// </summary>
+        /// <param name="r">red channel value</param>
+        /// <param name="g">green channel value</param>
+        /// <param name="b">blue channel value</param>
+        /// <exception cref="ArgumentOutOfRangeException">Color values must be between 0 and 255.</exception>
+        public void SetClearColor(int r, int g, int b) {
+            if (r < 0 || r > 255 ||
+                g < 0 || g > 255 ||
+                b < 0 || b > 255) {
+                throw new ArgumentOutOfRangeException(
+                    $"RGB Color values must be between 0 and 255: ({r},{g},{b})");
+            }
+            GL.ClearColor(r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
+        }
+
+        /// <summary>
+        /// Set color to be used as clear color when using the Window.Clear() method.
+        /// </summary>
+        /// <param name="r">red channel value</param>
+        /// <param name="g">green channel value</param>
+        /// <param name="b">blue channel value</param>
+        /// <param name="a">alpha channel value</param>
+        /// <exception cref="ArgumentOutOfRangeException">Color values must be between 0 and 255.</exception>
+        public void SetClearColor(int r, int g, int b, int a) {
+            if (r < 0 || r > 255 ||
+                g < 0 || g > 255 ||
+                b < 0 || b > 255 ||
+                a < 0 || a > 255) {
+                throw new ArgumentOutOfRangeException(
+                    $"RGBA Color values must be between 0 and 255: ({r},{g},{b},{a})");
+            }
+            GL.ClearColor(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
         }
 
         /// <summary>
         /// Set color to be used as clear color when using the Window.Clear() method.
         /// </summary>
         /// <param name="color">System.Drawing.Color object containing color channel values.</param>
-        public void SetClearColor(System.Drawing.Color color) {
-            SetClearColor(new Math.Vec3I((int) color.R, (int) color.G, (int) color.B));
+        public void SetClearColor(Color color) {
+            SetClearColor(new Math.Vec4I(color.R, color.G, color.B, color.A));
         }
+
+        #endregion
 
         /// <summary>
         /// Swap double buffers for the Window.
