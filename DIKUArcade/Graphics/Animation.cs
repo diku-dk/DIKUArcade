@@ -19,7 +19,7 @@ namespace DIKUArcade.Graphics {
         /// </summary>
         public ImageStride Stride { get; set; }
 
-        private readonly double timeOfCreation;
+        private double timeOfCreation;
 
         public Animation() {
             timeOfCreation = StaticTimer.GetElapsedMilliseconds();
@@ -35,6 +35,10 @@ namespace DIKUArcade.Graphics {
 
         public void RenderAnimation() {
             Stride.Render(Shape);
+        }
+
+        public void ResetAnimation() {
+            timeOfCreation = StaticTimer.GetElapsedMilliseconds();
         }
     }
 }
