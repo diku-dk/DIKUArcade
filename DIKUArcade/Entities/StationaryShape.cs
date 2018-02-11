@@ -8,7 +8,7 @@ namespace DIKUArcade.Entities {
     public class StationaryShape : Shape {
         public StationaryShape(float posX, float posY, float width, float height) {
             Position = new Vec2F(posX, posY);
-            Extent = new Vec2F();
+            Extent = new Vec2F(width, height);
         }
 
         public StationaryShape(Vec2F pos, Vec2F extent) {
