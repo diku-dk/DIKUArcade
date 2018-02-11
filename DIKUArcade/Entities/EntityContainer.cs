@@ -20,30 +20,24 @@ namespace DIKUArcade.Entities {
             entities.Add(new Entity(ent, img));
         }
 
-        private void TendToPending() {
-            var newList = new List<Entity>(entities.Count);
-            foreach (var ent in entities) {
-                if (!ent.IsDeleted()) {
-                    newList.Add(ent);
-                }
-            }
-            entities = newList;
-        }
-
         /// <summary>
         /// Delegate method for iterating through an EntityContainer.
         /// This function should return true if the shape should be
         /// removed from the EntityContainer.
         /// </summary>
         /// <param name="entity"></param>
-        public delegate void IteratorMethod(Entity entity);
+        /// <returns>True if the entity should be deleted, otherwise false.</returns>
+        public delegate bool IteratorMethod(Entity entity);
 
         public void Iterate(IteratorMethod iterator) {
+            var newList = new List<Entity>(entities.Count);
             // iterate through entities
             foreach (var entity in entities) {
-                iterator(entity);
+                if (!iterator(entity)) {
+                    newList.Add(entity);
+                }
             }
-            TendToPending();
+            entities = newList;
         }
 
         /// <summary>
