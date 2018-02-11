@@ -10,6 +10,10 @@ namespace DIKUArcade.Graphics {
             texture = new Texture(imageFile);
         }
 
+        public Image(Texture texture) {
+            this.texture = texture;
+        }
+
         public void Render(Shape shape) {
             texture.Render(shape);
         }

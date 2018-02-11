@@ -12,7 +12,8 @@
             //TestRenderText.MainFunction();
             //var prog = new TestEventBusInputEvents(); { prog.GameLoop(); }
             //var prog = new TestAabbCollision(); { prog.GameLoop(); }
-            TestGameTimer.MainFunction();
+            //TestGameTimer.MainFunction();
+            TestRealImageStrides.MainFunction();
         }
     }
 }
