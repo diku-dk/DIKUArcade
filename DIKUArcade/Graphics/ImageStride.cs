@@ -130,7 +130,7 @@ namespace DIKUArcade.Graphics {
         /// </summary>
         public void StartAnimation() {
             animate = true;
-            lastTime = StaticTimer.GetCurrentTimeFrame();
+            lastTime = StaticTimer.GetElapsedMilliseconds();
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace DIKUArcade.Graphics {
         /// <param name="shape">The Shape object for the rendered image</param>
         public void Render(Shape shape) {
             // measure elapsed time
-            double elapsed = StaticTimer.GetCurrentTimeFrame() + timerOffset;
+            double elapsed = StaticTimer.GetElapsedMilliseconds() + timerOffset;
 
             // the desired number of milliseconds has passed, change texture stride
             if (animFrequency > 0 && animate && elapsed - lastTime > animFrequency) {
