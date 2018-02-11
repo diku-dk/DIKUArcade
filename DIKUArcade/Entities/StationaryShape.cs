@@ -6,7 +6,7 @@ namespace DIKUArcade.Entities {
     /// since a static object os not meant to be affected by game physics.
     /// </summary>
     public class StationaryShape : Shape {
-        public StationaryShape(int posX, int posY, int width, int height) {
+        public StationaryShape(float posX, float posY, float width, float height) {
             Position = new Vec2F(posX, posY);
             Extent = new Vec2F();
         }
