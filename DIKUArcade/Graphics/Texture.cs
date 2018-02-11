@@ -5,7 +5,6 @@ using System.IO;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using DIKUArcade.Entities;
-using DIKUArcade.Math;
 
 namespace DIKUArcade.Graphics {
     public class Texture {

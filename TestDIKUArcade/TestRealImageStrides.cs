@@ -23,21 +23,25 @@ namespace TestDIKUArcade {
                 if (keyArgs.Key == Key.Left) {
                     entities.Iterate(delegate(Entity entity) {
                         entity.Shape.MoveX(-0.05f);
+                        return false;
                     });
                 }
                 if (keyArgs.Key == Key.Right) {
                     entities.Iterate(delegate(Entity entity) {
                         entity.Shape.MoveX(0.05f);
+                        return false;
                     });
                 }
                 if (keyArgs.Key == Key.Up) {
                     entities.Iterate(delegate(Entity entity) {
                         entity.Shape.MoveY(0.05f);
+                        return false;
                     });
                 }
                 if (keyArgs.Key == Key.Down) {
                     entities.Iterate(delegate(Entity entity) {
                         entity.Shape.MoveY(-0.05f);
+                        return false;
                     });
                 }
             });
