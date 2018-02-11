@@ -1,9 +1,22 @@
 ﻿namespace DIKUArcade.State {
     public interface IGameState {
-        // TODO: Should we have an `InitializeGameState()` method, so that `ResetGameState` will simply call initialize?
+        /// <summary>
+        /// The game loop can be structured differently depending on what the
+        /// current game state needs.
+        /// </summary>
         void GameLoop();
-        void ResetGameState();
+        /// <summary>
+        /// Use this method to initialize all the GameState's variables.
+        /// Call this method at the end of the constuctor.
+        /// </summary>
+        void InitializeGameState();
+        /// <summary>
+        /// Update all variables that are being used by this GameState.
+        /// </summary>
         void UpdateGameLogic();
+        /// <summary>
+        /// Render all entities in this GameState
+        /// </summary>
         void RenderState();
         /// <summary>
         /// Each state can react to key events, delegated from the host StateMachine.
