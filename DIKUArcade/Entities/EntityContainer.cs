@@ -23,7 +23,7 @@ namespace DIKUArcade.Entities {
         private void TendToPending() {
             var newList = new List<Entity>(entities.Count);
             foreach (var ent in entities) {
-                if (!ent.Shape.IsDeleted()) {
+                if (!ent.IsDeleted()) {
                     newList.Add(ent);
                 }
             }

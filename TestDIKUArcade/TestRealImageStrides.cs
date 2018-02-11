@@ -17,7 +17,6 @@ namespace TestDIKUArcade {
             for (int i = 0; i < 10; i++) {
                 var shape = new DynamicShape(new Vec2F(i * 0.1f, 0.9f), new Vec2F(0.1f, 0.1f));
                 entities.AddDynamicEntity(shape, new ImageStride(80, images[0], images[1], images[2], images[3]));
-                //entities.AddDynamicEntity(shape, img1);
             }
 
             win.AddKeyPressEventHandler(delegate(KeyboardKeyEventArgs keyArgs) {
