@@ -1,9 +1,7 @@
-﻿namespace DIKUArcade.Timers {
-    public class GameTimer {
-        // TODO: A better API for this class must be devised!
-        private int fps;
-        private int ups;
+﻿using System;
 
+namespace DIKUArcade.Timers {
+    public class GameTimer {
         private double lastTime;
         private double timer;
         private double timeLimit;
@@ -11,29 +9,33 @@
         private double nowTime;
 
         /// <summary>
-        /// Count how many updates we can do per second
-        /// </summary>
-        public int CapturedFrames { get; private set; }
-        /// <summary>
-        /// How many times `Update()` gets called per second
+        /// Get the last observed UPS count
         /// </summary>
         public int CapturedUpdates { get; private set; }
+        /// <summary>
+        /// Get the last observed FPS count
+        /// </summary>
+        public int CapturedFrames { get; private set; }
 
-        private int frames;
         private int updates;
+        private int frames;
 
-        public GameTimer(int fps) : this(fps, fps) {}
+        private int desiredMaxFPS;
+
         public GameTimer() : this(30, 30) {}
 
-        public GameTimer(int fps, int ups) {
-            this.fps = fps;
-            this.ups = ups;
+        public GameTimer(int ups, int fps = 0) {
+            if (ups < 0 || fps < 0) {
+                throw new ArgumentOutOfRangeException(
+                    $"GameTimer must have positive count values: (ups={ups},fps={fps})");
+            }
+            desiredMaxFPS = fps;
 
-            timeLimit = 1.0 / fps;
-            lastTime = StaticTimer.GetCurrentTimeFrame();
-            timer = lastTime;
+            timeLimit = 1.0 / ups;
+            lastTime = StaticTimer.GetElapsedSeconds();
             deltaTime = 0.0;
             nowTime = 0.0;
+            timer = lastTime;
 
             frames = 0;
             updates = 0;
@@ -42,10 +44,9 @@
         }
 
         public void MeasureTime() {
-            nowTime = StaticTimer.GetCurrentTimeFrame();
+            nowTime = StaticTimer.GetElapsedSeconds();
             deltaTime += (nowTime - lastTime) / timeLimit;
             lastTime = nowTime;
-            frames++;
         }
 
         public bool ShouldUpdate() {
@@ -57,21 +58,28 @@
             return ret;
         }
 
-        // TODO: should this method perform calculations based on desired FPS ?
         public bool ShouldRender() {
+            if (desiredMaxFPS > 0 && frames >= desiredMaxFPS) {
+                return false;
+            }
+            frames++;
             return true;
         }
 
+        /// <summary>
+        /// The timer will reset if 1 second has passed.
+        /// This information can be used to update game logic in any way desireable.
+        /// </summary>
         public bool ShouldReset() {
-            return StaticTimer.GetCurrentTimeFrame() - timer > 1.0;
-        }
-
-        public void ResetTime() {
-            timer++;
-            CapturedUpdates = updates;
-            CapturedFrames = frames;
-            updates = 0;
-            frames = 0;
+            var ret = StaticTimer.GetElapsedSeconds() - timer > 1.0;
+            if (ret) {
+                timer += 1.0;
+                CapturedUpdates = updates;
+                CapturedFrames = frames;
+                updates = 0;
+                frames = 0;
+            }
+            return ret;
         }
     }
 }

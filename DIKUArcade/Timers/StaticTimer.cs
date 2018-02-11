@@ -14,12 +14,18 @@ namespace DIKUArcade.Timers {
             StaticTimer.timer.Start();
         }
 
-        public static double GetCurrentTimeFrame() {
+        /// <summary>
+        /// Get the number of elapsed milliseconds since application start
+        /// </summary>
+        public static long GetElapsedMilliseconds() {
             return StaticTimer.timer.ElapsedMilliseconds;
         }
 
-        public static void ResetTimer() {
-            StaticTimer.timer.Restart();
+        /// <summary>
+        /// Get the number of elapsed seconds since application start
+        /// </summary>
+        public static double GetElapsedSeconds() {
+            return StaticTimer.timer.ElapsedMilliseconds / 1000.0;
         }
     }
 }
