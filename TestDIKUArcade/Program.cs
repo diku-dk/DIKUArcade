@@ -14,7 +14,8 @@
             //var prog = new TestAabbCollision(); { prog.GameLoop(); }
             //TestGameTimer.MainFunction();
             //TestRealImageStrides.MainFunction();
-            TestAnimations.MainFunction();
+            //TestAnimations.MainFunction();
+            TestAnimationContainer.MainFunction();
         }
     }
 }

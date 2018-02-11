@@ -48,6 +48,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestAABBCollision.cs" />
+    <Compile Include="TestAnimationContainer.cs" />
     <Compile Include="TestAnimations.cs" />
     <Compile Include="TestEventBusInputEvents.cs" />
     <Compile Include="TestGameTimer.cs" />

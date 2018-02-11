@@ -56,6 +56,7 @@
     <Compile Include="EventBus\GameEventQueue.cs" />
     <Compile Include="EventBus\GameEventType.cs" />
     <Compile Include="Graphics\Animation.cs" />
+    <Compile Include="Graphics\AnimationContainer.cs" />
     <Compile Include="Graphics\IBaseImage.cs" />
     <Compile Include="Graphics\Image.cs" />
     <Compile Include="Graphics\ImageStride.cs" />
