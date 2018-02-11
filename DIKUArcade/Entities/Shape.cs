@@ -2,8 +2,6 @@
 
 namespace DIKUArcade.Entities {
     public class Shape {
-        private bool markedForDeletion;
-
         /// <summary>
         /// Shape's rotational angle measured in radians.
         /// </summary>
@@ -14,14 +12,6 @@ namespace DIKUArcade.Entities {
         /// </summary>
         public Vec2F Position;
         public Vec2F Extent { get; set; }
-
-        public void DeleteEntity() {
-            markedForDeletion = true;
-        }
-
-        public bool IsDeleted() {
-            return markedForDeletion;
-        }
 
         public void Scale(float scale) {
             Extent *= scale;
