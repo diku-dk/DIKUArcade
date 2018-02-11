@@ -1,4 +1,5 @@
-﻿using DIKUArcade;
+﻿using System;
+using DIKUArcade;
 using DIKUArcade.Graphics;
 using DIKUArcade.Math;
 using DIKUArcade.Timers;
@@ -7,7 +8,7 @@ namespace TestDIKUArcade {
     public class TestGameTimer {
         public static void MainFunction() {
             var win = new Window("TestGameTimer", 300, AspectRatio.R4X3);
-            var timer = new GameTimer(30);
+            var timer = new GameTimer();
             var fps = new Text("", new Vec2F(0.25f, 0.5f),
                 new Vec2F(0.5f, 0.25f));
             var ups = new Text("", new Vec2F(0.25f, 0.25f),
@@ -20,22 +21,24 @@ namespace TestDIKUArcade {
 
             while (win.IsRunning()) {
                 win.PollEvents();
-                win.Clear();
                 timer.MeasureTime();
 
                 while (timer.ShouldUpdate()) {
+                    //Console.WriteLine("should update");
                     // win.GetEventBus().ProcessEvents(); // TODO: implement! (but property)
                     // update game logic
                 }
 
                 if (timer.ShouldRender()) {
+                    win.Clear();
+                    //Console.WriteLine("should render");
                     // render game objects
                     fps.RenderText();
                     ups.RenderText();
                 }
 
                 if (timer.ShouldReset()) {
-                    timer.ResetTime();
+                    //Console.WriteLine("should reset");
                     fps.SetText($"FPS: {timer.CapturedFrames}");
                     ups.SetText($"UPS: {timer.CapturedUpdates}");
                 }
