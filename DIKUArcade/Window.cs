@@ -428,21 +428,10 @@ namespace DIKUArcade {
             var dir = new DirectoryInfo(Path.GetDirectoryName(
                 System.Reflection.Assembly.GetExecutingAssembly().Location));
 
-            // TODO: Place this functionality elsewhere!
-            var loop = true;
-            while (loop) {
+            while (dir.Name != "bin") {
                 dir = dir.Parent;
-                foreach (var d in dir.Parent.GetDirectories()) {
-                    if (d.Name == "DIKUArcade") {
-                        loop = false;
-                        break;
-                    }
-                }
-                //Console.WriteLine($"DIR:        {dir}");
-                //Console.WriteLine($"DIR.Name:   {dir.Name}");
-                //Console.WriteLine($"DIR.Parent: {dir.Parent}");
-                //Console.WriteLine($"DIR.Root:   {dir.Root}");
             }
+            dir = dir.Parent;
 
             // build the save path
             var saveName = $"screenShot_{Window.screenShotCounter++}.bmp";
@@ -454,6 +443,7 @@ namespace DIKUArcade {
             }
 
             bmp.Save(path);
+            Console.WriteLine($"Screenshot saved as: {path}");
         }
     }
 }

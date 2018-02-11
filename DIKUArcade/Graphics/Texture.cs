@@ -25,30 +25,15 @@ namespace DIKUArcade.Graphics {
             var dir = new DirectoryInfo(Path.GetDirectoryName(
                 System.Reflection.Assembly.GetExecutingAssembly().Location));
 
-            // TODO: Place this functionality elsewhere!
-            var loop = true;
-            while (loop) {
+            while (dir.Name != "bin") {
                 dir = dir.Parent;
-                foreach (var d in dir.Parent.GetDirectories()) {
-                    if (d.Name == "DIKUArcade") {
-                        loop = false;
-                        break;
-                    }
-                }
-                //Console.WriteLine($"DIR:        {dir}");
-                //Console.WriteLine($"DIR.Name:   {dir.Name}");
-                //Console.WriteLine($"DIR.Parent: {dir.Parent}");
-                //Console.WriteLine($"DIR.Root:   {dir.Root}");
             }
+            dir = dir.Parent;
 
             // load image file
             var path = Path.Combine(dir.ToString(), filename);
             if (!File.Exists(path)) {
-                Console.WriteLine($"filename is {path}");
-                Console.WriteLine($"DirectoryName: {Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)}");
-                Console.WriteLine($"Location: {System.Reflection.Assembly.GetExecutingAssembly().Location}");
-                Console.WriteLine($"Codebase: {System.Reflection.Assembly.GetExecutingAssembly().CodeBase}");
-                throw new FileNotFoundException($"Error: The file \"{filename}\" does not exist.");
+                throw new FileNotFoundException($"Error: The file \"{path}\" does not exist.");
             }
             Bitmap image = new Bitmap(path);
             BitmapData data = image.LockBits(new Rectangle(0, 0, image.Width, image.Height),
