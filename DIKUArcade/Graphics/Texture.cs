@@ -1,11 +1,11 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using DIKUArcade.Entities;
-using System;
-using System.Linq;
+using DIKUArcade.Math;
 
 namespace DIKUArcade.Graphics {
     public class Texture {
@@ -37,6 +37,64 @@ namespace DIKUArcade.Graphics {
             }
             Bitmap image = new Bitmap(path);
             BitmapData data = image.LockBits(new Rectangle(0, 0, image.Width, image.Height),
+                ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+            // attach it to OpenGL context
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
+                data.Width, data.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra,
+                PixelType.UnsignedByte, data.Scan0);
+
+            image.UnlockBits(data);
+
+            // set texture properties, filters, blending functions, etc.
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
+                (int) TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
+                (int) TextureMagFilter.Linear);
+
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.Enable(EnableCap.DepthTest);
+            GL.DepthFunc(DepthFunction.Lequal);
+
+            GL.Enable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.AlphaTest);
+
+            GL.AlphaFunc(AlphaFunction.Gequal, 0.5f);
+
+            // unbind the texture
+            UnbindTexture();
+        }
+
+        public Texture(string filename, int currentStride, int stridesInImage) {
+            if (currentStride < 0 || currentStride >= stridesInImage || stridesInImage < 0) {
+                throw new ArgumentOutOfRangeException(
+                    $"Invalid stride numbers: ({currentStride}/{stridesInImage})");
+            }
+            // create a texture id
+            textureId = GL.GenTexture();
+
+            // bind this new texture id
+            BindTexture();
+
+            // find base path
+            var dir = new DirectoryInfo(Path.GetDirectoryName(
+                System.Reflection.Assembly.GetExecutingAssembly().Location));
+
+            while (dir.Name != "bin") {
+                dir = dir.Parent;
+            }
+            dir = dir.Parent;
+
+            // load image file
+            var path = Path.Combine(dir.ToString(), filename);
+            if (!File.Exists(path)) {
+                throw new FileNotFoundException($"Error: The file \"{path}\" does not exist.");
+            }
+            Bitmap image = new Bitmap(path);
+            var width = (int)((float)image.Width / (float)stridesInImage);
+            var posX = currentStride * width;
+            BitmapData data = image.LockBits(new Rectangle(posX, 0, width, image.Height),
                 ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             // attach it to OpenGL context

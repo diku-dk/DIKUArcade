@@ -50,6 +50,7 @@
     <Compile Include="TestAABBCollision.cs" />
     <Compile Include="TestEventBusInputEvents.cs" />
     <Compile Include="TestGameTimer.cs" />
+    <Compile Include="TestRealImageStrides.cs" />
     <Compile Include="TestRenderText.cs" />
     <Compile Include="TestSimpleEntityRendering.cs" />
     <Compile Include="TestImageStrideFormation.cs" />

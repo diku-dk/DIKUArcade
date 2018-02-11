@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using DIKUArcade.Timers;
 using DIKUArcade.Entities;
+using DIKUArcade.Math;
 using DIKUArcade.Utilities;
 
 namespace DIKUArcade.Graphics {
@@ -83,6 +84,45 @@ namespace DIKUArcade.Graphics {
             {
                 textures.Add(img.GetTexture());
             }
+        }
+
+        public ImageStride(int milliseconds, List<Image> images) {
+            if (milliseconds < 0) {
+                throw new ArgumentException("milliseconds must be a positive integer");
+            }
+            animFrequency = milliseconds;
+            animate = true;
+
+            int imgs = images.Count;
+            if (imgs == 0) {
+                // ReSharper disable once NotResolvedInText
+                throw new ArgumentNullException("at least one image file must be specified");
+            }
+
+            maxImageCount = imgs - 1;
+            currentImageCount = RandomGenerator.Generator.Next(imgs);
+            timerOffset = RandomGenerator.Generator.Next(100);
+
+            textures = new List<Texture>(imgs);
+            foreach (Image img in images)
+            {
+                textures.Add(img.GetTexture());
+            }
+        }
+
+        /// <summary>
+        /// Create a List of images from an image stride file.
+        /// </summary>
+        /// <param name="numStrides">Total number of strides in the image</param>
+        /// <param name="imagePath">The relative path to the image</param>
+        /// <returns>A list of Image objects, each corresponding to a stride of the image.</returns>
+        public static List<Image> CreateStrides(int numStrides, string imagePath) {
+            var res = new List<Image>();
+
+            for (int i = 0; i < numStrides; i++) {
+                res.Add(new Image(new Texture(imagePath, i, numStrides)));
+            }
+            return res;
         }
 
         /// <summary>
