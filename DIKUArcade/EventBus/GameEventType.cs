@@ -8,7 +8,6 @@
     {
         // TODO: Add/remove enumerations so that all relevant event types can be covered
         PlayerEvent,
-        NonPlayerEvent,
         GraphicsEvent,
         InputEvent,
         ControlEvent,

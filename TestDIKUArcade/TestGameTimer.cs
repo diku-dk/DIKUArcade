@@ -25,7 +25,7 @@ namespace TestDIKUArcade {
 
                 while (timer.ShouldUpdate()) {
                     //Console.WriteLine("should update");
-                    // win.GetEventBus().ProcessEvents(); // TODO: implement! (but property)
+                    // win.GetEventBus().ProcessEvents();
                     // update game logic
                 }
 
