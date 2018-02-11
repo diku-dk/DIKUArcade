@@ -53,7 +53,6 @@ namespace DIKUArcade.Graphics {
                     return true;
                 }
             }
-            Console.WriteLine("Could not AddAnimation");
             return false;
         }
 
