@@ -75,6 +75,7 @@
     <Compile Include="Physics\CollisionDirection.cs" />
     <Compile Include="Physics\NewtonianForce.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="State\IGameState.cs" />
     <Compile Include="Timers\GameTimer.cs" />
     <Compile Include="Timers\StaticTimer.cs" />
     <Compile Include="Utilities\RandomGenerator.cs" />
