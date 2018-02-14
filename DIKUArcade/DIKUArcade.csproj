@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\DynamicShape.cs" />
+    <Compile Include="Entities\EntityContainerT.cs" />
     <Compile Include="Entities\Shape.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\EntityContainer.cs" />
