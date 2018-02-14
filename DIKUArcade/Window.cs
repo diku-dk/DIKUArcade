@@ -62,6 +62,11 @@ namespace DIKUArcade {
             isRunning = true;
             window.Context.MakeCurrent(window.WindowInfo);
             window.Visible = true;
+
+            GL.Viewport(0, 0, window.Width, window.Height);
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0.0,1.0,0.0,1.0, 0.0, 4.0);
         }
 
         public Window(string title, uint width, uint height)
