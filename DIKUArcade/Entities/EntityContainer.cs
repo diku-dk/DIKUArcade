@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using DIKUArcade.Graphics;
 
 namespace DIKUArcade.Entities {
-    // TODO: Implement IEnumerable for using 'foreach'-loops
     public class EntityContainer : IEnumerable {
         private List<Entity> entities;
 

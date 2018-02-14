@@ -1,7 +1,7 @@
 ﻿using DIKUArcade.Graphics;
 
 namespace DIKUArcade.Entities {
-    public struct Entity {
+    public class Entity {
         public Shape Shape { get; set; }
         public IBaseImage Image { get; set; }
 
