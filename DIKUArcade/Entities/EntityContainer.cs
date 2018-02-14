@@ -24,7 +24,7 @@ namespace DIKUArcade.Entities {
 
         /// <summary>
         /// Delegate method for iterating through an EntityContainer.
-        /// This function should return true if the shape should be
+        /// This function should return true if the Entity should be
         /// removed from the EntityContainer.
         /// </summary>
         /// <param name="entity"></param>
