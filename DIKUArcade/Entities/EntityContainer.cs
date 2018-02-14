@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using DIKUArcade.Graphics;
 
 namespace DIKUArcade.Entities {
-    public class EntityContainer {
-
+    // TODO: Implement IEnumerable for using 'foreach'-loops
+    public class EntityContainer : IEnumerable {
         private List<Entity> entities;
 
         public EntityContainer(int size) {
@@ -26,14 +29,24 @@ namespace DIKUArcade.Entities {
         /// removed from the EntityContainer.
         /// </summary>
         /// <param name="entity"></param>
-        /// <returns>True if the entity should be deleted, otherwise false.</returns>
-        public delegate bool IteratorMethod(Entity entity);
+        public delegate void IteratorMethod(Entity entity);
 
+        /// <summary>Iterate through all Entities in this EntityContainer.</summary>
+        /// <remarks>This method can modify objects during iteration!
+        /// If this functionality is undesired, iterate then through this
+        /// EntityContainer using a 'foreach'-loop (from IEnumerable).</remarks>
         public void Iterate(IteratorMethod iterator) {
-            var newList = new List<Entity>(entities.Count);
+            var count = entities.Count;
+            var newList = new List<Entity>(count);
+
             // iterate through entities
+            for (int i = 0; i < count; i++) {
+                iterator(entities[i]);
+            }
+
+            // keep Entities that have not been marked for deletion during iteration
             foreach (var entity in entities) {
-                if (!iterator(entity)) {
+                if (!entity.IsDeleted()) {
                     newList.Add(entity);
                 }
             }
@@ -62,5 +75,50 @@ namespace DIKUArcade.Entities {
         public int CountEntities() {
             return entities.Count;
         }
+
+        // IEnumerable interface:
+        #region IEnumerable
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public IEnumerator GetEnumerator() {
+            return new EntityContainerEnum(entities);
+        }
+
+        private class EntityContainerEnum : IEnumerator {
+            private ReadOnlyCollection<Entity> entities;
+            private int position = -1;
+
+            public EntityContainerEnum(List<Entity> entities) {
+                this.entities = entities.AsReadOnly();
+            }
+
+            public bool MoveNext() {
+                position++;
+                return position < entities.Count;
+            }
+
+            public void Reset() {
+                position = -1;
+            }
+
+            object IEnumerator.Current => Current;
+
+            public Entity Current {
+                get {
+                    try {
+                        return entities[position];
+                    } catch (IndexOutOfRangeException) {
+                        throw new InvalidOperationException();
+                    }
+                }
+            }
+        }
+
+        #endregion
+
     }
 }
