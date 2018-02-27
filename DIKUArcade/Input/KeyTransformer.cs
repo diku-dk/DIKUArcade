@@ -23,10 +23,10 @@ namespace DIKUArcade.Input {
                 ret = "KEY_CONTROL_RIGHT";
                 break;
             case Key.AltLeft:
-                ret = "KEY_SHIFT_LEFT";
+                ret = "KEY_ALT_LEFT";
                 break;
             case Key.AltRight:
-                ret = "KEY_SHIFT_LEFT";
+                ret = "KEY_ALT_RIGHT";
                 break;
             case Key.WinLeft:
                 ret = "KEY_WIN_LEFT";
