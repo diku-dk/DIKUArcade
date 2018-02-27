@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using OpenTK.Graphics.OpenGL;
 using DIKUArcade.Entities;
 using DIKUArcade.Math;
@@ -8,7 +10,39 @@ using OpenTK;
 using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 namespace DIKUArcade.Graphics {
+    public enum Fonts {
+        Default,
+        Arial,
+        Times,
+        Courier,
+        Palatino,
+        Garamond,
+        Bookman,
+        AvantGarde
+    }
+
     public class Text {
+        private static class FontTransformer {
+            private static List<Tuple<Fonts, string>> fontStrings = new List<Tuple<Fonts, string>>() {
+                new Tuple<Fonts, string>(Fonts.Default, ""),
+                new Tuple<Fonts, string>(Fonts.Arial, "Arial"),
+                new Tuple<Fonts, string>(Fonts.Times, "Times"),
+                new Tuple<Fonts, string>(Fonts.Courier, "Courier"),
+                new Tuple<Fonts, string>(Fonts.Palatino, "Palatino"),
+                new Tuple<Fonts, string>(Fonts.Garamond, "Garamond"),
+                new Tuple<Fonts, string>(Fonts.Bookman, "Bookman"),
+                new Tuple<Fonts, string>(Fonts.AvantGarde, "AvantGarde")
+            };
+
+            public static string FontToString(Fonts font) {
+                return (FontTransformer.fontStrings.First(elem => elem.Item1 == font)).Item2;
+            }
+
+            public static Fonts StringToFont(string font) {
+                return (FontTransformer.fontStrings.First(elem => elem.Item2 == font)).Item1;
+            }
+        }
+
         // TODO: Add method for centering text (vertically, horizontally) within its shape!
         /// <summary>
         /// OpenGL texture handle
@@ -25,6 +59,8 @@ namespace DIKUArcade.Graphics {
         /// </summary>
         private int fontSize;
 
+        private Fonts fontFamily;
+
         /// <summary>
         /// The position and size of the text
         /// </summary>
@@ -40,6 +76,7 @@ namespace DIKUArcade.Graphics {
             shape = new StationaryShape(pos, extent);
             color = Color.Black;
             fontSize = 50;
+            fontFamily = Fonts.Arial;
 
             // create a texture id
             textureId = GL.GenTexture();
@@ -82,7 +119,7 @@ namespace DIKUArcade.Graphics {
             {
                 gfx.Clear(Color.Transparent);
                 // TODO: Could create an enumeration for choosing btw different font families!
-                Font drawFont = new Font("Arial", fontSize);
+                Font drawFont = new Font(FontTransformer.FontToString(fontFamily), fontSize);
                 SolidBrush drawBrush = new SolidBrush(color);
 
                 // TODO: Maybe we should not use shape.Position here, because different coordinate system !!?
@@ -138,6 +175,10 @@ namespace DIKUArcade.Graphics {
             CreateBitmapTexture();
         }
 
+        public void SetFontFamily(Fonts font) {
+            fontFamily = Fonts.Arial;
+        }
+
         /// <summary>
         /// Change text color
         /// </summary>
@@ -174,7 +215,7 @@ namespace DIKUArcade.Graphics {
         /// Change text color
         /// </summary>
         /// <param name="newColor">System.Drawing.Color containing new color channel values.</param>
-        public void SetColor(System.Drawing.Color newColor) {
+        public void SetColor(Color newColor) {
             color = newColor;
             CreateBitmapTexture();
         }
