@@ -30,7 +30,7 @@ namespace DIKUArcade.Graphics {
             dir = dir.Parent;
 
             // load image file
-            var path = Path.Combine(dir.ToString(), filename);
+            var path = Path.Combine(dir.FullName.ToString(), filename);
             if (!File.Exists(path)) {
                 throw new FileNotFoundException($"Error: The file \"{path}\" does not exist.");
             }
