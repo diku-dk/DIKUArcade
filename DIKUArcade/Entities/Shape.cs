@@ -13,6 +13,36 @@ namespace DIKUArcade.Entities {
         public Vec2F Position;
         public Vec2F Extent { get; set; }
 
+        /// <summary>
+        /// Performs a downcast on this Shape instance to a
+        /// DynamicShape. If the downcast fails, a new
+        /// DynamicShape is returned instead with this Shape's
+        /// Position and Extent properties.
+        /// </summary>
+        /// <returns></returns>
+        public DynamicShape TryCastToDynamicShape() {
+            if (this is DynamicShape dyn) {
+                return dyn;
+            } else {
+                return new DynamicShape(Position, Extent);
+            }
+        }
+
+        /// <summary>
+        /// Performs a downcast on this Shape instance to a
+        /// StationaryShape. If the downcast fails, a new
+        /// StationaryShape is returned instead with this Shape's
+        /// Position and Extent properties.
+        /// </summary>
+        /// <returns></returns>
+        public StationaryShape TryCastToStationaryShape() {
+            if (this is StationaryShape sta) {
+                return sta;
+            } else {
+                return new StationaryShape(Position, Extent);
+            }
+        }
+
         public void Scale(float scale) {
             Extent *= scale;
         }
