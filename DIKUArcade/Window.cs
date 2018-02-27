@@ -1,14 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Drawing;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
+using Bitmap = System.Drawing.Bitmap;
+using Color = System.Drawing.Color;
+using RotateFlipType = System.Drawing.RotateFlipType;
 using System.Drawing.Imaging;
 using System.IO;
-using DIKUArcade.EventBus;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
-using PixelFormat = System.Drawing.Imaging.PixelFormat;
+using DIKUArcade.EventBus;
 
 namespace DIKUArcade {
     /// <summary>
