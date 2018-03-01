@@ -4,8 +4,10 @@ namespace DIKUArcade.Timers {
     public class GameTimer {
         private double lastTime;
         private double timer;
-        private double timeLimit;
-        private double deltaTime;
+        private double updateTimeLimit;
+        private double renderTimeLimit;
+        private double deltaUpdateTime;
+        private double deltaRenderTime;
         private double nowTime;
 
         /// <summary>
@@ -31,9 +33,11 @@ namespace DIKUArcade.Timers {
             }
             desiredMaxFPS = fps;
 
-            timeLimit = 1.0 / ups;
+            updateTimeLimit = 1.0 / ups;
+            renderTimeLimit = 1.0 / fps;
             lastTime = StaticTimer.GetElapsedSeconds();
-            deltaTime = 0.0;
+            deltaUpdateTime = 0.0;
+            deltaRenderTime = 0.0;
             nowTime = 0.0;
             timer = lastTime;
 
@@ -45,25 +49,30 @@ namespace DIKUArcade.Timers {
 
         public void MeasureTime() {
             nowTime = StaticTimer.GetElapsedSeconds();
-            deltaTime += (nowTime - lastTime) / timeLimit;
+            deltaUpdateTime += (nowTime - lastTime) / updateTimeLimit;
+            deltaRenderTime += (nowTime - lastTime) / renderTimeLimit;
             lastTime = nowTime;
         }
 
         public bool ShouldUpdate() {
-            var ret = deltaTime >= 1.0;
+            var ret = deltaUpdateTime >= 1.0;
             if (ret) {
                 updates++;
-                deltaTime--;
+                deltaUpdateTime--;
             }
             return ret;
         }
 
         public bool ShouldRender() {
-            if (desiredMaxFPS > 0 && frames >= desiredMaxFPS) {
-                return false;
+            if (desiredMaxFPS == 0) {
+                return true;
             }
-            frames++;
-            return true;
+            var ret = deltaRenderTime >= 1.0;
+            if (ret) {
+                frames++;
+                deltaRenderTime--;
+            }
+            return ret;
         }
 
         /// <summary>
