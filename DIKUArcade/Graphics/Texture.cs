@@ -36,7 +36,7 @@ namespace DIKUArcade.Graphics {
             }
             Bitmap image = new Bitmap(path);
             BitmapData data = image.LockBits(new Rectangle(0, 0, image.Width, image.Height),
-                ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
             // attach it to OpenGL context
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
@@ -94,7 +94,7 @@ namespace DIKUArcade.Graphics {
             var width = (int)((float)image.Width / (float)stridesInImage);
             var posX = currentStride * width;
             BitmapData data = image.LockBits(new Rectangle(posX, 0, width, image.Height),
-                ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
             // attach it to OpenGL context
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
