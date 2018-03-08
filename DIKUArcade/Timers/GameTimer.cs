@@ -9,7 +9,6 @@ namespace DIKUArcade.Timers {
         private double deltaUpdateTime;
         private double deltaRenderTime;
         private double nowTime;
-        // just for checking
 
         /// <summary>
         /// Get the last observed UPS count
@@ -65,7 +64,7 @@ namespace DIKUArcade.Timers {
         }
 
         public bool ShouldRender() {
-            if (desiredMaxFPS == 0) {
+            if (desiredMaxFPS < 1) {
                 return true;
             }
             var ret = deltaRenderTime >= 1.0;
