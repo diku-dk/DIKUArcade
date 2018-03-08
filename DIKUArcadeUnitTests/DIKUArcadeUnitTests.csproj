@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\TestIEnumerableInterface.cs" />
+    <Compile Include="Entities\TestShapeConversion.cs" />
     <Compile Include="GameEventBus\TestEventQueue.cs" />
     <Compile Include="GameEventBus\TestGameEventFactory.cs" />
     <Compile Include="GameEventBus\TestsEventBus.cs" />
