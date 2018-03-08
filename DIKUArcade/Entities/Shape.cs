@@ -17,15 +17,13 @@ namespace DIKUArcade.Entities {
         /// Performs a downcast on this Shape instance to a
         /// DynamicShape. If the downcast fails, a new
         /// DynamicShape is returned instead with this Shape's
-        /// Position and Extent properties.
+        /// Position and Extent properties, and a default (0,0)
+        /// Direction vector.
         /// </summary>
         /// <returns></returns>
         public DynamicShape AsDynamicShape() {
-            if (this is DynamicShape dyn) {
-                return dyn;
-            } else {
-                return new DynamicShape(Position, Extent);
-            }
+            var shape = this as DynamicShape;
+            return shape ?? new DynamicShape(Position, Extent);
         }
 
         /// <summary>
@@ -36,11 +34,8 @@ namespace DIKUArcade.Entities {
         /// </summary>
         /// <returns></returns>
         public StationaryShape AsStationaryShape() {
-            if (this is StationaryShape sta) {
-                return sta;
-            } else {
-                return new StationaryShape(Position, Extent);
-            }
+            var sta = this as StationaryShape;
+            return sta ?? new StationaryShape(Position, Extent);
         }
 
         public void Scale(float scale) {
