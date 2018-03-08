@@ -9,6 +9,7 @@ namespace DIKUArcade.Timers {
         private double deltaUpdateTime;
         private double deltaRenderTime;
         private double nowTime;
+        // just for checking
 
         /// <summary>
         /// Get the last observed UPS count
