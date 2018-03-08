@@ -25,8 +25,8 @@ namespace DIKUArcadeUnitTests.Entities {
             Assert.AreEqual(entity.Shape.Position.X, 6.0f);
             Assert.AreEqual(entity.Shape.Position.Y, 4.0f);
 
-            entity.Shape.TryCastToDynamicShape().Direction.X = -1.0f;
-            entity.Shape.TryCastToDynamicShape().Direction.Y = -1.0f;
+            entity.Shape.AsDynamicShape().Direction.X = -1.0f;
+            entity.Shape.AsDynamicShape().Direction.Y = -1.0f;
             entity.Shape.Move();
             Assert.AreEqual(entity.Shape.Position.X, 5.0f);
             Assert.AreEqual(entity.Shape.Position.Y, 3.0f);
