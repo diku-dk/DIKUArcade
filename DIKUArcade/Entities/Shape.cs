@@ -20,7 +20,7 @@ namespace DIKUArcade.Entities {
         /// Position and Extent properties.
         /// </summary>
         /// <returns></returns>
-        public DynamicShape TryCastToDynamicShape() {
+        public DynamicShape AsDynamicShape() {
             if (this is DynamicShape dyn) {
                 return dyn;
             } else {
@@ -35,7 +35,7 @@ namespace DIKUArcade.Entities {
         /// Position and Extent properties.
         /// </summary>
         /// <returns></returns>
-        public StationaryShape TryCastToStationaryShape() {
+        public StationaryShape AsStationaryShape() {
             if (this is StationaryShape sta) {
                 return sta;
             } else {
