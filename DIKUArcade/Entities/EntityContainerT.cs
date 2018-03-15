@@ -6,7 +6,7 @@ using DIKUArcade.Graphics;
 
 namespace DIKUArcade.Entities {
     public sealed class EntityContainer<T> : IEnumerable where T: Entity {
-        private List<T> entities;
+        public List<T> entities;
 
         public EntityContainer(int size) {
             entities = new List<T>(size);
