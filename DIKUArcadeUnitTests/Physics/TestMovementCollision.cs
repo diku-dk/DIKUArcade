@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using DIKUArcade.Entities;
 using DIKUArcade.Math;
@@ -14,13 +15,25 @@ namespace DIKUArcadeUnitTests.Physics {
         /// with a list of obstacles.
         /// </summary>
         /// <returns>If any collision occured</returns>
-        public bool CheckActorMove(DynamicShape actor, List<StationaryShape> obstacles, int iterations) {
+        private bool CheckActorMove(DynamicShape actor, List<StationaryShape> obstacles, int iterations) {
             var collision = false;
 
             for (int i = 0; i < iterations; i++) {
                 actor.Move();
                 foreach (var obstacle in obstacles) {
                     collision = CollisionDetection.Aabb(actor, obstacle).Collision;
+                    if (collision) {
+                        Console.WriteLine($"Encountered collision:\n" +
+                                          $"actor lower left: {actor.Position}\n" +
+                                          $"actor upper left: {actor.Position + new Vec2F(0.0f, actor.Extent.Y)}\n" +
+                                          $"actor upper right: {actor.Position + actor.Extent}\n" +
+                                          $"actor upper left: {actor.Position + new Vec2F(actor.Extent.X, 0.0f)}\n" +
+                                          $"obstacle pos: {obstacle.Position}\n" +
+                                          $"obstacle extent: {obstacle.Extent}"
+                        );
+                                          //actor.pos: {actor.Position}, obstacle.pos: {obstacle.Position}");
+                        return true;
+                    }
                 }
             }
             return collision;
@@ -91,22 +104,41 @@ namespace DIKUArcadeUnitTests.Physics {
         }
 
         /// <summary>
-        /// An entity is moving diagonally up and left in a clear path between
+        /// An entity is moving diagonally up and right in a clear path between
         /// a number of obstacles on each side of its path
         /// </summary>
         [Test]
         public void TestMoveDiagonalUpRight() {
             var obstacles = new List<StationaryShape>() {
                 // (pos, extent)
+                // upper-left triangle
                 new StationaryShape(new Vec2F(0.0f, 0.8f), new Vec2F(0.2f, 0.2f)),
                 new StationaryShape(new Vec2F(0.0f, 0.5f), new Vec2F(0.2f, 0.2f)),
-                new StationaryShape(new Vec2F(0.5f, 0.8f), new Vec2F(0.2f, 0.2f))
+                new StationaryShape(new Vec2F(0.5f, 0.8f), new Vec2F(0.2f, 0.2f)),
+
+                // lower-right triangle
+                new StationaryShape(new Vec2F(0.8f, 0.0f), new Vec2F(0.2f, 0.2f)),
+                new StationaryShape(new Vec2F(0.5f, 0.0f), new Vec2F(0.2f, 0.2f)),
+                new StationaryShape(new Vec2F(0.8f, 0.5f), new Vec2F(0.2f, 0.2f))
             };
 
             // (pos, extent, dir)
-            var actor = new DynamicShape(new Vec2F(0.0f, 0.0f), new Vec2F(0.1f, 0.1f), new Vec2F(0.001f, 0.001f));
+            var actor = new DynamicShape(new Vec2F(0.0f, 0.0f), new Vec2F(0.09f, 0.09f), new Vec2F(0.001f, 0.001f));
 
             Assert.IsFalse(CheckActorMove(actor, obstacles, 1500));
+        }
+
+        /// <summary>
+        /// This check was developed by a student
+        /// </summary>
+        [Test]
+        public void StudentCheck() {
+            // Copied in the exact parameters from assignment 9 debug run where it first fails
+            StationaryShape s = new StationaryShape(new Vec2F(0.9f, 0.739130437f), new Vec2F(0.025f, 0.0434782617f));
+            DynamicShape a = new DynamicShape(new Vec2F(0.744843602f, 0.783036947f),
+                new Vec2F(0.065f, 0.05f), new Vec2F(-0.00157072174f, -0.00205000024f));
+
+            Assert.IsFalse(CollisionDetection.Aabb(a, s).Collision);
         }
     }
 }
