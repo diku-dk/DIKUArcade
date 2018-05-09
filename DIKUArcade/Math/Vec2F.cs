@@ -39,6 +39,10 @@
             return System.Math.Sqrt(X * X + Y * Y);
         }
 
+        public static Vec2F Normalize(Vec2F v) {
+            return v.Copy() * (1.0f / (float)v.Length());
+        }
+
         public Vec2F Copy() {
             return new Vec2F(X, Y);
         }
