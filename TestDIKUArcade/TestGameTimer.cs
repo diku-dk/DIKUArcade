@@ -35,6 +35,8 @@ namespace TestDIKUArcade {
                     // render game objects
                     fps.RenderText();
                     ups.RenderText();
+
+                    win.SwapBuffers();
                 }
 
                 if (timer.ShouldReset()) {
@@ -42,7 +44,6 @@ namespace TestDIKUArcade {
                     fps.SetText($"FPS: {timer.CapturedFrames}");
                     ups.SetText($"UPS: {timer.CapturedUpdates}");
                 }
-                win.SwapBuffers();
             }
         }
     }
