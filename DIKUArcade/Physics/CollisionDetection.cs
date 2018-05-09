@@ -118,7 +118,7 @@ namespace DIKUArcade.Physics {
                 var exitTime = new Vec2F(exitDistance.X / actor.Direction.X, exitDistance.Y / actor.Direction.Y);
 
                 float entryTimeMax = System.Math.Max(entryTime.X, entryTime.Y);
-                float exitTimeMin = System.Math.Max(exitTime.Y, exitTime.Y);
+                float exitTimeMin = System.Math.Max(exitTime.X, exitTime.Y);
 
                 if(entryTimeMax < exitTimeMin && (entryTime.X >= 0.0f || entryTime.Y >= 0.0f) &&
                    entryTime.X < 1.0f && entryTime.Y < 1.0f)
