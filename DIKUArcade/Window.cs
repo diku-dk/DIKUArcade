@@ -52,6 +52,29 @@ namespace DIKUArcade {
 
         private GameEventBus<object> eventBus;
 
+
+        #region OpenGLContext
+
+        /// <summary>
+        /// A static, private OpenTK.GameWindow instance.
+        /// Only used for initializing an OpenGL context in the background.
+        /// </summary>
+        private static GameWindow _contextWin;
+
+        /// <summary>
+        /// Use this method to create an OpenGL context.
+        /// Never use this method in your application, ONLY in unit testing.
+        /// This will enable you to unit test classes which use OpenGL-dependent
+        /// function calls, including `Text', `Image', and `ImageStride' classes.
+        /// </summary>
+        public static void CreateOpenGLContext() {
+            Window._contextWin = new GameWindow(1, 1);
+            Window._contextWin.Context.MakeCurrent(Window._contextWin.WindowInfo);
+        }
+
+        #endregion
+
+
         private void ActivateThisWindowContext(string title) {
             window = new GameWindow((int) width, (int) height) {Title = title};
 
