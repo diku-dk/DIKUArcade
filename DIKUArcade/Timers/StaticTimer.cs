@@ -27,5 +27,13 @@ namespace DIKUArcade.Timers {
         public static double GetElapsedSeconds() {
             return StaticTimer.timer.ElapsedMilliseconds / 1000.0;
         }
+
+        /// <summary>
+        /// Get the number of elapsed minutes since application start
+        /// </summary>
+        /// <returns></returns>
+        public static double GetElapsedMinutes() {
+            return StaticTimer.timer.ElapsedMilliseconds / 60000.0;
+        }
     }
 }
