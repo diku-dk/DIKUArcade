@@ -82,6 +82,9 @@
     <Compile Include="State\IGameState.cs" />
     <Compile Include="Timers\GameTimer.cs" />
     <Compile Include="Timers\StaticTimer.cs" />
+    <Compile Include="Timers\TimedEvent.cs" />
+    <Compile Include="Timers\TimedEventContainer.cs" />
+    <Compile Include="Timers\TimeSpanType.cs" />
     <Compile Include="Utilities\FileIO.cs" />
     <Compile Include="Utilities\RandomGenerator.cs" />
     <Compile Include="Window.cs" />
