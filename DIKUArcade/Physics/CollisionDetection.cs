@@ -116,13 +116,13 @@ namespace DIKUArcade.Physics {
             var absRads = System.Math.Abs(rads);
             
             
-            if (absRads < 0.785) {
+            if (absRads <= 0.785) {
                 dirData = CollisionDirection.CollisionDirRight;
                 
-            } else if (absRads >= 2.356) {
+            } else if (absRads > 2.356) {
                 dirData = CollisionDirection.CollisionDirLeft;
                 
-            } else if (rads >= 0.785 && rads < 2.356) {
+            } else if (rads > 0.785 && rads <= 2.356) {
                 dirData = CollisionDirection.CollisionDirUp;
                 
             } else if (rads < -0.785 && rads >= -2.356) {
