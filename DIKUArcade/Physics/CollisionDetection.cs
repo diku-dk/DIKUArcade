@@ -12,7 +12,7 @@ namespace DIKUArcade.Physics {
         /// provides smoother collision when the taxi is moving in both directions.
         /// TODO: needs testing. Edge cases might deem this NOT a better approach!!!
         /// </summary>
-        public static CollisionData AabbAtan(DynamicShape actor, Shape shape, 
+        public static CollisionData Aabb2(DynamicShape actor, Shape shape, 
             CollisionDirection actorDir) {
             
             
@@ -143,11 +143,11 @@ namespace DIKUArcade.Physics {
         /// of the GameLoop (eg. in a foreach on an EntityContainer) are NOT necessary,
         /// use this overload.
         /// </summary>
-        public static CollisionData AabbAtan(DynamicShape actor, Shape shape) {
+        public static CollisionData Aabb2(DynamicShape actor, Shape shape) {
             
             CollisionDirection actorDir = CollisionDetection.CalcDir(actor.Direction);
             
-            return CollisionDetection.AabbAtan(actor, shape, actorDir);
+            return CollisionDetection.Aabb2(actor, shape, actorDir);
             
         }
         
