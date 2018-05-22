@@ -50,6 +50,7 @@
     <Compile Include="GameTimerTests\TestingGameTimer.cs" />
     <Compile Include="Physics\TestAabbCollision.cs" />
     <Compile Include="Physics\TestMovementCollision.cs" />
+    <Compile Include="StaticTimerTests\StaticTimerTest.cs" />
     <Compile Include="TestOpenGLContext.cs" />
     <Compile Include="Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
