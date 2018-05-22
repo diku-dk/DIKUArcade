@@ -8,10 +8,12 @@ namespace DIKUArcade.Timers {
     /// </summary>
     public class StaticTimer {
         private static Stopwatch timer;
+        private static bool paused;
 
         static StaticTimer() {
             StaticTimer.timer = new Stopwatch();
             StaticTimer.timer.Start();
+            StaticTimer.paused = false;
         }
 
         /// <summary>
@@ -34,6 +36,24 @@ namespace DIKUArcade.Timers {
         /// <returns></returns>
         public static double GetElapsedMinutes() {
             return StaticTimer.timer.ElapsedMilliseconds / 60000.0;
+        }
+
+        public static void RestartTimer() {
+            StaticTimer.timer.Restart();
+        }
+
+        public static void PauseTimer() {
+            if (!StaticTimer.paused) {
+                StaticTimer.timer.Stop();
+                StaticTimer.paused = true;
+            }
+        }
+
+        public static void ResumeTimer() {
+            if (StaticTimer.paused) {
+                StaticTimer.timer.Start();
+                StaticTimer.paused = false;
+            }
         }
     }
 }
