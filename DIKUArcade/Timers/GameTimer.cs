@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace DIKUArcade.Timers {
     public class GameTimer {
@@ -24,6 +25,8 @@ namespace DIKUArcade.Timers {
 
         private int desiredMaxFPS;
 
+        private Stopwatch stopwatch;
+
         public GameTimer() : this(30, 30) {}
 
         public GameTimer(int ups, int fps = 0) {
@@ -33,9 +36,12 @@ namespace DIKUArcade.Timers {
             }
             desiredMaxFPS = fps;
 
+            stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             updateTimeLimit = 1.0 / ups;
             renderTimeLimit = 1.0 / fps;
-            lastTime = StaticTimer.GetElapsedSeconds();
+            lastTime = stopwatch.ElapsedMilliseconds / 1000.0; // elapsed seconds
             deltaUpdateTime = 0.0;
             deltaRenderTime = 0.0;
             nowTime = 0.0;
@@ -48,7 +54,7 @@ namespace DIKUArcade.Timers {
         }
 
         public void MeasureTime() {
-            nowTime = StaticTimer.GetElapsedSeconds();
+            nowTime = stopwatch.ElapsedMilliseconds / 1000.0;
             deltaUpdateTime += (nowTime - lastTime) / updateTimeLimit;
             deltaRenderTime += (nowTime - lastTime) / renderTimeLimit;
             lastTime = nowTime;
@@ -80,7 +86,7 @@ namespace DIKUArcade.Timers {
         /// This information can be used to update game logic in any way desireable.
         /// </summary>
         public bool ShouldReset() {
-            var ret = StaticTimer.GetElapsedSeconds() - timer > 1.0;
+            var ret = (stopwatch.ElapsedMilliseconds / 1000.0) - timer > 1.0;
             if (ret) {
                 timer += 1.0;
                 CapturedUpdates = updates;
