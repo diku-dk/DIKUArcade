@@ -32,5 +32,9 @@ namespace DIKUArcade.Entities {
         public void RenderEntity() {
             Image.Render(Shape);
         }
+
+        public void RenderEntity(Camera camera) {
+            Image.Render(Shape);
+        }
     }
 }

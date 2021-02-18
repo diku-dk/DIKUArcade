@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Drawing.Text;
 using OpenTK.Graphics.OpenGL;
 using DIKUArcade.Entities;
 using DIKUArcade.Math;
-using OpenTK;
-using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
+using OpenTK.Mathematics;
 
 namespace DIKUArcade.Graphics {
     public class Text {
@@ -33,13 +33,19 @@ namespace DIKUArcade.Graphics {
         /// <summary>
         /// The color for the text
         /// </summary>
-        private Color color;
+        private System.Drawing.Color color;
+
+        /// <summary>
+        /// The font family of the text.
+        /// </summary>
+        private System.Drawing.Font font;
 
         public Text(string text, Vec2F pos, Vec2F extent) {
             this.text = text;
             shape = new StationaryShape(pos, extent);
-            color = Color.Black;
+            color = System.Drawing.Color.Black;
             fontSize = 50;
+            font = new Font("Arial", fontSize);
 
             // create a texture id
             textureId = GL.GenTexture();
@@ -52,7 +58,7 @@ namespace DIKUArcade.Graphics {
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
 
             GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
 
@@ -72,29 +78,29 @@ namespace DIKUArcade.Graphics {
         private void CreateBitmapTexture() {
             BindTexture();
 
-            Bitmap textBmp = new Bitmap(500, 500); // match window size
+            System.Drawing.Bitmap textBmp = new System.Drawing.Bitmap(500, 500); // match window size
 
             // just allocate memory, so we can update efficiently using TexSubImage2D
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, textBmp.Width, textBmp.Height, 0,
-                PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
+                OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
 
             using (System.Drawing.Graphics gfx = System.Drawing.Graphics.FromImage(textBmp))
             {
-                gfx.Clear(Color.Transparent);
+                gfx.Clear(System.Drawing.Color.Transparent);
                 // TODO: Could create an enumeration for choosing btw different font families!
-                Font drawFont = new Font("Arial", fontSize);
+                Font drawFont = font;
                 SolidBrush drawBrush = new SolidBrush(color);
 
                 // TODO: Maybe we should not use shape.Position here, because different coordinate system !!?
-                PointF drawPoint = new PointF(shape.Position.X, shape.Position.Y);
+                System.Drawing.PointF drawPoint = new System.Drawing.PointF(shape.Position.X, shape.Position.Y);
 
                 gfx.DrawString(text, drawFont, drawBrush, drawPoint); // Draw as many strings as you need
             }
 
-            BitmapData data = textBmp.LockBits(new Rectangle(0, 0, textBmp.Width, textBmp.Height),
+            BitmapData data = textBmp.LockBits(new System.Drawing.Rectangle(0, 0, textBmp.Width, textBmp.Height),
                 ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, textBmp.Width, textBmp.Height, 0,
-                PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
+                OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
             textBmp.UnlockBits(data);
 
             UnbindTexture();
@@ -139,6 +145,24 @@ namespace DIKUArcade.Graphics {
         }
 
         /// <summary>
+        /// Set the font for this Text object, if the font is installed.
+        /// If the font is not installed defaults to Arial.
+        /// </summary>
+        /// <param name="fontfamily">The name of the font family</param>
+        public void SetFont(string fontfamily) {
+            // The loop below checks if said font is installed, if not defaults to Arial.
+            var fontsCollection = new InstalledFontCollection();
+            foreach (var fontFamily in fontsCollection.Families) {
+                if (fontFamily.Name == fontfamily) {
+                    font = new Font(fontfamily, fontSize);
+                    break;
+                }
+            }
+
+            CreateBitmapTexture();
+        }
+
+        /// <summary>
         /// Change text color
         /// </summary>
         /// <param name="vec">Vec3F containing the RGB color values.</param>
@@ -150,7 +174,7 @@ namespace DIKUArcade.Graphics {
                 vec.Z < 0.0f || vec.Z > 1.0f) {
                 throw new ArgumentOutOfRangeException($"RGB Color values must be between 0 and 1: {vec}");
             }
-            color = Color.FromArgb((int)(vec.X * 255.0f), (int)(vec.Y * 255.0f), (int)(vec.Z * 255.0f));
+            color = System.Drawing.Color.FromArgb((int)(vec.X * 255.0f), (int)(vec.Y * 255.0f), (int)(vec.Z * 255.0f));
             CreateBitmapTexture();
         }
 
@@ -166,7 +190,58 @@ namespace DIKUArcade.Graphics {
                 vec.Z < 0 || vec.Z > 255) {
                 throw new ArgumentOutOfRangeException($"RGB Color values must be between 0 and 255: {vec}");
             }
-            color = Color.FromArgb(vec.X, vec.Y, vec.Z);
+            color = System.Drawing.Color.FromArgb(vec.X, vec.Y, vec.Z);
+            CreateBitmapTexture();
+        }
+
+        /// <summary>
+        /// Change text color
+        /// </summary>
+        /// <param name="vec">Vec4I containing the ARGB color values.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Color values must be
+        /// between 0 and 255.</exception>
+        public void SetColor(int a, int r, int g, int b) {
+            if (a < 0 || a > 255 ||
+                r < 0 || r > 255 ||
+                g < 0 || g > 255 ||
+                b < 0 || b > 255) {
+                throw new ArgumentOutOfRangeException($"ARGB Color values must be between 0 and 255: {a} {r} {g} {b}");
+            }
+            color = System.Drawing.Color.FromArgb(a, r, g, b);
+            CreateBitmapTexture();
+        }
+
+        /// <summary>
+        /// Change text color
+        /// </summary>
+        /// <param name="vec">Vec4I containing the ARGB color values.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Color values must be
+        /// between 0 and 255.</exception>
+        public void SetColor(Vec4I vec) {
+            if (vec.X < 0 || vec.X > 255 ||
+                vec.Y < 0 || vec.Y > 255 ||
+                vec.Z < 0 || vec.Z > 255 ||
+                vec.W < 0 || vec.W > 255) {
+                throw new ArgumentOutOfRangeException($"ARGB Color values must be between 0 and 255: {vec}");
+            }
+            color = System.Drawing.Color.FromArgb(vec.X, vec.Y, vec.Z, vec.W);
+            CreateBitmapTexture();
+        }
+
+        /// <summary>
+        /// Change text color
+        /// </summary>
+        /// <param name="vec">Vec3F containing the RGB color values.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Normalized color values must be
+        /// between 0 and 1.</exception>
+        public void SetColor(Vec4F vec) {
+            if (vec.X < 0.0f || vec.X > 1.0f ||
+                vec.Y < 0.0f || vec.Y > 1.0f ||
+                vec.Z < 0.0f || vec.Z > 1.0f ||
+                vec.W < 0.0f || vec.W > 1.0f) {
+                throw new ArgumentOutOfRangeException($"ARGB Color values must be between 0 and 1: {vec}");
+            }
+            color = System.Drawing.Color.FromArgb((int)(vec.X * 255.0f), (int)(vec.Y * 255.0f), (int)(vec.Z * 255.0f), (int)(vec.W * 255.0f));
             CreateBitmapTexture();
         }
 
@@ -192,7 +267,10 @@ namespace DIKUArcade.Graphics {
                    Matrix4.CreateTranslation(shape.Position.X + halfX, shape.Position.Y + halfY,
                        0.0f);
         }
-
+        public void ScaleText(float scale) {
+            shape.Position *= scale;
+            shape.Scale(scale);
+        }
         public void RenderText() {
             // bind this texture
             BindTexture();

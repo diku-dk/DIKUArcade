@@ -3,7 +3,32 @@ using DIKUArcade.Math;
 
 namespace DIKUArcade.Physics {
 
+    // https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-detection
+    // Potentially allow for AABB with circles.
+    // Or use SAT.
     public class CollisionDetection {
+        public static CollisionData Aabb_C(DynamicShape actor, Shape shape) {
+            var data = new CollisionData {
+                Collision = false,
+                DirectionFactor = new Vec2F(1.0f, 1.0f),
+                CollisionDir = CollisionDirection.CollisionDirUnchecked
+            };
+
+            var circRadius = shape.Extent.Y/2;
+            var circCenter = new Vec2F(shape.Position.X + shape.Extent.X/2, shape.Position.Y + shape.Extent.Y/2);
+
+            var staLowerLeft = new Vec2F(shape.Position.X, shape.Position.Y);
+            var staUpperRight = new Vec2F(shape.Position.X + shape.Extent.X,
+                shape.Position.Y + shape.Extent.Y);
+            var staCenter = new Vec2F(shape.Position.X + shape.Extent.X/2, shape.Position.Y + shape.Extent.Y/2);
+
+            var D = circCenter - staCenter;
+
+            // Clamp D to width/2 height/2 and add it to staCenter
+
+            return data;
+        }
+
         public static CollisionData Aabb(DynamicShape actor, Shape shape) {
             var data = new CollisionData {
                 Collision = false,
@@ -20,8 +45,7 @@ namespace DIKUArcade.Physics {
                 shape.Position.Y + shape.Extent.Y);
 
             // inactive movement in both x- and y-direction
-            if(System.Math.Abs(actor.Direction.X) < 1e-6f && System.Math.Abs(actor.Direction.Y) < 1e-6f)
-            {
+            if(System.Math.Abs(actor.Direction.X) < 1e-6f && System.Math.Abs(actor.Direction.Y) < 1e-6f) {
                 return data;
             }
 
@@ -126,11 +150,22 @@ namespace DIKUArcade.Physics {
                     if (entryTime.X > entryTime.Y)
                     {
                         data.DirectionFactor.X = entryTimeMax;
+                        if (actor.Direction.X < 0.0f) {
+                            data.CollisionDir = CollisionDirection.CollisionDirRight;
+                        } else {
+                            data.CollisionDir = CollisionDirection.CollisionDirLeft;
+                        }
                     }
                     else
                     {
                         data.DirectionFactor.Y = entryTimeMax;
+                        if (actor.Direction.Y < 0.0f) {
+                            data.CollisionDir = CollisionDirection.CollisionDirUp;
+                        } else {
+                            data.CollisionDir = CollisionDirection.CollisionDirDown;
+                        }
                     }
+
                     data.Collision = true;
                     return data;
                 }
