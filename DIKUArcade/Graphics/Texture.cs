@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using OpenTK;
+using OpenTK.Mathematics;
 using OpenTK.Graphics.OpenGL;
 using DIKUArcade.Entities;
 
@@ -11,6 +10,8 @@ namespace DIKUArcade.Graphics {
         /// <summary>
         /// OpenGL texture handle
         /// </summary>
+        public static double offsetX = 0.0;
+        public static double offsetY = 0.0;
         private int textureId;
 
         public Texture(string filename) {
@@ -24,18 +25,20 @@ namespace DIKUArcade.Graphics {
             var dir = new DirectoryInfo(Path.GetDirectoryName(
                 System.Reflection.Assembly.GetExecutingAssembly().Location));
 
-            while (dir.Name != "bin") {
+            while (dir.Name != "bin")
+            {
                 dir = dir.Parent;
             }
             dir = dir.Parent;
 
             // load image file
             var path = Path.Combine(dir.FullName.ToString(), filename);
-            if (!File.Exists(path)) {
+            if (!File.Exists(path))
+            {
                 throw new FileNotFoundException($"Error: The file \"{path}\" does not exist.");
             }
-            Bitmap image = new Bitmap(path);
-            BitmapData data = image.LockBits(new Rectangle(0, 0, image.Width, image.Height),
+            System.Drawing.Bitmap image = new System.Drawing.Bitmap(path);
+            BitmapData data = image.LockBits(new System.Drawing.Rectangle(0, 0, image.Width, image.Height),
                 ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
             // attach it to OpenGL context
@@ -47,12 +50,12 @@ namespace DIKUArcade.Graphics {
 
             // set texture properties, filters, blending functions, etc.
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
-                (int) TextureMinFilter.Linear);
+                (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
-                (int) TextureMagFilter.Linear);
+                (int)TextureMagFilter.Linear);
 
             GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
 
@@ -65,8 +68,10 @@ namespace DIKUArcade.Graphics {
             UnbindTexture();
         }
 
-        public Texture(string filename, int currentStride, int stridesInImage) {
-            if (currentStride < 0 || currentStride >= stridesInImage || stridesInImage < 0) {
+        public Texture(string filename, int currentStride, int stridesInImage)
+        {
+            if (currentStride < 0 || currentStride >= stridesInImage || stridesInImage < 0)
+            {
                 throw new ArgumentOutOfRangeException(
                     $"Invalid stride numbers: ({currentStride}/{stridesInImage})");
             }
@@ -80,20 +85,22 @@ namespace DIKUArcade.Graphics {
             var dir = new DirectoryInfo(Path.GetDirectoryName(
                 System.Reflection.Assembly.GetExecutingAssembly().Location));
 
-            while (dir.Name != "bin") {
+            while (dir.Name != "bin")
+            {
                 dir = dir.Parent;
             }
             dir = dir.Parent;
 
             // load image file
             var path = Path.Combine(dir.FullName.ToString(), filename);
-            if (!File.Exists(path)) {
+            if (!File.Exists(path))
+            {
                 throw new FileNotFoundException($"Error: The file \"{path}\" does not exist.");
             }
-            Bitmap image = new Bitmap(path);
+            System.Drawing.Bitmap image = new System.Drawing.Bitmap(path);
             var width = (int)((float)image.Width / (float)stridesInImage);
             var posX = currentStride * width;
-            BitmapData data = image.LockBits(new Rectangle(posX, 0, width, image.Height),
+            BitmapData data = image.LockBits(new System.Drawing.Rectangle(posX, 0, width, image.Height),
                 ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
             // attach it to OpenGL context
@@ -105,12 +112,12 @@ namespace DIKUArcade.Graphics {
 
             // set texture properties, filters, blending functions, etc.
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
-                (int) TextureMinFilter.Linear);
+                (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
-                (int) TextureMagFilter.Linear);
+                (int)TextureMagFilter.Linear);
 
             GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
 
@@ -123,15 +130,18 @@ namespace DIKUArcade.Graphics {
             UnbindTexture();
         }
 
-        private void BindTexture() {
+        private void BindTexture()
+        {
             GL.BindTexture(TextureTarget.Texture2D, textureId);
         }
 
-        private void UnbindTexture() {
+        private void UnbindTexture()
+        {
             GL.BindTexture(TextureTarget.Texture2D, 0); // 0 is invalid texture id
         }
 
-        private Matrix4 CreateMatrix(Shape shape) {
+        private Matrix4 CreateMatrix(Shape shape)
+        {
             // ensure that rotation is performed around the center of the shape
             // instead of the bottom-left corner
             var halfX = shape.Extent.X / 2.0f;
@@ -142,8 +152,55 @@ namespace DIKUArcade.Graphics {
                    Matrix4.CreateTranslation(shape.Position.X + halfX, shape.Position.Y + halfY,
                        0.0f);
         }
+        
+        // Render things that are affected by a camera (if the game has one)
+        private Matrix4 CreateMatrix(Shape shape, Camera camera)
+        {
+            // ensure that rotation is performed around the center of the shape
+            // instead of the bottom-left corner
+            var halfX = shape.Extent.X / 2.0f;
+            var halfY = shape.Extent.Y / 2.0f;
 
-        public void Render(Shape shape) {
+            return Matrix4.CreateTranslation(
+                -halfX - camera.Offset.X,
+                -halfY - camera.Offset.Y,
+                0.0f) *
+                   Matrix4.CreateRotationZ(shape.Rotation) *
+                   Matrix4.CreateTranslation(shape.Position.X + halfX + camera.Offset.X,
+                    shape.Position.Y + halfY + camera.Offset.Y,
+                       0.0f);
+        }
+
+        public void Render(Shape shape, Camera camera)
+        {
+
+            // bind this texture
+            BindTexture();
+
+            // render this texture
+            Matrix4 modelViewMatrix = CreateMatrix(shape, camera);
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadMatrix(ref modelViewMatrix);
+
+            GL.Translate(camera.Offset.X, camera.Offset.Y, 0);
+            //GL.Scale(camera.Scale, camera.Scale, 1f);
+            GL.Color4(1f, 1f, 1f, 1f);
+            GL.Begin(PrimitiveType.Quads);
+
+            GL.TexCoord2(0, 1); GL.Vertex2(0.0f, 0.0f);                      // Top Left
+            GL.TexCoord2(0, 0); GL.Vertex2(0.0f, shape.Extent.Y);            // Bottom Left
+            GL.TexCoord2(1, 0); GL.Vertex2(shape.Extent.X, shape.Extent.Y);  // Bottom Right
+            GL.TexCoord2(1, 1); GL.Vertex2(shape.Extent.X, 0.0f);            // Top Right
+
+            GL.End();
+
+            // unbind this texture
+            UnbindTexture();
+        }
+        
+        public void Render(Shape shape)
+        {
+
             // bind this texture
             BindTexture();
 
@@ -152,7 +209,7 @@ namespace DIKUArcade.Graphics {
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref modelViewMatrix);
 
-            GL.Color4(1f,1f,1f,1f);
+            GL.Color4(1f, 1f, 1f, 1f);
             GL.Begin(PrimitiveType.Quads);
 
             GL.TexCoord2(0, 1); GL.Vertex2(0.0f, 0.0f);                      // Top Left

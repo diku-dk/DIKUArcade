@@ -31,6 +31,10 @@
             return new Vec2F(v.X * s, v.Y * s);
         }
 
+        public static Vec2F operator /(Vec2F v, float s) {
+            return new Vec2F(v.X / s, v.Y / s);
+        }
+
         public static float Dot(Vec2F v1, Vec2F v2) {
             return v1.X * v2.X + v1.Y * v2.Y;
         }
@@ -46,6 +50,7 @@
         public Vec2F Copy() {
             return new Vec2F(X, Y);
         }
+
 
         public override int GetHashCode() {
             // Source: http://stackoverflow.com/a/263416/5801152

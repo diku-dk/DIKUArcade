@@ -2,11 +2,11 @@
 
 namespace DIKUArcade.Physics {
     public class NewtonianForce {
-        private Vec2F center;
+        //private Vec2F center;
 
-        private float falloff;
+        //private float falloff;
 
         // TODO: very barebones!
-        private float strengh;
+        //private float strengh;
     }
 }

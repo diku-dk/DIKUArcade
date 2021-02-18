@@ -6,10 +6,9 @@ using Color = System.Drawing.Color;
 using RotateFlipType = System.Drawing.RotateFlipType;
 using System.Drawing.Imaging;
 using System.IO;
-using OpenTK;
-using OpenTK.Graphics;
+using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.Common;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Input;
 using DIKUArcade.EventBus;
 
 namespace DIKUArcade {
@@ -38,8 +37,8 @@ namespace DIKUArcade {
 
         // This is the signature for a key event handler:
         //private delegate void KeyEventHandler(object sender, KeyboardKeyEventArgs e);
-        private EventHandler<KeyboardKeyEventArgs> defaultKeyHandler;
-        private EventHandler<EventArgs> defaultResizeHandler;
+        private Action<KeyboardKeyEventArgs> defaultKeyHandler;
+        private Action<ResizeEventArgs> defaultResizeHandler;
 
         private bool isRunning;
 
@@ -68,27 +67,36 @@ namespace DIKUArcade {
         /// function calls, including `Text', `Image', and `ImageStride' classes.
         /// </summary>
         public static void CreateOpenGLContext() {
-            Window._contextWin = new GameWindow(1, 1);
-            Window._contextWin.Context.MakeCurrent(Window._contextWin.WindowInfo);
+            var settings = new GameWindowSettings();
+            var nativeSettings = new NativeWindowSettings();
+            Window._contextWin = new GameWindow(settings, nativeSettings);
+            Window._contextWin.Context.MakeCurrent();
         }
 
         #endregion
 
 
         private void ActivateThisWindowContext(string title) {
-            window = new GameWindow((int) width, (int) height) {Title = title};
+            var settings = new GameWindowSettings();
+            settings.IsMultiThreaded = false;
+            var nativeSettings = new NativeWindowSettings();
+
+            window = new GameWindow(settings, nativeSettings) {
+                Title = title,
+                Size = new OpenTK.Mathematics.Vector2i((int)width, (int)height)
+            };
 
             GL.ClearDepth(1);
-            GL.ClearColor(Color.Black);
+            GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
             AddDefaultKeyEventHandler();
             AddDefaultResizeHandler();
 
             isRunning = true;
-            window.Context.MakeCurrent(window.WindowInfo);
-            window.Visible = true;
+            window.Context.MakeCurrent();
+            window.IsVisible = true;
 
-            GL.Viewport(0, 0, window.Width, window.Height);
+            GL.Viewport(0, 0, window.Size.X, window.Size.Y);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(0.0,1.0,0.0,1.0, 0.0, 4.0);
@@ -133,18 +141,34 @@ namespace DIKUArcade {
                 return false;
             }
             eventBus = bus;
-            window.Keyboard.KeyDown += RegisterEvent;
-            window.Keyboard.KeyUp += RegisterEvent;
+            window.KeyDown += RegisterKeyDown;
+            window.KeyUp += RegisterKeyUp;
             RemoveDefaultKeyEventHandler();
             return true;
         }
 
+        private void RegisterKeyDown(KeyboardKeyEventArgs args) {
+            var keyAction = "KEY_PRESS";
+            var keyEvent = GameEventFactory<object>.CreateGameEventForAllProcessors(
+                GameEventType.InputEvent, this, Input.KeyTransformer.GetKeyString(args.Key), keyAction, "");
+                eventBus.RegisterEvent(keyEvent);
+        }
+
+        private void RegisterKeyUp(KeyboardKeyEventArgs args) {
+            var keyAction = "KEY_PRESS";
+            var keyEvent = GameEventFactory<object>.CreateGameEventForAllProcessors(
+                GameEventType.InputEvent, this, Input.KeyTransformer.GetKeyString(args.Key), keyAction, "");
+                eventBus.RegisterEvent(keyEvent);
+        }
+
+        /*
         private void RegisterEvent(object sender, KeyboardKeyEventArgs e) {
             var keyAction = (e.Keyboard.IsKeyDown(e.Key)) ? "KEY_PRESS" : "KEY_RELEASE";
             var newEvent = GameEventFactory<object>.CreateGameEventForAllProcessors(
                 GameEventType.InputEvent, this, Input.KeyTransformer.GetKeyString(e.Key), keyAction, "");
             eventBus.RegisterEvent(newEvent);
         }
+        */
 
         #region WINDOW_RESIZE
 
@@ -172,9 +196,9 @@ namespace DIKUArcade {
             }
 
             defaultResizeHandler = delegate {
-                GL.Viewport(0, 0, window.Width, window.Height);
-                width = (uint) window.Width;
-                height = (uint) window.Height;
+                GL.Viewport(0, 0, window.Size.X, window.Size.Y);
+                width = (uint) window.Size.X;
+                height = (uint) window.Size.Y;
 
                 GL.MatrixMode(MatrixMode.Projection);
                 GL.LoadIdentity();
@@ -200,21 +224,21 @@ namespace DIKUArcade {
                 return;
             }
 
-            defaultKeyHandler = delegate(object sender, KeyboardKeyEventArgs e) {
-                if (e.Key == Key.Escape) {
+            defaultKeyHandler = delegate(KeyboardKeyEventArgs e) {
+                if (e.Key == OpenTK.Windowing.GraphicsLibraryFramework.Keys.Escape) {
                     CloseWindow();
                     return;
                 }
-                if (e.Key == Key.F12) {
+                if (e.Key == OpenTK.Windowing.GraphicsLibraryFramework.Keys.F12) {
                     SaveScreenShot();
                 }
             };
-            window.Keyboard.KeyDown += defaultKeyHandler;
+            window.KeyDown += defaultKeyHandler;
         }
 
         private void RemoveDefaultKeyEventHandler() {
             if (defaultKeyHandler != null) {
-                window.Keyboard.KeyDown -= defaultKeyHandler;
+                window.KeyDown -= defaultKeyHandler;
                 defaultKeyHandler = null;
             }
         }
@@ -231,18 +255,16 @@ namespace DIKUArcade {
         /// <param name="method">Method with the signature of a Window.WindowKeyHandler delegate.</param>
         public void AddKeyPressEventHandler(WindowKeyHandler method) {
             //RemoveDefaultKeyEventHandler();
-            window.Keyboard.KeyUp += delegate(object sender, KeyboardKeyEventArgs args) {
-                method(args);
-            };
+            window.KeyUp += delegate(KeyboardKeyEventArgs args) { method(args); };
         }
 
         /// <summary>
         /// Add an event handler for when any keyboard key is released.
         /// </summary>
         /// <param name="method">Delegate method</param>
-        public void AddKeyReleaseEventHandler(EventHandler<KeyboardKeyEventArgs> method) {
+        public void AddKeyReleaseEventHandler(Action<KeyboardKeyEventArgs> method) {
             //RemoveDefaultKeyEventHandler();
-            window.Keyboard.KeyDown += method;
+            window.KeyDown += method;
         }
 
         #endregion KEY_EVENT_HANDLERS
@@ -439,15 +461,18 @@ namespace DIKUArcade {
         /// </summary>
         /// <exception cref="GraphicsContextMissingException"></exception>
         public void SaveScreenShot() {
-            if (GraphicsContext.CurrentContext == null) {
-                throw new GraphicsContextMissingException();
+            if (window.Context == null) {
+                throw new ArgumentNullException("GraphicsContextMissingException");// TODO: GraphicsContextMissingException();
             }
 
-            var bmp = new Bitmap(window.ClientSize.Width, window.ClientSize.Height);
+            var bmp = new Bitmap(window.ClientSize.X, window.ClientSize.Y);
             var data =
-                bmp.LockBits(window.ClientRectangle, ImageLockMode.WriteOnly,
+                bmp.LockBits(new System.Drawing.Rectangle(
+                    window.ClientRectangle.Min.X, window.ClientRectangle.Max.Y, // (left, top)
+                    window.ClientRectangle.Max.X, window.ClientRectangle.Min.Y), // (right, bottom)
+                    ImageLockMode.WriteOnly,
                     PixelFormat.Format24bppRgb);
-            GL.ReadPixels(0, 0, window.ClientSize.Width, window.ClientSize.Height,
+            GL.ReadPixels(0, 0, window.ClientSize.X, window.ClientSize.Y,
                 OpenTK.Graphics.OpenGL.PixelFormat.Bgr,
                 PixelType.UnsignedByte, data.Scan0);
             bmp.UnlockBits(data);

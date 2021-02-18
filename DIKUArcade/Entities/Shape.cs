@@ -38,6 +38,8 @@ namespace DIKUArcade.Entities {
             return sta ?? new StationaryShape(Position, Extent);
         }
 
+        // Do not reference other shapes if you intend to scale.
+        // Use .Copy() or you might scale everything.
         public void Scale(float scale) {
             Extent *= scale;
         }

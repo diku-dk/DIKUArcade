@@ -6,9 +6,9 @@ namespace DIKUArcade.EventBus
 {
     /// <summary>
     /// GameEventBus is the core module for processing events in the DIKUArcade game engine. Modules can register events and
-    /// add them to the queues. Events are distinguished by event types to improve processing performance. Event processor 
-    /// can register/subscribe themself to receive events of a certain event type. For a single event, all processors are 
-    /// called with this event (broadcast semantic). 
+    /// add them to the queues. Events are distinguished by event types to improve processing performance. Event processor
+    /// can register/subscribe themself to receive events of a certain event type. For a single event, all processors are
+    /// called with this event (broadcast semantic).
     /// </summary>
     /// <typeparam name="T">Parameter type of game entities.</typeparam>
     public class GameEventBus<T> : IGameEventBus<T>, IGameEventBusController<T>
@@ -38,12 +38,12 @@ namespace DIKUArcade.EventBus
                     _eventQueues.Add(eventType, new GameEventQueue<GameEvent<T>>());
                 }
         }
-        
+
         public void Subscribe(GameEventType eventType, IGameEventProcessor<T> gameEventProcessor)
         {
             if (gameEventProcessor == default(IGameEventProcessor<T>))
                 throw new ArgumentNullException("Parameter gameEventProcessor must not be null.");
-            
+
             try
             {
                 _eventProcessors?[eventType].Add(gameEventProcessor);
@@ -58,7 +58,7 @@ namespace DIKUArcade.EventBus
         {
             if (gameEventProcessor == default(IGameEventProcessor<T>))
                 throw new ArgumentNullException("Parameter gameEventProcessor must not be null.");
-            
+
             try
             {
                 _eventProcessors?[eventType].Remove(gameEventProcessor);
@@ -77,8 +77,7 @@ namespace DIKUArcade.EventBus
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw new Exception($"Could not register event. {e}");
+                throw new Exception($"Could not register event. Did you Initialize the EventBus with {e.Message}");
             }
         }
 
@@ -113,7 +112,7 @@ namespace DIKUArcade.EventBus
         {
             if(processOrder==default(IEnumerable<GameEventType>))
                 throw new ArgumentNullException();
-            
+
             foreach(GameEventType eventType in processOrder)
                 {
                     if (_eventQueues != null)
