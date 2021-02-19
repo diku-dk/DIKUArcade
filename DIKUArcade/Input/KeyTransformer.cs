@@ -6,8 +6,6 @@ namespace DIKUArcade.Input {
         /// Transform an OpenTK input key to a DIKUArcade key string
         /// </summary>
         public static string GetKeyString(Keys key) {
-            System.Console.WriteLine(key); System.Console.Out.Flush(); // TODO: TESTING; REMOVE!!
-
             var ret = "";
             switch (key) {
             case Keys.Unknown:
