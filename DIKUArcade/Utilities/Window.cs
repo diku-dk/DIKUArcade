@@ -462,13 +462,10 @@ namespace DIKUArcade {
                 throw new ArgumentNullException("GraphicsContextMissingException");// TODO: GraphicsContextMissingException();
             }
 
-            var bmp = new Bitmap(window.ClientSize.X, window.ClientSize.Y);
-            var data =
-                bmp.LockBits(new System.Drawing.Rectangle(
-                    window.ClientRectangle.Min.X, window.ClientRectangle.Max.Y, // (left, top)
-                    window.ClientRectangle.Max.X, window.ClientRectangle.Min.Y), // (right, bottom)
-                    ImageLockMode.WriteOnly,
-                    PixelFormat.Format24bppRgb);
+            var bmp = new Bitmap(window.ClientSize.X, window.ClientSize.Y, PixelFormat.Format24bppRgb);
+            var data = bmp.LockBits(new System.Drawing.Rectangle(0, 0, window.ClientSize.X, window.ClientSize.Y),
+                                    ImageLockMode.WriteOnly,
+                                    PixelFormat.Format24bppRgb);
             GL.ReadPixels(0, 0, window.ClientSize.X, window.ClientSize.Y,
                 OpenTK.Graphics.OpenGL.PixelFormat.Bgr,
                 PixelType.UnsignedByte, data.Scan0);
