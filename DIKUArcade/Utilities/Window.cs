@@ -77,9 +77,14 @@ namespace DIKUArcade {
 
 
         private void ActivateThisWindowContext(string title) {
+            // We use OpenGL 2.0 (ie. fixed-function pipeline!)
             var settings = new GameWindowSettings();
             settings.IsMultiThreaded = false;
             var nativeSettings = new NativeWindowSettings();
+            nativeSettings.Profile = ContextProfile.Any;
+            nativeSettings.WindowState = WindowState.Normal;
+            nativeSettings.API = ContextAPI.OpenGL;
+            nativeSettings.APIVersion = new Version(2, 0);
 
             window = new GameWindow(settings, nativeSettings) {
                 Title = title,
@@ -155,20 +160,12 @@ namespace DIKUArcade {
         }
 
         private void RegisterKeyUp(KeyboardKeyEventArgs args) {
-            var keyAction = "KEY_PRESS";
+            var keyAction = "KEY_RELEASE";
             var keyEvent = GameEventFactory<object>.CreateGameEventForAllProcessors(
                 GameEventType.InputEvent, this, Input.KeyTransformer.GetKeyString(args.Key), keyAction, "");
                 eventBus.RegisterEvent(keyEvent);
         }
 
-        /*
-        private void RegisterEvent(object sender, KeyboardKeyEventArgs e) {
-            var keyAction = (e.Keyboard.IsKeyDown(e.Key)) ? "KEY_PRESS" : "KEY_RELEASE";
-            var newEvent = GameEventFactory<object>.CreateGameEventForAllProcessors(
-                GameEventType.InputEvent, this, Input.KeyTransformer.GetKeyString(e.Key), keyAction, "");
-            eventBus.RegisterEvent(newEvent);
-        }
-        */
 
         #region WINDOW_RESIZE
 

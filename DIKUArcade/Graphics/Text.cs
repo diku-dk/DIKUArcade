@@ -59,6 +59,8 @@ namespace DIKUArcade.Graphics {
 
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+            //GL.BlendFunc(textureId, BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
 
@@ -267,10 +269,12 @@ namespace DIKUArcade.Graphics {
                    Matrix4.CreateTranslation(shape.Position.X + halfX, shape.Position.Y + halfY,
                        0.0f);
         }
+        
         public void ScaleText(float scale) {
             shape.Position *= scale;
             shape.Scale(scale);
         }
+        
         public void RenderText() {
             // bind this texture
             BindTexture();

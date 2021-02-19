@@ -59,6 +59,8 @@ namespace TestDIKUArcade {
             if (type != GameEventType.InputEvent) {
                 throw new InvalidEnumArgumentException("type must be a GameEventType.InputEvent!");
             }
+            var e = gameEvent;
+            Console.WriteLine($"type={e.EventType} from={e.From} to={e.To} msg={e.Message} p1={e.Parameter1} p2={e.Parameter2} p3={e.Parameter3}");
             if (gameEvent.Parameter1 != "KEY_PRESS") {
                 return;
             }
