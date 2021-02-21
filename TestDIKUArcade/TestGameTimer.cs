@@ -43,6 +43,7 @@ namespace TestDIKUArcade {
                     //Console.WriteLine("should reset");
                     fps.SetText($"FPS: {timer.CapturedFrames}");
                     ups.SetText($"UPS: {timer.CapturedUpdates}");
+                    win.Title = "TestGameTimer | " + timer.CapturedFrames;
                 }
             }
         }

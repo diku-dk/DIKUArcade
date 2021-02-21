@@ -31,5 +31,9 @@
         /// Additional parameter for message/command
         /// </summary>
         public string Parameter2;
+        /// <summary>
+        /// Additional object parameter to pass different types.
+        /// </summary>
+        public object Parameter3;
     }
 }

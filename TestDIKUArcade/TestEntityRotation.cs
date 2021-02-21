@@ -1,27 +1,27 @@
 ﻿using DIKUArcade;
 using DIKUArcade.Entities;
-using DIKUArcade.Graphics;
 using DIKUArcade.Math;
-using OpenTK.Input;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace TestDIKUArcade {
     public class TestEntityRotation {
         public static void MainFunction() {
-            var win = new Window("TestEntityRotation", 500, AspectRatio.R1X1) {Resizable = false};
+            var win = new DIKUArcade.Window("TestEntityRotation", 500, AspectRatio.R1X1) {Resizable = false};
 
-            var img = new Image("Taxi.png");
+            var img = new DIKUArcade.Graphics.Image("Taxi.png");
             var ent = new Entity(
                 new DynamicShape(new Vec2F(0.25f,0.25f), new Vec2F(0.5f,0.5f)), img);
 
             win.AddKeyPressEventHandler(delegate(KeyboardKeyEventArgs args) {
-                if (args.Key == Key.R) {
+                if (args.Key == Keys.R) {
                     if (args.Shift) {
                         ent.Shape.Rotate((float)System.Math.PI / 16.0f);
                     } else {
                         ent.Shape.Rotate((float)System.Math.PI / -16.0f);
                     }
                 }
-                if (args.Key == Key.Escape) {
+                if (args.Key == Keys.Escape) {
                     win.CloseWindow();
                 }
             });

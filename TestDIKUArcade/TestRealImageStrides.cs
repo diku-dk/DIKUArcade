@@ -3,12 +3,13 @@ using DIKUArcade;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
 using DIKUArcade.Math;
-using OpenTK.Input;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace TestDIKUArcade {
     public class TestRealImageStrides {
         public static void MainFunction() {
-            var win = new Window("hej", 500, AspectRatio.R1X1);
+            var win = new DIKUArcade.Window("hej", 500, AspectRatio.R1X1);
             win.SetClearColor(System.Drawing.Color.Brown);
 
             var images = ImageStride.CreateStrides(4, "BlueMonster.png");
@@ -20,22 +21,22 @@ namespace TestDIKUArcade {
             }
 
             win.AddKeyPressEventHandler(delegate(KeyboardKeyEventArgs keyArgs) {
-                if (keyArgs.Key == Key.Left) {
+                if (keyArgs.Key == Keys.Left) {
                     entities.Iterate(delegate(Entity entity) {
                         entity.Shape.MoveX(-0.05f);
                     });
                 }
-                if (keyArgs.Key == Key.Right) {
+                if (keyArgs.Key == Keys.Right) {
                     entities.Iterate(delegate(Entity entity) {
                         entity.Shape.MoveX(0.05f);
                     });
                 }
-                if (keyArgs.Key == Key.Up) {
+                if (keyArgs.Key == Keys.Up) {
                     entities.Iterate(delegate(Entity entity) {
                         entity.Shape.MoveY(0.05f);
                     });
                 }
-                if (keyArgs.Key == Key.Down) {
+                if (keyArgs.Key == Keys.Down) {
                     entities.Iterate(delegate(Entity entity) {
                         entity.Shape.MoveY(-0.05f);
                     });
