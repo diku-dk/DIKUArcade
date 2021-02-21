@@ -183,5 +183,9 @@ namespace DIKUArcade.Graphics {
             // render the current texture object
             textures[currentImageCount].Render(shape);
         }
+        public void Render(Shape shape, Camera camera) {
+            throw new NotImplementedException();
+            
+        }
     }
 }

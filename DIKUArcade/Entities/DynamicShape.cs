@@ -22,7 +22,7 @@ namespace DIKUArcade.Entities {
         public DynamicShape(Vec2F pos, Vec2F extent) {
             Position = pos;
             Extent = extent;
-            Direction = new Vec2F();
+            Direction = new Vec2F(0f, 0f); // init 0 to avoid problems
         }
 
         public DynamicShape(Vec2F pos, Vec2F extent, Vec2F dir) {

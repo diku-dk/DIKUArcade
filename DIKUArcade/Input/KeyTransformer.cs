@@ -1,408 +1,377 @@
-﻿using OpenTK.Input;
+﻿using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace DIKUArcade.Input {
     public class KeyTransformer {
         /// <summary>
         /// Transform an OpenTK input key to a DIKUArcade key string
         /// </summary>
-        public static string GetKeyString(Key key) {
+        public static string GetKeyString(Keys key) {
             var ret = "";
             switch (key) {
-            case Key.Unknown:
+            case Keys.Unknown:
                 break;
-            case Key.ShiftLeft:
+            case Keys.LeftShift:
                 ret = "KEY_SHIFT_LEFT";
                 break;
-            case Key.ShiftRight:
+            case Keys.RightShift:
                 ret = "KEY_SHIFT_RIGHT";
                 break;
-            case Key.ControlLeft:
+            case Keys.LeftControl:
                 ret = "KEY_CONTROL_LEFT";
                 break;
-            case Key.ControlRight:
+            case Keys.RightControl:
                 ret = "KEY_CONTROL_RIGHT";
                 break;
-            case Key.AltLeft:
+            case Keys.LeftAlt:
                 ret = "KEY_ALT_LEFT";
                 break;
-            case Key.AltRight:
+            case Keys.RightAlt:
                 ret = "KEY_ALT_RIGHT";
                 break;
-            case Key.WinLeft:
+            case Keys.LeftSuper:
                 ret = "KEY_WIN_LEFT";
                 break;
-            case Key.WinRight:
+            case Keys.RightSuper:
                 ret = "KEY_WIN_RIGHT";
                 break;
-            case Key.Menu:
+            case Keys.Menu:
                 ret = "KEY_MENU";
                 break;
-            case Key.F1:
+            case Keys.F1:
                 ret = "KEY_F1";
                 break;
-            case Key.F2:
+            case Keys.F2:
                 ret = "KEY_F2";
                 break;
-            case Key.F3:
+            case Keys.F3:
                 ret = "KEY_F3";
                 break;
-            case Key.F4:
+            case Keys.F4:
                 ret = "KEY_F4";
                 break;
-            case Key.F5:
+            case Keys.F5:
                 ret = "KEY_F5";
                 break;
-            case Key.F6:
+            case Keys.F6:
                 ret = "KEY_F6";
                 break;
-            case Key.F7:
+            case Keys.F7:
                 ret = "KEY_F7";
                 break;
-            case Key.F8:
+            case Keys.F8:
                 ret = "KEY_F8";
                 break;
-            case Key.F9:
+            case Keys.F9:
                 ret = "KEY_F9";
                 break;
-            case Key.F10:
+            case Keys.F10:
                 ret = "KEY_F10";
                 break;
-            case Key.F11:
+            case Keys.F11:
                 ret = "KEY_F11";
                 break;
-            case Key.F12:
+            case Keys.F12:
                 ret = "KEY_F12";
                 break;
-            case Key.F13:
+            case Keys.F13:
                 ret = "KEY_F13";
                 break;
-            case Key.F14:
+            case Keys.F14:
                 ret = "KEY_F14";
                 break;
-            case Key.F15:
+            case Keys.F15:
                 ret = "KEY_F15";
                 break;
-            case Key.F16:
+            case Keys.F16:
                 ret = "KEY_F16";
                 break;
-            case Key.F17:
+            case Keys.F17:
                 ret = "KEY_F17";
                 break;
-            case Key.F18:
+            case Keys.F18:
                 ret = "KEY_F18";
                 break;
-            case Key.F19:
+            case Keys.F19:
                 ret = "KEY_F19";
                 break;
-            case Key.F20:
+            case Keys.F20:
                 ret = "KEY_F20";
                 break;
-            case Key.F21:
+            case Keys.F21:
                 ret = "KEY_F21";
                 break;
-            case Key.F22:
+            case Keys.F22:
                 ret = "KEY_F22";
                 break;
-            case Key.F23:
+            case Keys.F23:
                 ret = "KEY_F23";
                 break;
-            case Key.F24:
+            case Keys.F24:
                 ret = "KEY_F24";
                 break;
-            case Key.F25:
+            case Keys.F25:
                 ret = "KEY_F25";
                 break;
-            case Key.F26:
-                ret = "KEY_F26";
-                break;
-            case Key.F27:
-                ret = "KEY_F27";
-                break;
-            case Key.F28:
-                ret = "KEY_F28";
-                break;
-            case Key.F29:
-                ret = "KEY_F29";
-                break;
-            case Key.F30:
-                ret = "KEY_F30";
-                break;
-            case Key.F31:
-                ret = "KEY_F31";
-                break;
-            case Key.F32:
-                ret = "KEY_F32";
-                break;
-            case Key.F33:
-                ret = "KEY_F33";
-                break;
-            case Key.F34:
-                ret = "KEY_F34";
-                break;
-            case Key.F35:
-                ret = "KEY_F35";
-                break;
-            case Key.Up:
+            case Keys.Up:
                 ret = "KEY_UP";
                 break;
-            case Key.Down:
+            case Keys.Down:
                 ret = "KEY_DOWN";
                 break;
-            case Key.Left:
+            case Keys.Left:
                 ret = "KEY_LEFT";
                 break;
-            case Key.Right:
+            case Keys.Right:
                 ret = "KEY_RIGHT";
                 break;
-            case Key.Enter:
+            case Keys.Enter:
                 ret = "KEY_ENTER";
                 break;
-            case Key.Escape:
+            case Keys.Escape:
                 ret = "KEY_ESCAPE";
                 break;
-            case Key.Space:
+            case Keys.Space:
                 ret = "KEY_SPACE";
                 break;
-            case Key.Tab:
+            case Keys.Tab:
                 ret = "KEY_TAB";
                 break;
-            case Key.BackSpace:
+            case Keys.Backspace:
                 ret = "KEY_BACKSPACE";
                 break;
-            case Key.Insert:
+            case Keys.Insert:
                 ret = "KEY_INSERT";
                 break;
-            case Key.Delete:
+            case Keys.Delete:
                 ret = "KEY_DELETE";
                 break;
-            case Key.PageUp:
+            case Keys.PageUp:
                 ret = "KEY_PAGEUP";
                 break;
-            case Key.PageDown:
+            case Keys.PageDown:
                 ret = "KEY_PAGEDOWN";
                 break;
-            case Key.Home:
+            case Keys.Home:
                 ret = "KEY_HOME";
                 break;
-            case Key.End:
+            case Keys.End:
                 ret = "KEY_END";
                 break;
-            case Key.CapsLock:
+            case Keys.CapsLock:
                 ret = "KEY_CAPSLOCK";
                 break;
-            case Key.ScrollLock:
+            case Keys.ScrollLock:
                 ret = "KEY_SCROLL_LOCK";
                 break;
-            case Key.PrintScreen:
+            case Keys.PrintScreen:
                 ret = "KEY_PRINTSCREEN";
                 break;
-            case Key.Pause:
+            case Keys.Pause:
                 ret = "KEY_PAUSE";
                 break;
-            case Key.NumLock:
+            case Keys.NumLock:
                 ret = "KEY_NUMLOCK";
                 break;
-            case Key.Clear:
-                ret = "KEY_CLEAR";
-                break;
-            case Key.Sleep:
-                ret = "KEY_SLEEP";
-                break;
-            case Key.Keypad0:
+            case Keys.KeyPad0:
                 ret = "KEY_KEYPAD_0";
                 break;
-            case Key.Keypad1:
+            case Keys.KeyPad1:
                 ret = "KEY_KEYPAD_1";
                 break;
-            case Key.Keypad2:
+            case Keys.KeyPad2:
                 ret = "KEY_KEYPAD_2";
                 break;
-            case Key.Keypad3:
+            case Keys.KeyPad3:
                 ret = "KEY_KEYPAD_3";
                 break;
-            case Key.Keypad4:
+            case Keys.KeyPad4:
                 ret = "KEY_KEYPAD_4";
                 break;
-            case Key.Keypad5:
+            case Keys.KeyPad5:
                 ret = "KEY_KEYPAD_5";
                 break;
-            case Key.Keypad6:
+            case Keys.KeyPad6:
                 ret = "KEY_KEYPAD_6";
                 break;
-            case Key.Keypad7:
+            case Keys.KeyPad7:
                 ret = "KEY_KEYPAD_7";
                 break;
-            case Key.Keypad8:
+            case Keys.KeyPad8:
                 ret = "KEY_KEYPAD_8";
                 break;
-            case Key.Keypad9:
+            case Keys.KeyPad9:
                 ret = "KEY_KEYPAD_9";
                 break;
-            case Key.KeypadDivide:
+            case Keys.KeyPadDivide:
                 ret = "KEY_KEYPAD_DIVIDE";
                 break;
-            case Key.KeypadMultiply:
+            case Keys.KeyPadMultiply:
                 ret = "KEY_KEYPAD_MULTIPLY";
                 break;
-            case Key.KeypadSubtract:
+            case Keys.KeyPadSubtract:
                 ret = "KEY_KEYPAD_SUBTRACT";
                 break;
-            case Key.KeypadAdd:
+            case Keys.KeyPadAdd:
                 ret = "KEY_KEYPAD_ADD";
                 break;
-            case Key.KeypadDecimal:
+            case Keys.KeyPadDecimal:
                 ret = "KEY_KEYPAD_DECIMAL";
                 break;
-            case Key.KeypadEnter:
+            case Keys.KeyPadEnter:
                 ret = "KEY_KEYPAD_ENTER";
                 break;
-            case Key.A:
+            case Keys.A:
                 ret = "KEY_A";
                 break;
-            case Key.B:
+            case Keys.B:
                 ret = "KEY_B";
                 break;
-            case Key.C:
+            case Keys.C:
                 ret = "KEY_C";
                 break;
-            case Key.D:
+            case Keys.D:
                 ret = "KEY_D";
                 break;
-            case Key.E:
+            case Keys.E:
                 ret = "KEY_E";
                 break;
-            case Key.F:
+            case Keys.F:
                 ret = "KEY_F";
                 break;
-            case Key.G:
+            case Keys.G:
                 ret = "KEY_G";
                 break;
-            case Key.H:
+            case Keys.H:
                 ret = "KEY_H";
                 break;
-            case Key.I:
+            case Keys.I:
                 ret = "KEY_I";
                 break;
-            case Key.J:
+            case Keys.J:
                 ret = "KEY_J";
                 break;
-            case Key.K:
+            case Keys.K:
                 ret = "KEY_K";
                 break;
-            case Key.L:
+            case Keys.L:
                 ret = "KEY_L";
                 break;
-            case Key.M:
+            case Keys.M:
                 ret = "KEY_M";
                 break;
-            case Key.N:
+            case Keys.N:
                 ret = "KEY_N";
                 break;
-            case Key.O:
+            case Keys.O:
                 ret = "KEY_O";
                 break;
-            case Key.P:
+            case Keys.P:
                 ret = "KEY_P";
                 break;
-            case Key.Q:
+            case Keys.Q:
                 ret = "KEY_Q";
                 break;
-            case Key.R:
+            case Keys.R:
                 ret = "KEY_R";
                 break;
-            case Key.S:
+            case Keys.S:
                 ret = "KEY_S";
                 break;
-            case Key.T:
+            case Keys.T:
                 ret = "KEY_T";
                 break;
-            case Key.U:
+            case Keys.U:
                 ret = "KEY_U";
                 break;
-            case Key.V:
+            case Keys.V:
                 ret = "KEY_V";
                 break;
-            case Key.W:
+            case Keys.W:
                 ret = "KEY_W";
                 break;
-            case Key.X:
+            case Keys.X:
                 ret = "KEY_X";
                 break;
-            case Key.Y:
+            case Keys.Y:
                 ret = "KEY_Y";
                 break;
-            case Key.Z:
+            case Keys.Z:
                 ret = "KEY_Z";
                 break;
-            case Key.Number0:
+            case Keys.D0:
                 ret = "KEY_0";
                 break;
-            case Key.Number1:
+            case Keys.D1:
                 ret = "KEY_1";
                 break;
-            case Key.Number2:
+            case Keys.D2:
                 ret = "KEY_2";
                 break;
-            case Key.Number3:
+            case Keys.D3:
                 ret = "KEY_3";
                 break;
-            case Key.Number4:
+            case Keys.D4:
                 ret = "KEY_4";
                 break;
-            case Key.Number5:
+            case Keys.D5:
                 ret = "KEY_5";
                 break;
-            case Key.Number6:
+            case Keys.D6:
                 ret = "KEY_6";
                 break;
-            case Key.Number7:
+            case Keys.D7:
                 ret = "KEY_7";
                 break;
-            case Key.Number8:
+            case Keys.D8:
                 ret = "KEY_8";
                 break;
-            case Key.Number9:
+            case Keys.D9:
                 ret = "KEY_9";
                 break;
-            case Key.Tilde:
-                ret = "KEY_TILDE";
-                break;
-            case Key.Minus:
+            case Keys.Minus:
                 ret = "KEY_MINUS";
                 break;
-            case Key.Plus:
+                /* // TODO: FIGURE OUT!!
+            case Keys
                 ret = "KEY_PLUS";
                 break;
-            case Key.BracketLeft:
+                */
+            case Keys.LeftBracket:
                 ret = "KEY_BRACKET_LEFT";
                 break;
-            case Key.BracketRight:
+            case Keys.RightBracket:
                 ret = "KEY_BRACKET_RIGHT";
                 break;
-            case Key.Semicolon:
+            case Keys.Semicolon:
                 ret = "KEY_SEMICOLON";
                 break;
-            case Key.Quote:
+                /* // TODO: FIGURE OUT!!
+            case Keys.
                 ret = "KEY_QUOTE";
                 break;
-            case Key.Comma:
+                */
+            case Keys.Comma:
                 ret = "KEY_COMMA";
                 break;
-            case Key.Period:
+            case Keys.Period:
                 ret = "KEY_PERIOD";
                 break;
-            case Key.Slash:
+            case Keys.Slash:
                 ret = "KEY_SLASH";
                 break;
-            case Key.BackSlash:
+            case Keys.Backslash:
                 ret = "KEY_BACKSLASH";
                 break;
-            case Key.NonUSBackSlash:
+                /* // TODO: FIGURE OUT!!
+            case Keys
                 ret = "KEY_NONUSBACKSLASH";
                 break;
-            case Key.LastKey:
+                */
+                /* // TODO: FIGURE OUT!!
+            case Keys.LastKey:
                 ret = "KEY_LASTKEY";
                 break;
+                */
             default:
                 break;
             }
