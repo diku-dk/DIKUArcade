@@ -14,11 +14,7 @@ namespace DIKUArcade.Entities {
 
         public EntityContainer() : this(50) { }
 
-        public void AddStationaryEntity(T obj) {
-            entities.Add(obj);
-        }
-
-        public void AddDynamicEntity(T obj) {
+        public void AddEntity(T obj) {
             entities.Add(obj);
         }
 
@@ -87,7 +83,7 @@ namespace DIKUArcade.Entities {
             return new EntityContainerEnum(entities);
         }
 
-        private class EntityContainerEnum : IEnumerator {
+        private class EntityContainerEnum : IEnumerator<T> {
             private ReadOnlyCollection<T> entities;
             private int position = -1;
 
@@ -104,17 +100,11 @@ namespace DIKUArcade.Entities {
                 position = -1;
             }
 
+            void IDisposable.Dispose() { }
+
             object IEnumerator.Current => Current;
 
-            public T Current {
-                get {
-                    try {
-                        return entities[position];
-                    } catch (IndexOutOfRangeException) {
-                        throw new InvalidOperationException();
-                    }
-                }
-            }
+            public T Current => entities[position];
         }
 
         #endregion

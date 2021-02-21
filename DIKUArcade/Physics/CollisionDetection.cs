@@ -1,4 +1,5 @@
-﻿using DIKUArcade.Entities;
+﻿using System;
+using DIKUArcade.Entities;
 using DIKUArcade.Math;
 
 namespace DIKUArcade.Physics {
@@ -8,6 +9,9 @@ namespace DIKUArcade.Physics {
     // Or use SAT.
     public class CollisionDetection {
         public static CollisionData Aabb_C(DynamicShape actor, Shape shape) {
+            throw new NotImplementedException("CollisionDetection.Aabb_C is not finished!");
+
+            /*
             var data = new CollisionData {
                 Collision = false,
                 DirectionFactor = new Vec2F(1.0f, 1.0f),
@@ -27,6 +31,7 @@ namespace DIKUArcade.Physics {
             // Clamp D to width/2 height/2 and add it to staCenter
 
             return data;
+            */
         }
 
         public static CollisionData Aabb(DynamicShape actor, Shape shape) {
