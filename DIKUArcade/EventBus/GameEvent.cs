@@ -26,18 +26,18 @@
         /// <summary>
         /// Paramter of the message/command, e.g. sound: sound filename or identifier 
         /// </summary>
-        public string Parameter1;
+        public string String1;
         /// <summary>
         /// Additional parameter for message/command
         /// </summary>
-        public string Parameter2;
+        public string String2;
         /// <summary>
         /// Additional object parameter to pass different types.
         /// </summary>
-        public object Parameter3;
+        public object Object1;
         /// <summary>
         /// Additional object parameter to pass different types.
         /// </summary>
-        public object Parameter4;
+        public object Object2;
     }
 }

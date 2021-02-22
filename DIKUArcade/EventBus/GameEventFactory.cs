@@ -20,27 +20,27 @@
             return new GameEvent<T>()
             {
                 EventType = gameEventType, From= sender, To=default(T),
-                Message = message, Parameter1 = parameter1, Parameter2 = parameter2
+                Message = message, String1 = parameter1, String2 = parameter2
             };
         }
 
-        // Overload that allows passing an object parameter to avoid casting to and from string when a different type payload is desired.
-        public static GameEvent<T> CreateGameEventForAllProcessors(GameEventType gameEventType, T sender, string message, string parameter1, string parameter2, object parameter3)
+        // Overload that allows passing an object parameter to avoid casting multiple times when a different type payload is desired.
+        public static GameEvent<T> CreateGameEventForAllProcessors(GameEventType gameEventType, T sender, string message, string string1, string string2, object object1)
         {
             return new GameEvent<T>()
             {
                 EventType = gameEventType, From= sender, To=default(T),
-                Message = message, Parameter1 = parameter1, Parameter2 = parameter2, Parameter3 = parameter3
+                Message = message, String1 = string1, String2 = string2, Object1 = object1
             };
         }
 
-        // Overload that allows passing an object parameter to avoid casting to and from string when a different type payload is desired.
-        public static GameEvent<T> CreateGameEventForAllProcessors(GameEventType gameEventType, T sender, string message, string parameter1, string parameter2, object parameter3, object parameter4)
+        // Overload that allows passing two object parameters to avoid casting multiple times when a different type payload is desired.
+        public static GameEvent<T> CreateGameEventForAllProcessors(GameEventType gameEventType, T sender, string message, string string1, string string2, object object1, object object2)
         {
             return new GameEvent<T>()
             {
                 EventType = gameEventType, From= sender, To=default(T),
-                Message = message, Parameter1 = parameter1, Parameter2 = parameter2, Parameter3 = parameter3, Parameter4 = parameter4
+                Message = message, String1 = string1, String2 = string2, Object1 = object1, Object2 = object2
             };
         }
 
@@ -55,10 +55,10 @@
         /// <param name="parameter2">Message specific parameter.</param>
         /// <returns>A fully initialized game event for all processors that can be registered in the game event bus.</returns>
         public static GameEvent<T> CreateGameEventForSpecificProcessor(GameEventType gameEventType,
-            T sender, T processor, string message, string parameter1, string parameter2)
+            T sender, T processor, string message, string string1, string string2)
         {
             return new GameEvent<T>() { EventType = gameEventType, From = sender, To= processor,
-                Message = message, Parameter1 = parameter1, Parameter2 = parameter2
+                Message = message, String1 = string1, String2 = string2
             };
         }
     }

@@ -4,8 +4,9 @@ namespace DIKUArcade.Timers {
     public struct TimedEvent {
 
         public string message { get; set; }
-        public string parameter1 { get; set; }
-        public string parameter2 { get; set; }
+        public string string1 { get; set; }
+        public string string2 { get; set; }
+        public object object1 { get; set; }
 
         /// <summary>
         /// Time span that must elapse before this event should be activated,
@@ -15,10 +16,11 @@ namespace DIKUArcade.Timers {
         private double timeOfCreation;
 
         public TimedEvent(TimeSpanType timeSpanType, int timeSpan, string message,
-            string parameter1 = "", string parameter2 = "") {
+            string parameter1 = "", string parameter2 = "", object object1 = null) {
             this.message = message;
-            this.parameter1 = parameter1;
-            this.parameter2 = parameter2;
+            this.string1 = parameter1;
+            this.string2 = parameter2;
+            this.object1 = object1;
 
             timeOfCreation = 0.0;
             timeSpanMilliseconds = (double) timeSpan;

@@ -59,6 +59,23 @@ namespace DIKUArcade.Timers {
         }
 
         /// <summary>
+        /// Add a timed event to this container, if there is enough space. Overloaded version with additional object parameter.
+        /// </summary>
+        public void AddTimedEvent(TimeSpanType type, int timeSpan, string message,
+            string parameter1, string parameter2, object parameter3) {
+            for (int i = 0; i < size; i++) {
+                ref var Tuple = ref events[i];
+                ref var Event = ref Tuple.timedEvent;
+                if (!Tuple.occupied) {
+                    Tuple.occupied = true;
+                    Event = new TimedEvent(type, timeSpan, message, parameter1, parameter2, parameter3);
+                    Event.ResetTimer();
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
         /// Iterate through its internal list of timed events and for each,
         /// push the event to the registered EventBus if its time has elapsed.
         /// </summary>
@@ -69,9 +86,17 @@ namespace DIKUArcade.Timers {
 
                 if (Tuple.occupied && Event.HasExpired()) { // boolean short-circuitry!
                     Tuple.occupied = false;
-                    eventBus.RegisterEvent(GameEventFactory<object>.CreateGameEventForAllProcessors(
-                        GameEventType.TimedEvent, this, Event.message, Event.parameter1,
-                        Event.parameter2));
+
+                    // Avoid passing any null object parameters in the case where object1 is not used.
+                    if (Event.object1 is not null) {
+                        eventBus.RegisterEvent(GameEventFactory<object>.CreateGameEventForAllProcessors(
+                            GameEventType.TimedEvent, this, Event.message, Event.string1,
+                            Event.string2, Event.object1));
+                    } else {
+                        eventBus.RegisterEvent(GameEventFactory<object>.CreateGameEventForAllProcessors(
+                            GameEventType.TimedEvent, this, Event.message, Event.string1,
+                            Event.string2));
+                    }
                 }
             }
         }
