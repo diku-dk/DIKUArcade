@@ -4,8 +4,8 @@
 </p>
 <br>
 
-DIKUArcade is a simple 2D Game Engine, created specifically for the SoftwareDevelopment (SU) course at DIKU 2018,
-and maintained to this date.
+**DIKUArcade** is a simple 2D Game Engine, created specifically for the SoftwareDevelopment (SU)
+course at DIKU (Department of Computer Science, University of Copenhagen) 2018, and maintained to this date.
 
 ### Core Features ###
 
