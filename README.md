@@ -1,6 +1,8 @@
-# DIKUArcade #
 
-![DIKUArcade Logo](https://github.com/diku-dk/DIKUArcade/blob/master/Logo/DIKU-Arcade-filled.png?raw=true)
+<p align="center">
+  <img width="540" src="https://github.com/diku-dk/DIKUArcade/blob/master/Logo/DIKU-Arcade.png?raw=true" alt="Material Bread logo">
+</p>
+<br>
 
 DIKUArcade is a simple 2D Game Engine, created specifically for the SoftwareDevelopment (SU) course at DIKU 2018,
 and maintained to this date.
