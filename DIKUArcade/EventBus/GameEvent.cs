@@ -35,5 +35,9 @@
         /// Additional object parameter to pass different types.
         /// </summary>
         public object Parameter3;
+        /// <summary>
+        /// Additional object parameter to pass different types.
+        /// </summary>
+        public object Parameter4;
     }
 }

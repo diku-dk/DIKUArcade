@@ -34,6 +34,16 @@
             };
         }
 
+        // Overload that allows passing an object parameter to avoid casting to and from string when a different type payload is desired.
+        public static GameEvent<T> CreateGameEventForAllProcessors(GameEventType gameEventType, T sender, string message, string parameter1, string parameter2, object parameter3, object parameter4)
+        {
+            return new GameEvent<T>()
+            {
+                EventType = gameEventType, From= sender, To=default(T),
+                Message = message, Parameter1 = parameter1, Parameter2 = parameter2, Parameter3 = parameter3, Parameter4 = parameter4
+            };
+        }
+
         /// <summary>
         /// Create a game event for a specific processors and initialize it correctly for the processors.
         /// </summary>
