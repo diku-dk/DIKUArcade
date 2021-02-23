@@ -51,7 +51,7 @@ $ dotnet run -p TestDIKUArcade/
 
 Boris Düdder (SU course responsible, EventBus and rendering)<br>
 Oleksandr Shturmov<br>
-Alexander Christensen (main architect, alex_c007@hotmail.com)<br>
+Alexander Christensen (main architect, alch@di.ku.dk)<br>
 Christian Olsen<br>
 Simon Surland Andersen<br>
 Mads Obitsoe<br>
