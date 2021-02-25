@@ -1,4 +1,4 @@
-﻿namespace DIKUArcade.EventBus
+﻿namespace DIKUArcade.Events
 {
     /// <summary>
     /// GameEventTypes identifying the different event systems in the game framework.

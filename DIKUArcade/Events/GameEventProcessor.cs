@@ -1,4 +1,4 @@
-﻿namespace DIKUArcade.EventBus
+﻿namespace DIKUArcade.Events
 {
     public interface IGameEventProcessor<T>
     {

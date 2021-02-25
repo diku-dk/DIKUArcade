@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DIKUArcade.EventBus
+namespace DIKUArcade.Events
 {
     /// <summary>
     /// GameEventBus is the core module for processing events in the DIKUArcade game engine. Modules can register events and
@@ -67,6 +67,11 @@ namespace DIKUArcade.EventBus
             {
                 throw new Exception($"Could not unsubsribe event processor. Check eventType or processor is unregistered! {e}");
             }
+        }
+
+        public void RegisterEvent(KeyboardEvent gameEvent)
+        {
+
         }
 
         public void RegisterEvent(GameEvent<T> gameEvent)
