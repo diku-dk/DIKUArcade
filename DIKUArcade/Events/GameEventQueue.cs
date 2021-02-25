@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace DIKUArcade.EventBus
+namespace DIKUArcade.Events
 {
     /// <summary>
     /// Game event queue based on the concurrent queue implementation of the .NET framework 

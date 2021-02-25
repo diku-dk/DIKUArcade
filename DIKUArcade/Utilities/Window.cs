@@ -9,7 +9,7 @@ using System.IO;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.Common;
 using OpenTK.Graphics.OpenGL;
-using DIKUArcade.EventBus;
+using DIKUArcade.Events;
 
 namespace DIKUArcade {
     /// <summary>
@@ -443,7 +443,6 @@ namespace DIKUArcade {
         /// </summary>
         public void SwapBuffers() {
             window.SwapBuffers();
-            //window.Context.SwapBuffers();
         }
 
         /// <summary>

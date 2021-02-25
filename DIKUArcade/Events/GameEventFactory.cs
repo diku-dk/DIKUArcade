@@ -1,4 +1,4 @@
-﻿namespace DIKUArcade.EventBus
+﻿namespace DIKUArcade.Events
 {
     /// <summary>
     /// Factory methods to generate game events.

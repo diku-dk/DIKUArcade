@@ -1,5 +1,5 @@
 ﻿using System;
-using DIKUArcade.EventBus;
+using DIKUArcade.Events;
 
 namespace DIKUArcade.Timers {
     public class TimedEventContainer {

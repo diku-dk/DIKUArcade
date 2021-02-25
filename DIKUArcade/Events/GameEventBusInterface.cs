@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DIKUArcade.EventBus
+namespace DIKUArcade.Events
 {
     public interface IGameEventBus<T>
     {
