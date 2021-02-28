@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using DIKUArcade;
-using DIKUArcade.EventBus;
+using DIKUArcade.Events;
 
 namespace TestDIKUArcade {
     public class TestEventBusInputEvents : IGameEventProcessor<object> {
