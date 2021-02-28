@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using DIKUArcade;
 using DIKUArcade.Entities;
-using DIKUArcade.EventBus;
+using DIKUArcade.Events;
 using DIKUArcade.Graphics;
 using DIKUArcade.Math;
 using DIKUArcade.Physics;
