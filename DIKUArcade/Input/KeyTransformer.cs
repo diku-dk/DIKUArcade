@@ -1,6 +1,7 @@
 ﻿using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace DIKUArcade.Input {
+    [System.Obsolete("KeyTransformer class is obsolete! Use IKeyTransformer with globalization insted!", true)]
     public class KeyTransformer {
         /// <summary>
         /// Transform an OpenTK input key to a DIKUArcade key string

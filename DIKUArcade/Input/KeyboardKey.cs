@@ -1,11 +1,12 @@
-namespace DIKUArcade.Input
-{
+namespace DIKUArcade.Input {
     /// <summary>
-    /// Represents keys on a Danish keyboard layout.
-    /// TODO: Add Globalization and a keyboard layout "Facade".
+    /// Enum of keyboard keys.
     /// </summary>
     public enum KeyboardKey
     {
+        /// <summary>
+        /// Matches the case of an invalid, non-existent, or unsupported keyboard key.
+        /// </summary>
         Unknown,
 
         /// <summary>
@@ -27,6 +28,11 @@ namespace DIKUArcade.Input
         /// The minus key '-'
         /// </summary>
         Minus,
+
+        /// <summary>
+        /// The plus key '+'
+        /// </summary>
+        Plus,
 
         /// <summary>
         /// The period/dot key '.'
@@ -96,7 +102,7 @@ namespace DIKUArcade.Input
         /// <summary>
         /// The equal key.
         /// </summary>
-        Equal = 61,
+        Equal,
 
         /// <summary>
         /// The A key.
@@ -146,461 +152,508 @@ namespace DIKUArcade.Input
         /// <summary>
         /// The J key.
         /// </summary>
-        J = 74,
+        J,
 
         /// <summary>
         /// The K key.
         /// </summary>
-        K = 75,
+        K,
 
         /// <summary>
         /// The L key.
         /// </summary>
-        L = 76,
+        L,
 
         /// <summary>
         /// The M key.
         /// </summary>
-        M = 77,
+        M,
 
         /// <summary>
         /// The N key.
         /// </summary>
-        N = 78,
+        N,
 
         /// <summary>
         /// The O key.
         /// </summary>
-        O = 79,
+        O,
 
         /// <summary>
         /// The P key.
         /// </summary>
-        P = 80,
+        P,
 
         /// <summary>
         /// The Q key.
         /// </summary>
-        Q = 81,
+        Q,
 
         /// <summary>
         /// The R key.
         /// </summary>
-        R = 82,
+        R,
 
         /// <summary>
         /// The S key.
         /// </summary>
-        S = 83,
+        S,
 
         /// <summary>
         /// The T key.
         /// </summary>
-        T = 84,
+        T,
 
         /// <summary>
         /// The U key.
         /// </summary>
-        U = 85,
+        U,
 
         /// <summary>
         /// The V key.
         /// </summary>
-        V = 86,
+        V,
 
         /// <summary>
         /// The W key.
         /// </summary>
-        W = 87,
+        W,
 
         /// <summary>
         /// The X key.
         /// </summary>
-        X = 88,
+        X,
 
         /// <summary>
         /// The Y key.
         /// </summary>
-        Y = 89,
+        Y,
 
         /// <summary>
         /// The Z key.
         /// </summary>
-        Z = 90,
+        Z,
 
         /// <summary>
-        /// The left bracket(opening bracket) key.
+        /// The left bracket(opening bracket) key '['
         /// </summary>
-        LeftBracket = 91 /* [ */,
+        LeftBracket,
 
         /// <summary>
-        /// The backslash.
+        /// The backslash '\'
         /// </summary>
-        Backslash = 92 /* \ */,
+        Backslash,
 
         /// <summary>
-        /// The right bracket(closing bracket) key.
+        /// The right bracket(closing bracket) key ']'
         /// </summary>
-        RightBracket = 93 /* ] */,
+        RightBracket,
 
         /// <summary>
-        /// The grave accent key.
+        /// The grave accent key '`'
         /// </summary>
-        GraveAccent = 96 /* ` */,
+        GraveAccent,
+
+        /// <summary>
+        /// The acute accent key ("inverted" grave accent) '´'
+        /// </summary>
+        AcuteAccent,
 
         /// <summary>
         /// The escape key.
         /// </summary>
-        Escape = 256,
+        Escape,
 
         /// <summary>
         /// The enter key.
         /// </summary>
-        Enter = 257,
+        Enter,
 
         /// <summary>
         /// The tab key.
         /// </summary>
-        Tab = 258,
+        Tab,
 
         /// <summary>
         /// The backspace key.
         /// </summary>
-        Backspace = 259,
+        Backspace,
 
         /// <summary>
         /// The insert key.
         /// </summary>
-        Insert = 260,
+        Insert,
 
         /// <summary>
         /// The delete key.
         /// </summary>
-        Delete = 261,
+        Delete,
 
         /// <summary>
         /// The right arrow key.
         /// </summary>
-        Right = 262,
+        Right,
 
         /// <summary>
         /// The left arrow key.
         /// </summary>
-        Left = 263,
+        Left,
 
         /// <summary>
         /// The down arrow key.
         /// </summary>
-        Down = 264,
+        Down,
 
         /// <summary>
         /// The up arrow key.
         /// </summary>
-        Up = 265,
+        Up,
 
         /// <summary>
         /// The page up key.
         /// </summary>
-        PageUp = 266,
+        PageUp,
 
         /// <summary>
         /// The page down key.
         /// </summary>
-        PageDown = 267,
+        PageDown,
 
         /// <summary>
         /// The home key.
         /// </summary>
-        Home = 268,
+        Home,
 
         /// <summary>
         /// The end key.
         /// </summary>
-        End = 269,
+        End,
 
         /// <summary>
         /// The caps lock key.
         /// </summary>
-        CapsLock = 280,
+        CapsLock,
 
         /// <summary>
         /// The scroll lock key.
         /// </summary>
-        ScrollLock = 281,
+        ScrollLock,
 
         /// <summary>
         /// The num lock key.
         /// </summary>
-        NumLock = 282,
+        NumLock,
 
         /// <summary>
         /// The print screen key.
         /// </summary>
-        PrintScreen = 283,
+        PrintScreen,
 
         /// <summary>
         /// The pause key.
         /// </summary>
-        Pause = 284,
+        Pause,
 
         /// <summary>
         /// The F1 key.
         /// </summary>
-        F1 = 290,
+        F1,
 
         /// <summary>
         /// The F2 key.
         /// </summary>
-        F2 = 291,
+        F2,
 
         /// <summary>
         /// The F3 key.
         /// </summary>
-        F3 = 292,
+        F3,
 
         /// <summary>
         /// The F4 key.
         /// </summary>
-        F4 = 293,
+        F4,
 
         /// <summary>
         /// The F5 key.
         /// </summary>
-        F5 = 294,
+        F5,
 
         /// <summary>
         /// The F6 key.
         /// </summary>
-        F6 = 295,
+        F6,
 
         /// <summary>
         /// The F7 key.
         /// </summary>
-        F7 = 296,
+        F7,
 
         /// <summary>
         /// The F8 key.
         /// </summary>
-        F8 = 297,
+        F8,
 
         /// <summary>
         /// The F9 key.
         /// </summary>
-        F9 = 298,
+        F9,
 
         /// <summary>
         /// The F10 key.
         /// </summary>
-        F10 = 299,
+        F10,
 
         /// <summary>
         /// The F11 key.
         /// </summary>
-        F11 = 300,
+        F11,
 
         /// <summary>
         /// The F12 key.
         /// </summary>
-        F12 = 301,
+        F12,
 
         /// <summary>
         /// The F13 key.
         /// </summary>
-        F13 = 302,
+        F13,
 
         /// <summary>
         /// The F14 key.
         /// </summary>
-        F14 = 303,
+        F14,
 
         /// <summary>
         /// The F15 key.
         /// </summary>
-        F15 = 304,
+        F15,
 
         /// <summary>
         /// The F16 key.
         /// </summary>
-        F16 = 305,
+        F16,
 
         /// <summary>
         /// The F17 key.
         /// </summary>
-        F17 = 306,
+        F17,
 
         /// <summary>
         /// The F18 key.
         /// </summary>
-        F18 = 307,
+        F18,
 
         /// <summary>
         /// The F19 key.
         /// </summary>
-        F19 = 308,
+        F19,
 
         /// <summary>
         /// The F20 key.
         /// </summary>
-        F20 = 309,
+        F20,
 
         /// <summary>
         /// The F21 key.
         /// </summary>
-        F21 = 310,
+        F21,
 
         /// <summary>
         /// The F22 key.
         /// </summary>
-        F22 = 311,
+        F22,
 
         /// <summary>
         /// The F23 key.
         /// </summary>
-        F23 = 312,
+        F23,
 
         /// <summary>
         /// The F24 key.
         /// </summary>
-        F24 = 313,
+        F24,
 
         /// <summary>
         /// The F25 key.
         /// </summary>
-        F25 = 314,
+        F25,
 
         /// <summary>
         /// The 0 key on the key pad.
         /// </summary>
-        KeyPad0 = 320,
+        KeyPad0,
 
         /// <summary>
         /// The 1 key on the key pad.
         /// </summary>
-        KeyPad1 = 321,
+        KeyPad1,
 
         /// <summary>
         /// The 2 key on the key pad.
         /// </summary>
-        KeyPad2 = 322,
+        KeyPad2,
 
         /// <summary>
         /// The 3 key on the key pad.
         /// </summary>
-        KeyPad3 = 323,
+        KeyPad3,
 
         /// <summary>
         /// The 4 key on the key pad.
         /// </summary>
-        KeyPad4 = 324,
+        KeyPad4,
 
         /// <summary>
         /// The 5 key on the key pad.
         /// </summary>
-        KeyPad5 = 325,
+        KeyPad5,
 
         /// <summary>
         /// The 6 key on the key pad.
         /// </summary>
-        KeyPad6 = 326,
+        KeyPad6,
 
         /// <summary>
         /// The 7 key on the key pad.
         /// </summary>
-        KeyPad7 = 327,
+        KeyPad7,
 
         /// <summary>
         /// The 8 key on the key pad.
         /// </summary>
-        KeyPad8 = 328,
+        KeyPad8,
 
         /// <summary>
         /// The 9 key on the key pad.
         /// </summary>
-        KeyPad9 = 329,
+        KeyPad9,
 
         /// <summary>
         /// The decimal key on the key pad.
         /// </summary>
-        KeyPadDecimal = 330,
+        KeyPadDecimal,
 
         /// <summary>
         /// The divide key on the key pad.
         /// </summary>
-        KeyPadDivide = 331,
+        KeyPadDivide,
 
         /// <summary>
         /// The multiply key on the key pad.
         /// </summary>
-        KeyPadMultiply = 332,
+        KeyPadMultiply,
 
         /// <summary>
         /// The subtract key on the key pad.
         /// </summary>
-        KeyPadSubtract = 333,
+        KeyPadSubtract,
 
         /// <summary>
         /// The add key on the key pad.
         /// </summary>
-        KeyPadAdd = 334,
+        KeyPadAdd,
 
         /// <summary>
         /// The enter key on the key pad.
         /// </summary>
-        KeyPadEnter = 335,
+        KeyPadEnter,
 
         /// <summary>
         /// The equal key on the key pad.
         /// </summary>
-        KeyPadEqual = 336,
+        KeyPadEqual,
 
         /// <summary>
         /// The left shift key.
         /// </summary>
-        LeftShift = 340,
+        LeftShift,
 
         /// <summary>
         /// The left control key.
         /// </summary>
-        LeftControl = 341,
+        LeftControl,
 
         /// <summary>
         /// The left alt key.
         /// </summary>
-        LeftAlt = 342,
+        LeftAlt,
 
         /// <summary>
         /// The left super key.
         /// </summary>
-        LeftSuper = 343,
+        LeftSuper,
 
         /// <summary>
         /// The right shift key.
         /// </summary>
-        RightShift = 344,
+        RightShift,
 
         /// <summary>
         /// The right control key.
         /// </summary>
-        RightControl = 345,
+        RightControl,
 
         /// <summary>
         /// The right alt key.
         /// </summary>
-        RightAlt = 346,
+        RightAlt,
 
         /// <summary>
         /// The right super key.
         /// </summary>
-        RightSuper = 347,
+        RightSuper,
 
         /// <summary>
         /// The menu key.
         /// </summary>
-        Menu = 348,
+        Menu,
+
+        /// <summary>
+        /// The Diaresis key '¨'
+        /// </summary>
+        Diaresis,
+
+        /// <summary>
+        /// The less than sign '<'
+        /// </summary>
+        LessThan,
+
+        /// <summary>
+        /// The greater than sign '>'
+        /// </summary>
+        GreaterThan,
+
+        /// <summary>
+        /// The US "reverse solidus" (backslash) key '\'.
+        /// This key has two places in the US keyboard layout, but OpenTK gives it code "161"
+        /// internally, so we use that code to identify it here.
+        /// </summary>
+        Backslash_161,
+
+        /// <summary>
+        /// The "vulgar fraction one half" key '½'
+        /// </summary>
+        FractionOneHalf,
+
+        /// <summary>
+        /// The Danish AA key 'Å'
+        /// </summary>
+        Danish_AA,
+
+        /// <summary>
+        /// The Danish AE key 'Æ'
+        /// </summary>
+        Danish_AE,
+
+        /// <summary>
+        /// The Danish OE key 'Ø'
+        /// </summary>
+        Danish_OE,
 
         /// <summary>
         /// The last valid key in this enum.
         /// </summary>
-        LastKey = Menu
+        LastKey
     }
 }
