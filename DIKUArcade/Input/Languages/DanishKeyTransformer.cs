@@ -16,11 +16,11 @@ namespace DIKUArcade.Input.Languages
             {
                 case Keys.Unknown: return KeyboardKey.Unknown;
                 case Keys.Space: return KeyboardKey.Space;
-                case Keys.Apostrophe: return KeyboardKey.Apostrophe;
+                case Keys.Apostrophe: return KeyboardKey.Danish_OE;
                 case Keys.Comma: return KeyboardKey.Comma;
-                case Keys.Minus: return KeyboardKey.Minus;
+                case Keys.Minus: return KeyboardKey.Plus;
                 case Keys.Period: return KeyboardKey.Period;
-                case Keys.Slash: return KeyboardKey.Slash;
+                case Keys.Slash: return KeyboardKey.Minus;
 
                 case Keys.D0: return KeyboardKey.Num_0;
                 case Keys.D1: return KeyboardKey.Num_1;
@@ -32,8 +32,8 @@ namespace DIKUArcade.Input.Languages
                 case Keys.D7: return KeyboardKey.Num_7;
                 case Keys.D8: return KeyboardKey.Num_8;
                 case Keys.D9: return KeyboardKey.Num_9;
-                case Keys.Semicolon: return KeyboardKey.Semicolon;
-                case Keys.Equal: return KeyboardKey.Equal;
+                case Keys.Semicolon: return KeyboardKey.Danish_AE;
+                case Keys.Equal: return KeyboardKey.AcuteAccent;
 
                 case Keys.A: return KeyboardKey.A;
                 case Keys.B: return KeyboardKey.B;
@@ -62,10 +62,10 @@ namespace DIKUArcade.Input.Languages
                 case Keys.Y: return KeyboardKey.Y;
                 case Keys.Z: return KeyboardKey.Z;
 
-                case Keys.LeftBracket: return KeyboardKey.LeftBracket;
-                case Keys.Backslash: return KeyboardKey.Backslash;
-                case Keys.RightBracket: return KeyboardKey.RightBracket;
-                case Keys.GraveAccent: return KeyboardKey.GraveAccent;
+                case Keys.LeftBracket: return KeyboardKey.Danish_AA;
+                case Keys.Backslash: return KeyboardKey.Apostrophe;
+                case Keys.RightBracket: return KeyboardKey.Diaresis;
+                case Keys.GraveAccent: return KeyboardKey.FractionOneHalf;
                 case Keys.Escape: return KeyboardKey.Escape;
                 case Keys.Enter: return KeyboardKey.Enter;
                 case Keys.Tab: return KeyboardKey.Tab;
@@ -144,8 +144,13 @@ namespace DIKUArcade.Input.Languages
                 case Keys.Menu: return KeyboardKey.Menu;
 
                 default:
-                    return KeyboardKey.Unknown;
+                    break;
             }
+
+            // special case for Danish keyboard layout, since this key is not given a
+            // name by OpenTK 4.5.
+            if ((int)key == 161) { return KeyboardKey.LessThan; }
+            else { return KeyboardKey.Unknown; }
         }
     }
 }

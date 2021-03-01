@@ -193,12 +193,12 @@ namespace DIKUArcade {
 
         public void SetKeyEventHandler(Action<KeyboardAction,KeyboardKey> keyHandler) {
             RemoveDefaultKeyEventHandler();
-            if (keyTransformer == null) {
-                // TODO: Globalization!
-                keyTransformer = new Input.Languages.DanishKeyTransformer();
-            }
-            window.KeyDown += args => { keyHandler(KeyboardAction.KeyPress, keyTransformer.TransformKey(args.Key)); };
-            window.KeyUp += args => { keyHandler(KeyboardAction.KeyRelease, keyTransformer.TransformKey(args.Key)); };
+            window.KeyDown += args => {
+                if (!args.IsRepeat) keyHandler(KeyboardAction.KeyPress, keyTransformer.TransformKey(args.Key));
+            };
+            window.KeyUp += args => {
+                keyHandler(KeyboardAction.KeyRelease, keyTransformer.TransformKey(args.Key));
+            };
         }
 
         #endregion KEY_EVENT_HANDLERS
