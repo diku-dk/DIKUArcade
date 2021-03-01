@@ -11,7 +11,6 @@ namespace DIKUArcade.Input.Languages
     {
         public KeyboardKey TransformKey(Keys key)
         {
-            Console.WriteLine($"DanishKeyTransformer.TransformKey({key})");
             switch (key)
             {
                 case Keys.Unknown: return KeyboardKey.Unknown;

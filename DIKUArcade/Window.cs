@@ -85,6 +85,22 @@ namespace DIKUArcade {
                 Size = new OpenTK.Mathematics.Vector2i((int)width, (int)height)
             };
 
+            // transparent windows for DIKUArcade ('cause it's cool!)
+            OpenTK.Windowing.GraphicsLibraryFramework.GLFW.WindowHint(
+                OpenTK.Windowing.GraphicsLibraryFramework.WindowHintBool.TransparentFramebuffer, true);
+
+            unsafe {
+                bool tr = OpenTK.Windowing.GraphicsLibraryFramework.GLFW.GetWindowAttrib(window.WindowPtr, OpenTK.Windowing.GraphicsLibraryFramework.WindowAttributeGetBool.TransparentFramebuffer);
+                Console.WriteLine("transparent framebuffer: " + tr);
+                // var op = OpenTK.Windowing.GraphicsLibraryFramework.GLFW.GetWindowOpacity(window.WindowPtr);
+                // Console.WriteLine("Window opacity: " + op);
+
+                // OpenTK.Windowing.GraphicsLibraryFramework.GLFW.SetWindowOpacity(window.WindowPtr, 0.2f);
+
+                // var op2 = OpenTK.Windowing.GraphicsLibraryFramework.GLFW.GetWindowOpacity(window.WindowPtr);
+                // Console.WriteLine("Window opacity: " + op2);
+            }
+
             GL.ClearDepth(1);
             GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -326,7 +342,7 @@ namespace DIKUArcade {
                 throw new ArgumentOutOfRangeException(
                     $"Normalized RGBA Color values must be between 0 and 1: ({r},{g},{b},{a})");
             }
-            GL.ClearColor(r, g, b, 1.0f);
+            GL.ClearColor(r, g, b, a);
         }
 
         /// <summary>
