@@ -10,18 +10,9 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.Common;
 using OpenTK.Graphics.OpenGL;
 using DIKUArcade.Events;
+using DIKUArcade.Input;
 
 namespace DIKUArcade {
-    /// <summary>
-    /// Aspect ratio for a DIKUArcade.Window object, defining
-    /// width as a function of height.
-    /// </summary>
-    public enum AspectRatio {
-        R4X3,
-        R16X9,
-        R1X1
-    }
-
     /// <summary>
     /// Create an OpenTK window wrapper, where we only show
     /// relevant data members and hide unneeded functionality.
@@ -35,21 +26,23 @@ namespace DIKUArcade {
         /// </summary>
         private GameWindow window;
 
-        // This is the signature for a key event handler:
-        //private delegate void KeyEventHandler(object sender, KeyboardKeyEventArgs e);
-        private Action<KeyboardKeyEventArgs> defaultKeyHandler;
-        private Action<ResizeEventArgs> defaultResizeHandler;
-
         private bool isRunning;
-
-        private uint width, height;
 
         public string Title {
             get { return window.Title; }
             set { window.Title = value; }
         }
 
-        private GameEventBus<object> eventBus;
+        /// <summary>
+        /// Get or set if this Window instance should be resizable.
+        /// </summary>
+        public bool Resizable { get; set; } = true;
+
+        /// <summary>
+        /// Instance for transforming OpenTK key events to DIKUArcade-interfaced
+        /// key events, based on globalization settings.
+        /// </summary>
+        private IKeyTransformer keyTransformer;
 
 
         #region OpenGLContext
@@ -76,7 +69,7 @@ namespace DIKUArcade {
         #endregion
 
 
-        private void ActivateThisWindowContext(string title) {
+        private void ActivateThisWindowContext(string title, uint width, uint height, bool fullscreen) {
             // We use OpenGL 2.0 (ie. fixed-function pipeline!)
             var settings = new GameWindowSettings();
             settings.IsMultiThreaded = false;
@@ -85,6 +78,7 @@ namespace DIKUArcade {
             nativeSettings.WindowState = WindowState.Normal;
             nativeSettings.API = ContextAPI.OpenGL;
             nativeSettings.APIVersion = new Version(2, 0);
+            nativeSettings.IsFullscreen = fullscreen;
 
             window = new GameWindow(settings, nativeSettings) {
                 Title = title,
@@ -93,9 +87,6 @@ namespace DIKUArcade {
 
             GL.ClearDepth(1);
             GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-            AddDefaultKeyEventHandler();
-            AddDefaultResizeHandler();
 
             isRunning = true;
             window.Context.MakeCurrent();
@@ -107,161 +98,107 @@ namespace DIKUArcade {
             GL.Ortho(0.0,1.0,0.0,1.0, 0.0, 4.0);
         }
 
-        public Window(string title, uint width, uint height)
-        {
-            this.width = width;
-            this.height = height;
-            isRunning = true;
-            ActivateThisWindowContext(title);
-        }
 
-        public Window(string title, uint height, AspectRatio aspect) {
-            this.height = height;
-            switch (aspect) {
-            case AspectRatio.R1X1:
-                width = this.height;
-                break;
-            case AspectRatio.R4X3:
-                width = this.height * 4 / 3;
-                break;
-            case AspectRatio.R16X9:
-                width = this.height * 16 / 9;
-                break;
-            default:
-                throw new InvalidEnumArgumentException();
+        public Window(WindowArgs windowArgs) {
+            // keyboard layout
+            switch(windowArgs.KeyboardLayout) {
+                case KeyboardLayout.Danish:
+                    keyTransformer = new Input.Languages.DanishKeyTransformer();
+                    break;
+                default:
+                    throw new ArgumentException("Window(): only Danish keyboard layout is currently supported!");
             }
-            ActivateThisWindowContext(title);
-        }
 
-        /// <summary>
-        /// Register an event bus to this window instance. The specified
-        /// bus will be used for capturing input events, such as keyboard presses.
-        /// </summary>
-        /// <param name="bus">A GameEventBus to register for this window</param>
-        /// <returns>False if an event bus was already registered, true otherwise.</returns>
-        public bool RegisterEventBus(GameEventBus<object> bus) {
-            if (eventBus != null) {
-                // an event bus was already registered!
-                // TODO: Should it be possible to swap event bus?
-                return false;
+            // window dimensions
+            uint width = windowArgs.Width;
+            uint height = windowArgs.Height;
+            switch (windowArgs.AspectRatio) {
+                case WindowAspectRatio.Aspect_Custom:
+                    break;
+                case WindowAspectRatio.Aspect_1X1:
+                    width = height;
+                    break;
+                case WindowAspectRatio.Aspect_3X2:
+                    width = (height * 3) / 2;
+                    break;
+                case WindowAspectRatio.Aspect_4X3:
+                    width = (height * 4) / 3;
+                    break;
+                case WindowAspectRatio.Aspect_16X9:
+                    width = (height * 16) / 9;
+                    break;
+                default:
+                    throw new ArgumentException("Window(): invalid aspect ratio!");
             }
-            eventBus = bus;
-            window.KeyDown += RegisterKeyDown;
-            window.KeyUp += RegisterKeyUp;
-            RemoveDefaultKeyEventHandler();
-            return true;
-        }
 
-        private void RegisterKeyDown(KeyboardKeyEventArgs args) {
-            var keyAction = "KEY_PRESS";
-            var keyEvent = GameEventFactory<object>.CreateGameEventForAllProcessors(
-                GameEventType.InputEvent, this, Input.KeyTransformer.GetKeyString(args.Key), keyAction, "");
-                eventBus.RegisterEvent(keyEvent);
-        }
+            // create and bind OpenGL context
+            ActivateThisWindowContext(windowArgs.Title, width, height, windowArgs.FullScreen);
 
-        private void RegisterKeyUp(KeyboardKeyEventArgs args) {
-            var keyAction = "KEY_RELEASE";
-            var keyEvent = GameEventFactory<object>.CreateGameEventForAllProcessors(
-                GameEventType.InputEvent, this, Input.KeyTransformer.GetKeyString(args.Key), keyAction, "");
-                eventBus.RegisterEvent(keyEvent);
+            // setup event handlers
+            if (windowArgs.Resizable) {
+                AddDefaultResizeHandler();
+            }
+            AddDefaultKeyEventHandler();
         }
 
 
         #region WINDOW_RESIZE
 
-        private bool resizable = true;
+        private void DefaultResizeHandler(ResizeEventArgs args) {
+            if (!Resizable) { 
+                return; 
+            }
 
-        /// <summary>
-        /// Get or set if this Window instance should be resizable.
-        /// </summary>
-        public bool Resizable {
-            get {
-                return resizable;
-            }
-            set {
-                if (value) {
-                    RemoveDefaultResizeHandler();
-                } else {
-                    AddDefaultResizeHandler();
-                }
-            }
+            // GL.Viewport(0, 0, window.Size.X, window.Size.Y);
+            GL.Viewport(0, 0, args.Size.X, args.Size.Y); // TODO: Is that right?
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0.0, 1.0, 0.0, 1.0, 0.0, 4.0);
         }
 
         private void AddDefaultResizeHandler() {
-            if (defaultResizeHandler != null) {
-                return;
-            }
-
-            defaultResizeHandler = delegate {
-                GL.Viewport(0, 0, window.Size.X, window.Size.Y);
-                width = (uint) window.Size.X;
-                height = (uint) window.Size.Y;
-
-                GL.MatrixMode(MatrixMode.Projection);
-                GL.LoadIdentity();
-                //GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
-                GL.Ortho(0.0,1.0,0.0,1.0, 0.0, 4.0);
-                };
-            window.Resize += defaultResizeHandler;
+            window.Resize += DefaultResizeHandler;
         }
 
         private void RemoveDefaultResizeHandler() {
-            if (defaultResizeHandler != null) {
-                window.Resize -= defaultResizeHandler;
-                defaultResizeHandler = null;
-            }
+            window.Resize -= DefaultResizeHandler;
         }
 
         #endregion WINDOW_RESIZE
 
         #region KEY_EVENT_HANDLERS
 
-        private void AddDefaultKeyEventHandler() {
-            if (defaultKeyHandler != null) {
-                return;
-            }
+        
 
-            defaultKeyHandler = delegate(KeyboardKeyEventArgs e) {
-                if (e.Key == OpenTK.Windowing.GraphicsLibraryFramework.Keys.Escape) {
+        private void DefaultKeyEventHandler(KeyboardKeyEventArgs args) {
+            switch(args.Key) {
+                case OpenTK.Windowing.GraphicsLibraryFramework.Keys.Escape:
                     CloseWindow();
-                    return;
-                }
-                if (e.Key == OpenTK.Windowing.GraphicsLibraryFramework.Keys.F12) {
+                    break;
+                case OpenTK.Windowing.GraphicsLibraryFramework.Keys.F12:
                     SaveScreenShot();
-                }
-            };
-            window.KeyDown += defaultKeyHandler;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void AddDefaultKeyEventHandler() {
+            window.KeyDown += DefaultKeyEventHandler;
         }
 
         private void RemoveDefaultKeyEventHandler() {
-            if (defaultKeyHandler != null) {
-                window.KeyDown -= defaultKeyHandler;
-                defaultKeyHandler = null;
+            window.KeyDown -= DefaultKeyEventHandler;
+        }
+
+        public void SetKeyEventHandler(Action<KeyboardAction,KeyboardKey> keyHandler) {
+            RemoveDefaultKeyEventHandler();
+            if (keyTransformer == null) {
+                // TODO: Globalization!
+                keyTransformer = new Input.Languages.DanishKeyTransformer();
             }
-        }
-
-        /// <summary>
-        /// Function signature for a key event handler method.
-        /// </summary>
-        /// <param name="keyArgs">OpenTK.Input.KeyboardKeyEventArgs</param>
-        public delegate void WindowKeyHandler(KeyboardKeyEventArgs keyArgs);
-
-        /// <summary>
-        /// Add an event handler for when any keyboard key is pressed.
-        /// </summary>
-        /// <param name="method">Method with the signature of a Window.WindowKeyHandler delegate.</param>
-        public void AddKeyPressEventHandler(WindowKeyHandler method) {
-            //RemoveDefaultKeyEventHandler();
-            window.KeyUp += delegate(KeyboardKeyEventArgs args) { method(args); };
-        }
-
-        /// <summary>
-        /// Add an event handler for when any keyboard key is released.
-        /// </summary>
-        /// <param name="method">Delegate method</param>
-        public void AddKeyReleaseEventHandler(Action<KeyboardKeyEventArgs> method) {
-            //RemoveDefaultKeyEventHandler();
-            window.KeyDown += method;
+            window.KeyDown += args => { keyHandler(KeyboardAction.KeyPress, keyTransformer.TransformKey(args.Key)); };
+            window.KeyUp += args => { keyHandler(KeyboardAction.KeyRelease, keyTransformer.TransformKey(args.Key)); };
         }
 
         #endregion KEY_EVENT_HANDLERS

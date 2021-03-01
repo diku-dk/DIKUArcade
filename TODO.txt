@@ -1,0 +1,6 @@
+CONSIDERATIONS:
+* Can window clear color be transparent? Otherwise overloads for SetClearColor with alpha must be removed!
+
+
+TESTING:
+* Removing resize handler multiple times in a row, and similar tests!
