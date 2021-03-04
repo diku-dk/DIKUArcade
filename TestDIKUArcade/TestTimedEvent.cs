@@ -4,6 +4,7 @@ using DIKUArcade;
 using DIKUArcade.Events;
 using DIKUArcade.GUI;
 using DIKUArcade.Input;
+using DIKUArcade.Timers;
 
 namespace TestDIKUArcade {
     public class TestTimedEvent : DIKUGame, IGameEventProcessor<object>
@@ -51,7 +52,7 @@ namespace TestDIKUArcade {
             e.Message = "This is a timed event!";
             e.Id = id;
             e.EventType = GameEventType.TimedEvent;
-            eventBus.RegisterTimedEvent(GameEventType.TimedEvent, e, DIKUArcade.Timers.TimeSpan.NewSeconds(1.0));
+            eventBus.RegisterTimedEvent(GameEventType.TimedEvent, e, TimePeriod.NewSeconds(1.0));
         }
 
         public override void Render()

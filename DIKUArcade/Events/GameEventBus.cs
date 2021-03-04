@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DIKUArcade;
+using DIKUArcade.Timers;
 
 namespace DIKUArcade.Events
 {
@@ -75,7 +75,7 @@ namespace DIKUArcade.Events
             }
         }
 
-        public void RegisterTimedEvent(GameEventType eventType, GameEvent<T> gameEvent, Timers.TimeSpan timeSpan)
+        public void RegisterTimedEvent(GameEventType eventType, GameEvent<T> gameEvent, TimePeriod timeSpan)
         {
             gameEvent.EventType = eventType;
 
