@@ -8,10 +8,10 @@ namespace DIKUArcade.Events {
     public struct TimedGameEvent<T> {
         public GameEvent<T> GameEvent { get; private set; }
 
-        private readonly TimeSpan timeSpan;
+        private readonly TimePeriod timeSpan;
         private readonly long timeOfCreation;
 
-        public TimedGameEvent(TimeSpan timeSpan, GameEvent<T> gameEvent) {
+        public TimedGameEvent(TimePeriod timeSpan, GameEvent<T> gameEvent) {
             this.timeSpan = timeSpan;
             GameEvent = gameEvent;
 

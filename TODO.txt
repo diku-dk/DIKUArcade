@@ -1,6 +1,9 @@
 CONSIDERATIONS:
-* Is the new key transformer system well-designed?
++ Is the new key transformer system well-designed?
+  + Yes, Boris seems to think so.
 * Can window clear color be transparent? Otherwise overloads for SetClearColor with alpha must be removed!
+* Do we want GameEventType as function argument next to GameEvent, or can we simply contain it inside the GameEvent? (cleaner, right now much confusion)
+* Optimize DIKUArcade.Events.GameEventBus.RegisterTimedEvent to not create a new list every time. (list double-buffering is considered a viable solution)
 
 
 TESTING:
