@@ -8,7 +8,9 @@ namespace TestDIKUArcade {
             // ---- uncomment ONE line at a time ----
             //
 
-            TestKeyEvents.MainFunction();
+            //TestKeyEvents.MainFunction();
+            //TestDIKUGame.MainFunction();
+            TestTimedEvent.MainFunction();
             //TestSimpleEntityRendering.MainFunction();
             //TestImageStrideFormation.MainFunction();
             //TestEntityRotation.MainFunction();

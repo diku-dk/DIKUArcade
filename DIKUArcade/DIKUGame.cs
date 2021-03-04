@@ -15,6 +15,7 @@ namespace DIKUArcade {
         public abstract void Render();
 
         public void Run() {
+            System.Console.WriteLine("Game.Run()");
             gameTimer = new GameTimer(30, 30);
 
             while (window.IsRunning()) {

@@ -30,12 +30,12 @@ namespace TestDIKUArcade {
 
         public override void Render()
         {
-            throw new NotImplementedException();
+
         }
 
         public override void Update()
         {
-            throw new NotImplementedException();
+
         }
 
 
