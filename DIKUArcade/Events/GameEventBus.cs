@@ -81,11 +81,16 @@ namespace DIKUArcade.Events
 
             // do not insert already registered events:
             if (gameEvent.Id != default(uint)) {
+                Console.WriteLine("Id not default!");
                 if (_timedEvents.Exists(e => e.GameEvent.Id == gameEvent.Id)) {
+                    Console.WriteLine("Already exists in _timedEvents");
                     return;
                 }
             }
             _timedEvents.Add(new TimedGameEvent<T>(timeSpan, gameEvent));
+
+            Console.WriteLine("Registered timed event with message " + gameEvent.Message);
+            Console.WriteLine("Count: " + _timedEvents.Count);
         }
 
         public void RegisterEvent(GameEvent<T> gameEvent)

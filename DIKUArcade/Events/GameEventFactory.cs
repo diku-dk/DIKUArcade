@@ -1,5 +1,6 @@
 ﻿namespace DIKUArcade.Events
 {
+    /*
     /// <summary>
     /// Factory methods to generate game events.
     /// </summary>
@@ -52,4 +53,5 @@
             };
         }
     }
+    */
 }

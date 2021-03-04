@@ -2,6 +2,7 @@
 using DIKUArcade.Events;
 
 namespace DIKUArcade.Timers {
+    /*
     public class TimedEventContainer {
         /// <summary>
         /// Every field in the container will be a tuple of a boolean,
@@ -76,4 +77,5 @@ namespace DIKUArcade.Timers {
             }
         }
     }
+    */
 }
