@@ -1,5 +1,5 @@
 using System;
-using DIKUArcade;
+using DIKUArcade.GUI;
 using DIKUArcade.Input;
 
 namespace TestDIKUArcade {
@@ -23,8 +23,6 @@ namespace TestDIKUArcade {
                         var n = ran.Next();
                         test.Add(n, $"insert({n})");
                         break;
-                    case KeyboardKey.P:
-                        test.
                     case KeyboardKey.Escape:
                         window.CloseWindow();
                         break;

@@ -32,16 +32,22 @@
         /// <summary>
         /// Paramter of the message/command, e.g. sound: sound filename or identifier 
         /// </summary>
-        public string Parameter1;
+        public string StringArg1;
         
         /// <summary>
         /// Additional parameter for message/command
         /// </summary>
-        public string Parameter2;
+        public string StringArg2;
         
         /// <summary>
         /// Additional object parameter to pass different types.
         /// </summary>
-        public object Parameter3;
+        public object ObjectArg1;
+
+        /// <summary>
+        /// Assign a unique identification number to a GameEvent,
+        /// to prevent the same event from being registered several times simultaneously.
+        /// </summary>
+        public uint Id;
     }
 }

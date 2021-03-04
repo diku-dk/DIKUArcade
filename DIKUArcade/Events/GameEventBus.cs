@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DIKUArcade;
 
 namespace DIKUArcade.Events
 {
@@ -26,17 +27,22 @@ namespace DIKUArcade.Events
         /// </summary>
         private bool _breakExecution = false;
 
+        private List<TimedGameEvent<T>> _timedEvents;
+
         public void InitializeEventBus(ICollection<GameEventType> eventTypeList)
         {
             _eventProcessors= new Dictionary<GameEventType, ICollection<IGameEventProcessor<T>>>();
             _eventQueues= new Dictionary<GameEventType, GameEventQueue<GameEvent<T>>>();
 
-            if (eventTypeList != null)
+            if (eventTypeList != null) {
                 foreach (var eventType in eventTypeList)
                 {
                     _eventProcessors.Add(eventType, new List<IGameEventProcessor<T>>());
                     _eventQueues.Add(eventType, new GameEventQueue<GameEvent<T>>());
                 }
+            }
+
+            _timedEvents = new List<TimedGameEvent<T>>();
         }
 
         public void Subscribe(GameEventType eventType, IGameEventProcessor<T> gameEventProcessor)
@@ -69,9 +75,17 @@ namespace DIKUArcade.Events
             }
         }
 
-        public void RegisterEvent(KeyboardEvent gameEvent)
+        public void RegisterTimedEvent(GameEventType eventType, GameEvent<T> gameEvent, Timers.TimeSpan timeSpan)
         {
+            gameEvent.EventType = eventType;
 
+            // do not insert already registered events:
+            if (gameEvent.Id != default(uint)) {
+                if (_timedEvents.Exists(e => e.GameEvent.Id == gameEvent.Id)) {
+                    return;
+                }
+            }
+            _timedEvents.Add(new TimedGameEvent<T>(timeSpan, gameEvent));
         }
 
         public void RegisterEvent(GameEvent<T> gameEvent)
@@ -86,10 +100,27 @@ namespace DIKUArcade.Events
             }
         }
 
+        private void ProcessTimedEvents()
+        {
+            var temp = _timedEvents;
+            _timedEvents = new List<TimedGameEvent<T>>(_timedEvents.Capacity);
+
+            var currentTime = Timers.StaticTimer.GetElapsedMilliseconds();
+            foreach (var e in temp) {
+                if (e.HasExpired(currentTime)) {
+                    RegisterEvent(e.GameEvent);
+                } else {
+                    _timedEvents.Add(e);
+                }
+            }
+        }
+
         public void ProcessEvents(IEnumerable<GameEventType> processOrder)
         {
             if(processOrder==default(IEnumerable<GameEventType>))
                 throw new ArgumentNullException();
+
+            ProcessTimedEvents();
 
             Parallel.ForEach<GameEventType>(processOrder, new Action<GameEventType, ParallelLoopState>((eventType, loopState) =>
             {
@@ -107,8 +138,7 @@ namespace DIKUArcade.Events
                             }
                     }
                 }
-            }
-                ));
+            }));
 
             // semantic of Parallel.ForEach is it blocks until all parallel threads are finished
         }
