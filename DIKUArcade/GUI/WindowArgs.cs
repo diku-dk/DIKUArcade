@@ -1,6 +1,6 @@
 using DIKUArcade.Input;
 
-namespace DIKUArcade {
+namespace DIKUArcade.GUI {
     public class WindowArgs {
         /* Globalisation settings */
         public KeyboardLayout KeyboardLayout { get; set; } = KeyboardLayout.Danish;

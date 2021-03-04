@@ -1,4 +1,4 @@
-namespace DIKUArcade {
+namespace DIKUArcade.GUI {
     /// <summary>
     /// Aspect ratio for a DIKUArcade.Window object, defining
     /// width as a function of height.

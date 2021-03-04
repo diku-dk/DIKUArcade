@@ -12,7 +12,7 @@ using OpenTK.Graphics.OpenGL;
 using DIKUArcade.Events;
 using DIKUArcade.Input;
 
-namespace DIKUArcade {
+namespace DIKUArcade.GUI {
     /// <summary>
     /// Create an OpenTK window wrapper, where we only show
     /// relevant data members and hide unneeded functionality.
