@@ -1,4 +1,4 @@
-﻿using DIKUArcade.EventBus;
+﻿using DIKUArcade.Events;
 using NUnit.Framework;
 
 namespace DIKUArcadeUnitTests.GameEventBus
@@ -9,12 +9,23 @@ namespace DIKUArcadeUnitTests.GameEventBus
         [Test]
         public void CreateEventQueue()
         {
-            GameEventQueue<GameEvent<object>> geq= new GameEventQueue<GameEvent<object>>();
+            GameEventQueue<GameEvent<object>> geq = new GameEventQueue<GameEvent<object>>();
 
-            var res1 = GameEventFactory<object>.CreateGameEventForAllProcessors(GameEventType.ControlEvent, this, "test data",
-                "param1", "param2");
-            var res2 = GameEventFactory<object>.CreateGameEventForAllProcessors(GameEventType.ControlEvent, this, "test data2",
-                "param1", "param2");
+            var res1 = new GameEvent<object> {
+                EventType = GameEventType.ControlEvent,
+                From = this,
+                Message = "test data",
+                StringArg1 = "param1",
+                StringArg2 = "param2"
+            };
+
+            var res2 = new GameEvent<object> {
+                EventType = GameEventType.ControlEvent,
+                From = this,
+                Message = "test data2",
+                StringArg1 = "param1",
+                StringArg2 = "param2"
+            };
 
             geq.Enqueue(res1);
             geq.Enqueue(res2);

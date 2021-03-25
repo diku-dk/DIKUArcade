@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DIKUArcade.EventBus;
+using DIKUArcade.Events;
 using NUnit.Framework;
 
 namespace DIKUArcadeUnitTests.GameEventBus
@@ -30,8 +30,9 @@ namespace DIKUArcadeUnitTests.GameEventBus
             /// </summary>
             public int EventCounterSound;
 
-            public void ProcessEvent(GameEventType eventType, GameEvent<object> gameEvent)
+            public void ProcessEvent(GameEvent<object> gameEvent)
             {
+                var eventType = gameEvent.EventType;
                 // Count events using integer fields
                 if(eventType==GameEventType.ControlEvent)
                     EventCounterControl++;
@@ -54,10 +55,20 @@ namespace DIKUArcadeUnitTests.GameEventBus
             _eb.Subscribe(GameEventType.ControlEvent, _simpleEventProcessor);
             _eb.Subscribe(GameEventType.SoundEvent, _simpleEventProcessor);
 
-            _eventControl = GameEventFactory<object>.CreateGameEventForAllProcessors(
-                GameEventType.ControlEvent, this, "Test1", "test", "test");
-            _eventSound = GameEventFactory<object>.CreateGameEventForAllProcessors(
-                GameEventType.SoundEvent, this, "Test2", "test", "test");
+            _eventControl = new GameEvent<object> {
+                EventType = GameEventType.ControlEvent,
+                From = this,
+                Message = "Test2",
+                StringArg1 = "test",
+                StringArg2 = "test"
+            };
+            _eventSound = new GameEvent<object> {
+                EventType = GameEventType.SoundEvent,
+                From = this,
+                Message = "Test2",
+                StringArg1 = "test",
+                StringArg2 = "test"
+            };
         }
 
         /// <summary>
