@@ -27,10 +27,10 @@ namespace TestDIKUArcade {
             if (action == KeyboardAction.KeyRelease) {
                 switch (key) {
                     case KeyboardKey.Num_1:
-                        window.SetClearColor(128, 52, 43, 0);
+                        window.SetClearColor(128, 52, 43);
                         break;
                     case KeyboardKey.Num_2:
-                        window.SetClearColor(28, 108, 218, 50);
+                        window.SetClearColor(28, 108, 218);
                         break;
                     case KeyboardKey.T:
                         AddTimedEvent();
@@ -69,15 +69,17 @@ namespace TestDIKUArcade {
         // static testing method
         public static void MainFunction() {
             var windowArgs = new WindowArgs() {
-                Title = "TestTimedEvent"
+                Title = "TestTimedEvent",
+                Resizable = false
             };
 
             var game = new TestTimedEvent(windowArgs);
             game.Run();
         }
 
-        public void ProcessEvent(GameEventType eventType, GameEvent<object> gameEvent)
+        public void ProcessEvent(GameEvent<object> gameEvent)
         {
+            var eventType = gameEvent.EventType;
             if (eventType != GameEventType.TimedEvent) {
                 Console.WriteLine($"Incorrect type of event ({eventType})");
             }

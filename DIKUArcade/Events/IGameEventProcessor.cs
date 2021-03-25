@@ -2,6 +2,6 @@
 {
     public interface IGameEventProcessor<T>
     {
-        void ProcessEvent(GameEventType eventType, GameEvent<T> gameEvent);
+        void ProcessEvent(GameEvent<T> gameEvent);
     }
 }

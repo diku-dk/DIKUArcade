@@ -1,15 +1,12 @@
 ﻿using System;
-using System.ComponentModel;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using Bitmap = System.Drawing.Bitmap;
-using Color = System.Drawing.Color;
 using RotateFlipType = System.Drawing.RotateFlipType;
 using System.Drawing.Imaging;
 using System.IO;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.Common;
 using OpenTK.Graphics.OpenGL;
-using DIKUArcade.Events;
 using DIKUArcade.Input;
 
 namespace DIKUArcade.GUI {
@@ -84,22 +81,6 @@ namespace DIKUArcade.GUI {
                 Title = title,
                 Size = new OpenTK.Mathematics.Vector2i((int)width, (int)height)
             };
-
-            // transparent windows for DIKUArcade ('cause it's cool!)
-            OpenTK.Windowing.GraphicsLibraryFramework.GLFW.WindowHint(
-                OpenTK.Windowing.GraphicsLibraryFramework.WindowHintBool.TransparentFramebuffer, true);
-
-            unsafe {
-                bool tr = OpenTK.Windowing.GraphicsLibraryFramework.GLFW.GetWindowAttrib(window.WindowPtr, OpenTK.Windowing.GraphicsLibraryFramework.WindowAttributeGetBool.TransparentFramebuffer);
-                Console.WriteLine("transparent framebuffer: " + tr);
-                // var op = OpenTK.Windowing.GraphicsLibraryFramework.GLFW.GetWindowOpacity(window.WindowPtr);
-                // Console.WriteLine("Window opacity: " + op);
-
-                // OpenTK.Windowing.GraphicsLibraryFramework.GLFW.SetWindowOpacity(window.WindowPtr, 0.2f);
-
-                // var op2 = OpenTK.Windowing.GraphicsLibraryFramework.GLFW.GetWindowOpacity(window.WindowPtr);
-                // Console.WriteLine("Window opacity: " + op2);
-            }
 
             GL.ClearDepth(1);
             GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -262,23 +243,6 @@ namespace DIKUArcade.GUI {
         /// <summary>
         /// Set color to be used as clear color when using the Window.Clear() method.
         /// </summary>
-        /// <param name="vec">Vec4F containing the RGB color values.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Normalized color values must be
-        /// between 0 and 1.</exception>
-        public void SetClearColor(Math.Vec4F vec) {
-            if (vec.X < 0.0f || vec.X > 1.0f ||
-                vec.Y < 0.0f || vec.Y > 1.0f ||
-                vec.Z < 0.0f || vec.Z > 1.0f ||
-                vec.W < 0.0f || vec.W > 1.0f) {
-                throw new ArgumentOutOfRangeException(
-                    $"Normalized RGBA Color values must be between 0 and 1: {vec}");
-            }
-            GL.ClearColor(vec.X, vec.Y, vec.Z, vec.W);
-        }
-
-        /// <summary>
-        /// Set color to be used as clear color when using the Window.Clear() method.
-        /// </summary>
         /// <param name="vec">Vec3I containing the RGB color values.</param>
         /// <exception cref="ArgumentOutOfRangeException">Color values must be between 0 and 255.</exception>
         public void SetClearColor(Math.Vec3I vec) {
@@ -289,22 +253,6 @@ namespace DIKUArcade.GUI {
                     $"RGB Color values must be between 0 and 255: {vec}");
             }
             GL.ClearColor(vec.X / 255.0f, vec.Y / 255.0f, vec.Z / 255.0f, 1.0f);
-        }
-
-        /// <summary>
-        /// Set color to be used as clear color when using the Window.Clear() method.
-        /// </summary>
-        /// <param name="vec">Vec4I containing the RGB color values.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Color values must be between 0 and 255.</exception>
-        public void SetClearColor(Math.Vec4I vec) {
-            if (vec.X < 0 || vec.X > 255 ||
-                vec.Y < 0 || vec.Y > 255 ||
-                vec.Z < 0 || vec.Z > 255 ||
-                vec.W < 0 || vec.W > 255) {
-                throw new ArgumentOutOfRangeException(
-                    $"RGBA Color values must be between 0 and 255: {vec}");
-            }
-            GL.ClearColor(vec.X / 255.0f, vec.Y / 255.0f, vec.Z / 255.0f, vec.W / 255.0f);
         }
 
         /// <summary>
@@ -331,26 +279,6 @@ namespace DIKUArcade.GUI {
         /// <param name="r">red channel value</param>
         /// <param name="g">green channel value</param>
         /// <param name="b">blue channel value</param>
-        /// <param name="a">alpha channel value</param>
-        /// <exception cref="ArgumentOutOfRangeException">Normalized color values must be
-        /// between 0 and 1.</exception>
-        public void SetClearColor(float r, float g, float b, float a) {
-            if (r < 0.0f || r > 1.0f ||
-                g < 0.0f || g > 1.0f ||
-                b < 0.0f || b > 1.0f ||
-                a < 0.0f || a > 1.0f) {
-                throw new ArgumentOutOfRangeException(
-                    $"Normalized RGBA Color values must be between 0 and 1: ({r},{g},{b},{a})");
-            }
-            GL.ClearColor(r, g, b, a);
-        }
-
-        /// <summary>
-        /// Set color to be used as clear color when using the Window.Clear() method.
-        /// </summary>
-        /// <param name="r">red channel value</param>
-        /// <param name="g">green channel value</param>
-        /// <param name="b">blue channel value</param>
         /// <exception cref="ArgumentOutOfRangeException">Color values must be between 0 and 255.</exception>
         public void SetClearColor(int r, int g, int b) {
             if (r < 0 || r > 255 ||
@@ -365,28 +293,9 @@ namespace DIKUArcade.GUI {
         /// <summary>
         /// Set color to be used as clear color when using the Window.Clear() method.
         /// </summary>
-        /// <param name="r">red channel value</param>
-        /// <param name="g">green channel value</param>
-        /// <param name="b">blue channel value</param>
-        /// <param name="a">alpha channel value</param>
-        /// <exception cref="ArgumentOutOfRangeException">Color values must be between 0 and 255.</exception>
-        public void SetClearColor(int r, int g, int b, int a) {
-            if (r < 0 || r > 255 ||
-                g < 0 || g > 255 ||
-                b < 0 || b > 255 ||
-                a < 0 || a > 255) {
-                throw new ArgumentOutOfRangeException(
-                    $"RGBA Color values must be between 0 and 255: ({r},{g},{b},{a})");
-            }
-            GL.ClearColor(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
-        }
-
-        /// <summary>
-        /// Set color to be used as clear color when using the Window.Clear() method.
-        /// </summary>
         /// <param name="color">System.Drawing.Color object containing color channel values.</param>
-        public void SetClearColor(Color color) {
-            SetClearColor(new Math.Vec4I(color.R, color.G, color.B, color.A));
+        public void SetClearColor(System.Drawing.Color color) {
+            SetClearColor(new Math.Vec3I(color.R, color.G, color.B));
         }
 
         #endregion
@@ -411,7 +320,7 @@ namespace DIKUArcade.GUI {
         /// <exception cref="GraphicsContextMissingException"></exception>
         public void SaveScreenShot() {
             if (window.Context == null) {
-                throw new ArgumentNullException("GraphicsContextMissingException");// TODO: GraphicsContextMissingException();
+                throw new ArgumentNullException("GraphicsContextMissingException");
             }
 
             var bmp = new Bitmap(window.ClientSize.X, window.ClientSize.Y, PixelFormat.Format24bppRgb);

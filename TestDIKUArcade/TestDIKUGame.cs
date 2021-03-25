@@ -16,10 +16,10 @@ namespace TestDIKUArcade {
             if (action == KeyboardAction.KeyRelease) {
                 switch (key) {
                     case KeyboardKey.Num_1:
-                        window.SetClearColor(128, 52, 43, 0);
+                        window.SetClearColor(128, 52, 43);
                         break;
                     case KeyboardKey.Num_2:
-                        window.SetClearColor(28, 108, 218, 50);
+                        window.SetClearColor(28, 108, 218);
                         break;
                     case KeyboardKey.Escape:
                         window.CloseWindow();

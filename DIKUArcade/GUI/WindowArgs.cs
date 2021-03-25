@@ -1,6 +1,10 @@
 using DIKUArcade.Input;
 
 namespace DIKUArcade.GUI {
+    /// <summary>
+    /// Arguments for constructing a DIKUArcade.Window object.
+    /// Use this class to set fundamental properties of the window.
+    /// </summary>
     public class WindowArgs {
         /* Globalisation settings */
         public KeyboardLayout KeyboardLayout { get; set; } = KeyboardLayout.Danish;
