@@ -48,6 +48,15 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         /// </summary>
         public TestsEventBus()
         {
+            
+        }
+
+        /// <summary>
+        /// Reset event bus and event processor before calling each test method.
+        /// </summary>
+        [SetUp]
+        public void SetupEventBusForTests()
+        {
             _eb = new GameEventBus();
             _eb.InitializeEventBus(_registeredEvents);
 
@@ -69,17 +78,6 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
                 StringArg1 = "test",
                 StringArg2 = "test"
             };
-        }
-
-        /// <summary>
-        /// Reset event bus and event processor before calling each test method.
-        /// </summary>
-        [SetUp]
-        public void SetupEventBusForTests()
-        {
-            _eb.Flush();
-            _simpleEventProcessor.EventCounterControl = 0;
-            _simpleEventProcessor.EventCounterSound = 0;
         }
 
         /// <summary>
