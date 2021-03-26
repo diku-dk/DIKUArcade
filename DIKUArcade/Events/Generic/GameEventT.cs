@@ -1,18 +1,15 @@
-﻿namespace DIKUArcade.Events
+namespace DIKUArcade.Events.Generic
 {
     /// <summary>
-    /// GameEvent is used in the GameEventBusSystem to encode events that are send between system parts.
-    /// Events are generated using the GameEventFactory methods. Events are produced by event sources and
-    /// are consumed by event sinks. Event sinks needs to be registered at the event bus for receiving events
-    /// on the bus.
-    /// Event sinks can register for multiple event types and event sources can generated different event types.
+    /// Default implementation of GameEvent (see below) which uses GameEventType
+    /// instead of a generic enum event type.
     /// </summary>
-    public struct GameEvent
-    {
+    public class GameEvent<EventT> where EventT : System.Enum
+    {       
         /// <summary>
         ///  EventType is a classifier to distinguish event system parts, e.g. sound, graphics and game logic.
         /// </summary>
-        public GameEventType EventType;
+        public EventT EventType;
 
         /// <summary>
         /// From is where did the message originate from
@@ -23,7 +20,7 @@
         /// To is where should the message go. If this value is not set,
         /// every GameEventProcessor registered in the event category EventType will receive this event.
         /// </summary>
-        public IGameEventProcessor To;
+        public IGameEventProcessor<EventT> To;
 
         /// <summary>
         /// Message depends on the event type. Various event processors interpret it as commands,

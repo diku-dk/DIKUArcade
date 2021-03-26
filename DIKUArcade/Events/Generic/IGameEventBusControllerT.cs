@@ -1,21 +1,21 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace DIKUArcade.Events
+namespace DIKUArcade.Events.Generic
 {
-    public interface IGameEventBusController
+    public interface IGameEventBusController<EventT> where EventT : System.Enum
     {
         /// <summary>
         /// Initialize the game event bus with a list of event types that need to be processed. 
         /// The architecture is static and does not allow additional event types after the initialization.
         /// </summary>
         /// <param name="eventTypeList">List of events which shall be processed by the game event bus.</param>
-        void InitializeEventBus(ICollection<GameEventType> eventTypeList);
+        void InitializeEventBus(ICollection<EventT> eventTypeList);
         
         /// <summary>
         /// Process events contained in the event queues in parallel. All event processors are called for events that they registered for.
         /// </summary>
         /// <param name="processOrder">Order of game events for processing. This can be used for prioritizing event types, e.g. control before sound.</param>
-        void ProcessEvents(IEnumerable<GameEventType> processOrder);
+        void ProcessEvents(IEnumerable<EventT> processOrder);
         
         /// <summary>
         /// Process events contained in the event queues in parallel. All event processors are called for events that they registered for.
@@ -27,7 +27,7 @@ namespace DIKUArcade.Events
         /// Process events contained in the event queues sequentially. All event processors are called for events that they registered for.
         /// </summary>
         /// <param name="processOrder">Order of game events for processing. This can be used for prioritizing event types, e.g. control before sound.</param>
-        void ProcessEventsSequentially(IEnumerable<GameEventType> processOrder);
+        void ProcessEventsSequentially(IEnumerable<EventT> processOrder);
         
         /// <summary>
         /// Process events contained in the event queues sequentially. All event processors are called for events that they registered for.

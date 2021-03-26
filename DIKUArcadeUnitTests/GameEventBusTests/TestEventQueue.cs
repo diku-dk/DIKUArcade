@@ -9,9 +9,9 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         [Test]
         public void CreateEventQueue()
         {
-            GameEventQueue<GameEvent<object>> geq = new GameEventQueue<GameEvent<object>>();
+            GameEventQueue<GameEvent> geq = new GameEventQueue<GameEvent>();
 
-            var res1 = new GameEvent<object> {
+            var res1 = new GameEvent {
                 EventType = GameEventType.ControlEvent,
                 From = this,
                 Message = "test data",
@@ -19,7 +19,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
                 StringArg2 = "param2"
             };
 
-            var res2 = new GameEvent<object> {
+            var res2 = new GameEvent {
                 EventType = GameEventType.ControlEvent,
                 From = this,
                 Message = "test data2",

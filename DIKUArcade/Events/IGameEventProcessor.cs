@@ -1,7 +1,7 @@
 ﻿namespace DIKUArcade.Events
 {
-    public interface IGameEventProcessor<T>
+    public interface IGameEventProcessor
     {
-        void ProcessEvent(GameEvent<T> gameEvent);
+        void ProcessEvent(GameEvent gameEvent);
     }
 }

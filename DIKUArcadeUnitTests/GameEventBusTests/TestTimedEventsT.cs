@@ -1,17 +1,23 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using DIKUArcade.Events;
+using DIKUArcade.Events.Generic;
 using DIKUArcade.Timers;
 using System.Threading;
 
 namespace DIKUArcadeUnitTests.GameEventBusTests
 {
+    public enum TestTimedEventT {
+        TimedEvent,
+        StatusEvent,
+        MovementEvent
+    };
+
     [TestFixture]
-    public class TestTimedEvents
+    public class TestTimedEventsT
     {
-        private class Helper : IGameEventProcessor
+        private class Helper : IGameEventProcessor<TestTimedEventT>
         {
-            public void ProcessEvent(GameEvent gameEvent)
+            public void ProcessEvent(GameEvent<TestTimedEventT> gameEvent)
             {
                 EventCounter++;
             }
@@ -22,20 +28,20 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         }
 
 
-        private GameEventBus _eventBus;
+        private GameEventBus<TestTimedEventT> _eventBus;
         private Helper _helper;
 
-        public TestTimedEvents()
+        public TestTimedEventsT()
         {
             _helper = new Helper();
 
-            _eventBus = new GameEventBus();
-            _eventBus.InitializeEventBus(new List<GameEventType> {
-                GameEventType.TimedEvent,
-                GameEventType.StatusEvent,
-                GameEventType.MovementEvent
+            _eventBus = new GameEventBus<TestTimedEventT>();
+            _eventBus.InitializeEventBus(new List<TestTimedEventT> {
+                TestTimedEventT.TimedEvent,
+                TestTimedEventT.StatusEvent,
+                TestTimedEventT.MovementEvent
             });
-            _eventBus.Subscribe(GameEventType.TimedEvent, _helper);
+            _eventBus.Subscribe(TestTimedEventT.TimedEvent, _helper);
         }
 
         [SetUp]
@@ -48,8 +54,8 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         [Test]
         public void TestRegisterTimedEvent()
         {
-            var e = new GameEvent {
-                EventType = GameEventType.TimedEvent,
+            var e = new GameEvent<TestTimedEventT> {
+                EventType = TestTimedEventT.TimedEvent,
                 From = this,
                 To = _helper
             };
@@ -68,8 +74,8 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         public void TestResetTimedEvent()
         {
             // event for reset testing
-            var e = new GameEvent {
-                EventType = GameEventType.TimedEvent,
+            var e = new GameEvent<TestTimedEventT> {
+                EventType = TestTimedEventT.TimedEvent,
                 From = this,
                 To = _helper,
                 Id = 587
@@ -78,8 +84,8 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
 
             // event which should stay in event bus for a very long time,
             // and not be disturbed by resetting the other event multiple times.
-            var longWaitEvent = new GameEvent {
-                EventType = GameEventType.TimedEvent,
+            var longWaitEvent = new GameEvent<TestTimedEventT> {
+                EventType = TestTimedEventT.TimedEvent,
                 From = this,
                 To = _helper,
                 Id = 315
@@ -119,14 +125,14 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         [Test]
         public void TestHasTimedEvent()
         {
-            var e1 = new GameEvent {
-                EventType = GameEventType.StatusEvent,
+            var e1 = new GameEvent<TestTimedEventT> {
+                EventType = TestTimedEventT.StatusEvent,
                 From = this,
                 To = _helper,
                 Id = 42
             };
-            var e2 = new GameEvent {
-                EventType = GameEventType.MovementEvent,
+            var e2 = new GameEvent<TestTimedEventT> {
+                EventType = TestTimedEventT.MovementEvent,
                 From = this,
                 To = _helper,
                 Id = 633
@@ -150,14 +156,14 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         public void TestCancelTimedEvent()
         {
             // events for cancel testing
-            var e1 = new GameEvent {
-                EventType = GameEventType.StatusEvent,
+            var e1 = new GameEvent<TestTimedEventT> {
+                EventType = TestTimedEventT.StatusEvent,
                 From = this,
                 To = _helper,
                 Id = 42
             };
-            var e2 = new GameEvent {
-                EventType = GameEventType.MovementEvent,
+            var e2 = new GameEvent<TestTimedEventT> {
+                EventType = TestTimedEventT.MovementEvent,
                 From = this,
                 To = _helper,
                 Id = 633
@@ -167,8 +173,8 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
 
             // event which should stay in event bus for a very long time,
             // and not be disturbed by cancelling the other event multiple times.
-            var longWaitEvent = new GameEvent {
-                EventType = GameEventType.TimedEvent,
+            var longWaitEvent = new GameEvent<TestTimedEventT> {
+                EventType = TestTimedEventT.TimedEvent,
                 From = this,
                 To = _helper,
                 Id = 316
@@ -202,8 +208,8 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         public void TestAddOrResetTimedEvent()
         {
             // event for reset testing
-            var e = new GameEvent {
-                EventType = GameEventType.TimedEvent,
+            var e = new GameEvent<TestTimedEventT> {
+                EventType = TestTimedEventT.TimedEvent,
                 From = this,
                 To = _helper,
                 Id = 587
@@ -212,8 +218,8 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
 
             // event which should stay in event bus for a very long time,
             // and not be disturbed by resetting the other event multiple times.
-            var longWaitEvent = new GameEvent {
-                EventType = GameEventType.TimedEvent,
+            var longWaitEvent = new GameEvent<TestTimedEventT> {
+                EventType = TestTimedEventT.TimedEvent,
                 From = this,
                 To = _helper,
                 Id = 317
