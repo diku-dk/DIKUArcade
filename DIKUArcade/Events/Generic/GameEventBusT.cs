@@ -6,6 +6,8 @@ using DIKUArcade.Timers;
 namespace DIKUArcade.Events.Generic
 {
     /// <summary>
+    /// Generic version of the DIKUArcade.Events.GameEventBus class, which uses the generic type EventT
+    /// as the underlying event type enum.
     /// GameEventBus is the core module for processing events in the DIKUArcade game engine. Modules can register events and
     /// add them to the queues. Events are distinguished by event types to improve processing performance. Event processor
     /// can register/subscribe themself to receive events of a certain event type. For a single event, all processors are
@@ -34,9 +36,9 @@ namespace DIKUArcade.Events.Generic
         /// List of events which must be processed after a specified time interval has passed.
         /// We use a double-buffered system.
         /// </summary>
+        private List<TimedGameEvent<EventT>>[] _timedEventLists;
         private int _activeTimedEventList = 0;
         private int _inactiveTimedEventList = 1;
-        private List<TimedGameEvent<EventT>>[] _timedEventLists;
 
         private void SwapTimedEventLists() {
             _activeTimedEventList = (_activeTimedEventList + 1) % 2;
@@ -118,11 +120,6 @@ namespace DIKUArcade.Events.Generic
             _timedEventLists[_activeTimedEventList].Add(new TimedGameEvent<EventT>(timePeriod, gameEvent));
         }
 
-        /// <summary>
-        /// Reset the time period of specified game event.
-        /// If event does not already exist in the event bus it is added.
-        /// Search is done through the event's Id.
-        /// </summary>
         public void AddOrResetTimedEvent(GameEvent<EventT> gameEvent, TimePeriod timePeriod) {
             if (gameEvent.Id != default(uint)) {
                 // search for an item which matches the Id of the specified event
@@ -140,10 +137,6 @@ namespace DIKUArcade.Events.Generic
             _timedEventLists[_activeTimedEventList].Add(new TimedGameEvent<EventT>(timePeriod, gameEvent));
         }
 
-        /// <summary>
-        /// Cancel the TimedEvent with the given id and remove it from the EventBus.
-        /// returns false if event was not contained, and true otherwise.
-        /// </summary>
         public bool CancelTimedEvent(uint eventId) {
             bool cancelled = false;
             _timedEventLists[_inactiveTimedEventList].Clear();
@@ -160,10 +153,6 @@ namespace DIKUArcade.Events.Generic
             return cancelled;
         }
 
-        /// <summary>
-        /// If event with the given id is contained, reset its time period to the provided TimePeriod.
-        /// return false if event was not contained, and true otherwise.
-        /// </summary>
         public bool ResetTimedEvent(uint eventId, TimePeriod timePeriod) {
             var search = _timedEventLists[_activeTimedEventList].FindIndex(e => e.GameEvent.Id == eventId);
             if (search >= 0) {
@@ -174,9 +163,6 @@ namespace DIKUArcade.Events.Generic
             return false;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool HasTimedEvent(uint eventId) {
             return _timedEventLists[_activeTimedEventList].FindIndex(e => e.GameEvent.Id == eventId) >= 0;
         }

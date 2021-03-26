@@ -2,7 +2,11 @@ namespace DIKUArcade.Events.Generic
 {
     /// <summary
     /// Generic interface equivalent for the DIKUArcade.Events.IGameEventBus.
+    /// Interface for an event bus which may subscribe receivers to certain types of
+    /// events, unsubsribe them again, and register events to be processed for one or
+    /// more registered event processors.
     /// </summary>
+    /// <typeparam name="EventT">Enumeration type representing type of game events.</typeparam>
     public interface IGameEventBus<EventT> where EventT : System.Enum
     {
         /// <summary>
