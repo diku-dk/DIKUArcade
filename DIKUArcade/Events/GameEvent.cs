@@ -1,11 +1,8 @@
 ﻿namespace DIKUArcade.Events
 {
     /// <summary>
-    /// GameEvent is used in the GameEventBusSystem to encode events that are send between system parts.
-    /// Events are generated using the GameEventFactory methods. Events are produced by event sources and
-    /// are consumed by event sinks. Event sinks needs to be registered at the event bus for receiving events
-    /// on the bus.
-    /// Event sinks can register for multiple event types and event sources can generated different event types.
+    /// Represents an event which may be processed by certain subscribers of an event bus,
+    /// and contains data fields which may be relevant to the receiver(s) of the event.
     /// </summary>
     public struct GameEvent
     {
@@ -17,7 +14,7 @@
         /// <summary>
         /// From is where did the message originate from
         /// </summary>
-        public object From; // TODO: Check safe type conversion!
+        public object From;
 
         /// <summary>
         /// To is where should the message go. If this value is not set,
@@ -32,7 +29,7 @@
         public string Message;
 
         /// <summary>
-        /// Paramter of the message/command, e.g. sound: sound filename or identifier 
+        /// Parameter of the message/command, e.g. sound: sound filename or identifier 
         /// </summary>
         public string StringArg1;
         

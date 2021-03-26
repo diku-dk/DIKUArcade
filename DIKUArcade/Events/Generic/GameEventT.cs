@@ -1,11 +1,13 @@
 namespace DIKUArcade.Events.Generic
 {
     /// <summary>
-    /// Default implementation of GameEvent (see below) which uses GameEventType
-    /// instead of a generic enum event type.
+    /// Generic equivalent of the DIKUArcade.Events.GameEvent struct.
+    /// Represents an event which may be processed by certain subscribers of an event bus,
+    /// and contains data fields which may be relevant to the receiver(s) of the event.
     /// </summary>
-    public class GameEvent<EventT> where EventT : System.Enum
-    {       
+    /// <typeparam name="EventT">Enumeration type representing type of game events.</typeparam>
+    public struct GameEvent<EventT> where EventT : System.Enum
+    {
         /// <summary>
         ///  EventType is a classifier to distinguish event system parts, e.g. sound, graphics and game logic.
         /// </summary>
@@ -14,7 +16,7 @@ namespace DIKUArcade.Events.Generic
         /// <summary>
         /// From is where did the message originate from
         /// </summary>
-        public object From; // TODO: Check safe type conversion!
+        public object From;
 
         /// <summary>
         /// To is where should the message go. If this value is not set,

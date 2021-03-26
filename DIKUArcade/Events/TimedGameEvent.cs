@@ -7,6 +7,9 @@ namespace DIKUArcade.Events {
     /// </summary>
     public struct TimedGameEvent
     {
+        /// <summary>
+        /// The GameEvent which this object wraps around.
+        /// </summary>
         public GameEvent GameEvent { get; private set; }
 
         private readonly TimePeriod timeSpan;
@@ -27,8 +30,14 @@ namespace DIKUArcade.Events {
             return (now - timeOfCreation) > timeSpan.ToMilliseconds();
         }
 
-        public bool HasExpired(long currentTime) {
-            return (currentTime - timeOfCreation) > timeSpan.ToMilliseconds();
+        /// <summary>
+        /// Measure time and check if the event is ready for processing,
+        /// but where current timestamp is provided in milliseconds.
+        /// This is useful if checking multiple TimedEvents in sequence without
+        /// having to get current timestamp for each one.
+        /// </summary>
+        public bool HasExpired(long currentTimeMs) {
+            return (currentTimeMs - timeOfCreation) > timeSpan.ToMilliseconds();
         }
     }
 }
