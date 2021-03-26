@@ -52,7 +52,7 @@ namespace TestDIKUArcade {
             e.Message = "This is a timed event!";
             e.Id = id;
             e.EventType = GameEventType.TimedEvent;
-            eventBus.RegisterTimedEvent(GameEventType.TimedEvent, e, TimePeriod.NewSeconds(1.0));
+            eventBus.RegisterTimedEvent(e, TimePeriod.NewSeconds(1.0));
         }
 
         public override void Render()

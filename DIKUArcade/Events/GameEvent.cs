@@ -22,7 +22,7 @@
         /// <summary>
         /// To is where should the message go. If this value is zero every GameEventProcess registered in the event category EventType will receive this event.
         /// </summary>
-        public T To;
+        public IGameEventProcessor<T> To;
         
         /// <summary>
         /// Message depends on the event type. Various event processors interpret it as commands, e.g. sound: SOUNDEFFECT_PLAY
