@@ -20,15 +20,17 @@
         public T From;
         
         /// <summary>
-        /// To is where should the message go. If this value is zero every GameEventProcess registered in the event category EventType will receive this event.
+        /// To is where should the message go. If this value is not set,
+        /// every GameEventProcessor registered in the event category EventType will receive this event.
         /// </summary>
         public IGameEventProcessor<T> To;
         
         /// <summary>
-        /// Message depends on the event type. Various event processors interpret it as commands, e.g. sound: SOUNDEFFECT_PLAY
+        /// Message depends on the event type. Various event processors interpret it as commands,
+        /// e.g. sound: SOUNDEFFECT_PLAY.
         /// </summary>
         public string Message;
-        
+
         /// <summary>
         /// Paramter of the message/command, e.g. sound: sound filename or identifier 
         /// </summary>

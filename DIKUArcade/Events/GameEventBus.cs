@@ -249,11 +249,15 @@ namespace DIKUArcade.Events
                 if (_eventQueues != null) {
                     while (!_eventQueues[eventType].IsEmpty()) {
                         var currentEvent = _eventQueues[eventType].Dequeue();
-                        if (_eventProcessors == null) continue;
-
-                        foreach (var eventProcessor in _eventProcessors[eventType]) {
-                            eventProcessor.ProcessEvent(currentEvent);
-                            if (_breakExecution) return;
+                        if (currentEvent.To != default(IGameEventProcessor<T>))
+                        {
+                            currentEvent.To.ProcessEvent(currentEvent);
+                        }
+                        else if (_eventProcessors != null) {
+                            foreach (var eventProcessor in _eventProcessors[eventType]) {
+                                eventProcessor.ProcessEvent(currentEvent);
+                                if (_breakExecution) return;
+                            }
                         }
                     }
                 }
