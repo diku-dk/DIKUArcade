@@ -7,8 +7,8 @@
     /// on the bus.
     /// Event sinks can register for multiple event types and event sources can generated different event types.
     /// </summary>
-    public struct GameEvent<T>
-    {       
+    public struct GameEvent
+    {
         /// <summary>
         ///  EventType is a classifier to distinguish event system parts, e.g. sound, graphics and game logic.
         /// </summary>
@@ -17,14 +17,14 @@
         /// <summary>
         /// From is where did the message originate from
         /// </summary>
-        public T From;
-        
+        public object From; // TODO: Check safe type conversion!
+
         /// <summary>
         /// To is where should the message go. If this value is not set,
         /// every GameEventProcessor registered in the event category EventType will receive this event.
         /// </summary>
-        public IGameEventProcessor<T> To;
-        
+        public IGameEventProcessor To;
+
         /// <summary>
         /// Message depends on the event type. Various event processors interpret it as commands,
         /// e.g. sound: SOUNDEFFECT_PLAY.
@@ -45,6 +45,8 @@
         /// Additional object parameter to pass different types.
         /// </summary>
         public object ObjectArg1;
+
+        public int IntArg1;
 
         /// <summary>
         /// Assign a unique identification number to a GameEvent,

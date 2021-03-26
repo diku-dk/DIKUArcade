@@ -5,70 +5,81 @@ using NUnit.Framework;
 
 namespace DIKUArcadeUnitTests.GameEventBusTests
 {
+    /// <summary>
+    /// SimpleGameProcessor is a mock-up processor for testing purposes.
+    /// </summary>
+    public class SimpleEventProcessor : IGameEventProcessor
+    {
+        /// <summary>
+        /// Counter for number of processes control events.
+        /// </summary>
+        public int EventCounterControl;
+        /// <summary>
+        /// Counter for number of processes sound events.
+        /// </summary>
+        public int EventCounterSound;
+
+        public void ProcessEvent(GameEvent gameEvent)
+        {
+            var eventType = gameEvent.EventType;
+            // Count events using integer fields
+            if (eventType == GameEventType.ControlEvent)
+                EventCounterControl++;
+            if (eventType == GameEventType.SoundEvent)
+                EventCounterSound++;
+        }
+    }
+
+
     [TestFixture]
     public class TestsEventBus
     {
         private readonly List<GameEventType> _registeredEvents= new List<GameEventType>() {
             GameEventType.ControlEvent, GameEventType.SoundEvent, GameEventType.StatusEvent
         };
-        private GameEventBus<object> _eb;
+
+        private GameEventBus _eb;
         private SimpleEventProcessor _simpleEventProcessor;
-        private GameEvent<object> _eventControl;
-        private GameEvent<object> _eventSound;
-
-        /// <summary>
-        /// SimpleGameProcessor is a mock-up processor for testing purposes.
-        /// </summary>
-        public class SimpleEventProcessor : IGameEventProcessor<object>
-        {
-            /// <summary>
-            /// Counter for number of processes control events.
-            /// </summary>
-            public int EventCounterControl;
-            /// <summary>
-            /// Counter for number of processes sound events.
-            /// </summary>
-            public int EventCounterSound;
-
-            public void ProcessEvent(GameEvent<object> gameEvent)
-            {
-                var eventType = gameEvent.EventType;
-                // Count events using integer fields
-                if(eventType==GameEventType.ControlEvent)
-                    EventCounterControl++;
-                if (eventType == GameEventType.SoundEvent)
-                    EventCounterSound++;
-            }
-        }
+        private GameEvent _eventControl;
+        private GameEvent _eventSound;
 
         /// <summary>
         /// Setup event processor mock-up and events.
         /// </summary>
-        [SetUp]
-        public void SetupEventBusForTests()
+        public TestsEventBus()
         {
-            _eb=new GameEventBus<object>();
+            _eb = new GameEventBus();
             _eb.InitializeEventBus(_registeredEvents);
 
             _simpleEventProcessor = new SimpleEventProcessor();
-
             _eb.Subscribe(GameEventType.ControlEvent, _simpleEventProcessor);
             _eb.Subscribe(GameEventType.SoundEvent, _simpleEventProcessor);
 
-            _eventControl = new GameEvent<object> {
+            _eventControl = new GameEvent {
                 EventType = GameEventType.ControlEvent,
                 From = this,
                 Message = "Test2",
                 StringArg1 = "test",
                 StringArg2 = "test"
             };
-            _eventSound = new GameEvent<object> {
+            _eventSound = new GameEvent {
                 EventType = GameEventType.SoundEvent,
                 From = this,
                 Message = "Test2",
                 StringArg1 = "test",
                 StringArg2 = "test"
             };
+        }
+
+        /// <summary>
+        /// Reset event bus and event processor before calling each test method.
+        /// </summary>
+        [SetUp]
+        public void SetupEventBusForTests()
+        {
+            _eb.Flush();
+            _simpleEventProcessor.EventCounterControl = 0;
+            _simpleEventProcessor.EventCounterSound = 0;
         }
 
         /// <summary>
@@ -283,10 +294,9 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         [Test]
         public void TestSubscribeGameEventProcessorArgumentNotNullException()
         {
-            Assert.Throws<ArgumentNullException>(delegate
-                {
-                    _eb.Subscribe(GameEventType.ControlEvent, default(IGameEventProcessor<object>));
-                });
+            Assert.Throws<ArgumentNullException>(delegate {
+                _eb.Subscribe(GameEventType.ControlEvent, default(IGameEventProcessor));
+            });
         }
 
         /// <summary>
@@ -297,7 +307,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         {
             Assert.Throws<ArgumentNullException>(delegate
             {
-                _eb.Subscribe(GameEventType.ControlEvent, default(IGameEventProcessor<object>));
+                _eb.Subscribe(GameEventType.ControlEvent, default(IGameEventProcessor));
             });
         }
     }

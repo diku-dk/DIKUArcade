@@ -5,13 +5,14 @@ namespace DIKUArcade.Events {
     /// Represents a GameEvent together with an expiration time.
     /// When a TimedGameEvent has expired it is ready for processing by a GameEventBus.
     /// </summary>
-    public struct TimedGameEvent<T> {
-        public GameEvent<T> GameEvent { get; private set; }
+    public struct TimedGameEvent
+    {
+        public GameEvent GameEvent { get; private set; }
 
         private readonly TimePeriod timeSpan;
         private readonly long timeOfCreation;
 
-        public TimedGameEvent(TimePeriod timeSpan, GameEvent<T> gameEvent) {
+        public TimedGameEvent(TimePeriod timeSpan, GameEvent gameEvent) {
             this.timeSpan = timeSpan;
             GameEvent = gameEvent;
 

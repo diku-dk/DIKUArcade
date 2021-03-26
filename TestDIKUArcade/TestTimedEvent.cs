@@ -7,17 +7,17 @@ using DIKUArcade.Input;
 using DIKUArcade.Timers;
 
 namespace TestDIKUArcade {
-    public class TestTimedEvent : DIKUGame, IGameEventProcessor<object>
+    public class TestTimedEvent : DIKUGame, IGameEventProcessor
     {
         private System.Random random;
-        private GameEventBus<object> eventBus;
+        private GameEventBus eventBus;
 
         public TestTimedEvent(WindowArgs windowArgs) : base(windowArgs)
         {
             window.SetKeyEventHandler(KeyHandler);
             random = new Random();
 
-            eventBus = new GameEventBus<object>();
+            eventBus = new GameEventBus();
             eventBus.InitializeEventBus(new List<GameEventType> { GameEventType.TimedEvent });
 
             eventBus.Subscribe(GameEventType.TimedEvent, this);
@@ -48,10 +48,11 @@ namespace TestDIKUArcade {
         private void AddTimedEvent(uint id = 1)
         {
             Console.WriteLine($"AddTimedEvent({id})");
-            var e = new GameEvent<object>();
-            e.Message = "This is a timed event!";
-            e.Id = id;
-            e.EventType = GameEventType.TimedEvent;
+            var e = new GameEvent {
+                Message = "This is a timed event!",
+                Id = id,
+                EventType = GameEventType.TimedEvent
+            };
             eventBus.RegisterTimedEvent(e, TimePeriod.NewSeconds(1.0));
         }
 
@@ -77,7 +78,7 @@ namespace TestDIKUArcade {
             game.Run();
         }
 
-        public void ProcessEvent(GameEvent<object> gameEvent)
+        public void ProcessEvent(GameEvent gameEvent)
         {
             var eventType = gameEvent.EventType;
             if (eventType != GameEventType.TimedEvent) {

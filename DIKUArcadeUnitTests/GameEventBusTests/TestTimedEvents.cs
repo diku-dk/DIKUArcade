@@ -6,29 +6,30 @@ using System.Threading;
 
 namespace DIKUArcadeUnitTests.GameEventBusTests
 {
-    public class Helper : IGameEventProcessor<object>
-    {
-        public void ProcessEvent(GameEvent<object> gameEvent)
-        {
-            EventCounter++;
-        }
-
-        public int EventCounter { get; private set; } = 0;
-
-        public void ResetEventCounter() => EventCounter = 0;
-    }
-
     [TestFixture]
     public class TestTimedEvents
     {
-        private GameEventBus<object> _eventBus;
+        private class Helper : IGameEventProcessor
+        {
+            public void ProcessEvent(GameEvent gameEvent)
+            {
+                EventCounter++;
+            }
+
+            public int EventCounter { get; private set; } = 0;
+
+            public void ResetEventCounter() => EventCounter = 0;
+        }
+
+
+        private GameEventBus _eventBus;
         private Helper _helper;
 
         public TestTimedEvents()
         {
             _helper = new Helper();
 
-            _eventBus = new GameEventBus<object>();
+            _eventBus = new GameEventBus();
             _eventBus.InitializeEventBus(new List<GameEventType> {
                 GameEventType.TimedEvent,
                 GameEventType.StatusEvent,
@@ -47,7 +48,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         [Test]
         public void TestRegisterTimedEvent()
         {
-            var e = new GameEvent<object>() {
+            var e = new GameEvent {
                 EventType = GameEventType.TimedEvent,
                 From = this,
                 To = _helper
@@ -67,7 +68,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         public void TestResetTimedEvent()
         {
             // event for reset testing
-            var e = new GameEvent<object>() {
+            var e = new GameEvent {
                 EventType = GameEventType.TimedEvent,
                 From = this,
                 To = _helper,
@@ -77,7 +78,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
 
             // event which should stay in event bus for a very long time,
             // and not be disturbed by resetting the other event multiple times.
-            var longWaitEvent = new GameEvent<object>() {
+            var longWaitEvent = new GameEvent {
                 EventType = GameEventType.TimedEvent,
                 From = this,
                 To = _helper,
@@ -118,13 +119,13 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         [Test]
         public void TestHasTimedEvent()
         {
-            var e1 = new GameEvent<object>() {
+            var e1 = new GameEvent {
                 EventType = GameEventType.StatusEvent,
                 From = this,
                 To = _helper,
                 Id = 42
             };
-            var e2 = new GameEvent<object>() {
+            var e2 = new GameEvent {
                 EventType = GameEventType.MovementEvent,
                 From = this,
                 To = _helper,
@@ -149,13 +150,13 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         public void TestCancelTimedEvent()
         {
             // events for cancel testing
-            var e1 = new GameEvent<object>() {
+            var e1 = new GameEvent {
                 EventType = GameEventType.StatusEvent,
                 From = this,
                 To = _helper,
                 Id = 42
             };
-            var e2 = new GameEvent<object>() {
+            var e2 = new GameEvent {
                 EventType = GameEventType.MovementEvent,
                 From = this,
                 To = _helper,
@@ -166,7 +167,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
 
             // event which should stay in event bus for a very long time,
             // and not be disturbed by cancelling the other event multiple times.
-            var longWaitEvent = new GameEvent<object>() {
+            var longWaitEvent = new GameEvent {
                 EventType = GameEventType.TimedEvent,
                 From = this,
                 To = _helper,
@@ -201,7 +202,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         public void TestAddOrResetTimedEvent()
         {
             // event for reset testing
-            var e = new GameEvent<object>() {
+            var e = new GameEvent {
                 EventType = GameEventType.TimedEvent,
                 From = this,
                 To = _helper,
@@ -211,7 +212,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
 
             // event which should stay in event bus for a very long time,
             // and not be disturbed by resetting the other event multiple times.
-            var longWaitEvent = new GameEvent<object>() {
+            var longWaitEvent = new GameEvent {
                 EventType = GameEventType.TimedEvent,
                 From = this,
                 To = _helper,

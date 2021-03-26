@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DIKUArcade.Timers;
@@ -6,24 +6,25 @@ using DIKUArcade.Timers;
 namespace DIKUArcade.Events
 {
     /// <summary>
+    /// Default implementation of GameEventBus (see below) which uses GameEventType
+    /// instead of a generic enum event type.
     /// GameEventBus is the core module for processing events in the DIKUArcade game engine. Modules can register events and
     /// add them to the queues. Events are distinguished by event types to improve processing performance. Event processor
     /// can register/subscribe themself to receive events of a certain event type. For a single event, all processors are
     /// called with this event (broadcast semantic).
     /// </summary>
-    /// <typeparam name="T">Parameter type of game entities.</typeparam>
-    public class GameEventBus<T> : IGameEventBus<T>, IGameEventBusController<T>
+    public class GameEventBus : IGameEventBus, ITimedGameEventBus, IGameEventBusController
     {
         private bool _initialized = false;
 
         /// <summary>
         /// Dictionary of registered event processors for a given game event type.
         /// </summary>
-        private Dictionary<GameEventType, ICollection<IGameEventProcessor<T>>> _eventProcessors;
+        private Dictionary<GameEventType, ICollection<IGameEventProcessor>> _eventProcessors;
         /// <summary>
         /// Dictionary of game event queues for different game event types.
         /// </summary>
-        private Dictionary<GameEventType, GameEventQueue<GameEvent<T>>> _eventQueues;
+        private Dictionary<GameEventType, GameEventQueue<GameEvent>> _eventQueues;
         /// <summary>
         /// Stops processing the pipeline, e.g. needed due real-time constraints.
         /// </summary>
@@ -35,7 +36,7 @@ namespace DIKUArcade.Events
         /// </summary>
         private int _activeTimedEventList = 0;
         private int _inactiveTimedEventList = 1;
-        private List<TimedGameEvent<T>>[] _timedEventLists;
+        private List<TimedGameEvent>[] _timedEventLists;
 
         private void SwapTimedEventLists() {
             _activeTimedEventList = (_activeTimedEventList + 1) % 2;
@@ -54,28 +55,28 @@ namespace DIKUArcade.Events
                 throw new InvalidOperationException("GameEventBus is already initialized!");
             }
 
-            _eventProcessors= new Dictionary<GameEventType, ICollection<IGameEventProcessor<T>>>();
-            _eventQueues= new Dictionary<GameEventType, GameEventQueue<GameEvent<T>>>();
+            _eventProcessors= new Dictionary<GameEventType, ICollection<IGameEventProcessor>>();
+            _eventQueues= new Dictionary<GameEventType, GameEventQueue<GameEvent>>();
 
             if (eventTypeList != null) {
                 foreach (var eventType in eventTypeList)
                 {
-                    _eventProcessors.Add(eventType, new List<IGameEventProcessor<T>>());
-                    _eventQueues.Add(eventType, new GameEventQueue<GameEvent<T>>());
+                    _eventProcessors.Add(eventType, new List<IGameEventProcessor>());
+                    _eventQueues.Add(eventType, new GameEventQueue<GameEvent>());
                 }
             }
 
-            _timedEventLists = new List<TimedGameEvent<T>>[2] {
-                new List<TimedGameEvent<T>>(),
-                new List<TimedGameEvent<T>>()
+            _timedEventLists = new List<TimedGameEvent>[2] {
+                new List<TimedGameEvent>(),
+                new List<TimedGameEvent>()
             };
 
             _initialized = true;
         }
 
-        public void Subscribe(GameEventType eventType, IGameEventProcessor<T> gameEventProcessor)
+        public void Subscribe(GameEventType eventType, IGameEventProcessor gameEventProcessor)
         {
-            if (gameEventProcessor == default(IGameEventProcessor<T>))
+            if (gameEventProcessor == default(IGameEventProcessor))
                 throw new ArgumentNullException("Parameter gameEventProcessor must not be null.");
 
             try
@@ -88,9 +89,9 @@ namespace DIKUArcade.Events
             }
         }
 
-        public void Unsubscribe(GameEventType eventType, IGameEventProcessor<T> gameEventProcessor)
+        public void Unsubscribe(GameEventType eventType, IGameEventProcessor gameEventProcessor)
         {
-            if (gameEventProcessor == default(IGameEventProcessor<T>))
+            if (gameEventProcessor == default(IGameEventProcessor))
                 throw new ArgumentNullException("Parameter gameEventProcessor must not be null.");
 
             try
@@ -106,7 +107,7 @@ namespace DIKUArcade.Events
 
         #region TIMED_EVENTS
 
-        public void RegisterTimedEvent(GameEvent<T> gameEvent, TimePeriod timePeriod)
+        public void RegisterTimedEvent(GameEvent gameEvent, TimePeriod timePeriod)
         {
             // do not insert already registered events:
             if (gameEvent.Id != default(uint)) {
@@ -114,15 +115,10 @@ namespace DIKUArcade.Events
                     return;
                 }
             }
-            _timedEventLists[_activeTimedEventList].Add(new TimedGameEvent<T>(timePeriod, gameEvent));
+            _timedEventLists[_activeTimedEventList].Add(new TimedGameEvent(timePeriod, gameEvent));
         }
 
-        /// <summary>
-        /// Reset the time period of specified game event.
-        /// If event does not already exist in the event bus it is added.
-        /// Search is done through the event's Id.
-        /// </summary>
-        public void AddOrResetTimedEvent(GameEvent<T> gameEvent, TimePeriod timePeriod) {
+        public void AddOrResetTimedEvent(GameEvent gameEvent, TimePeriod timePeriod) {
             if (gameEvent.Id != default(uint)) {
                 // search for an item which matches the Id of the specified event
                 var search = _timedEventLists[_activeTimedEventList].FindIndex(e => e.GameEvent.Id == gameEvent.Id);
@@ -130,19 +126,15 @@ namespace DIKUArcade.Events
                 if (search >= 0) {
                     // event with Id already exists, so we reset its time period
                     _timedEventLists[_activeTimedEventList][search] =
-                        new TimedGameEvent<T>(timePeriod, _timedEventLists[_activeTimedEventList][search].GameEvent);
+                        new TimedGameEvent(timePeriod, _timedEventLists[_activeTimedEventList][search].GameEvent);
                     return;
                 }
             }
             // input event does not have an Id, or it has an Id but does not exist in list.
             // In either case, we add it.
-            _timedEventLists[_activeTimedEventList].Add(new TimedGameEvent<T>(timePeriod, gameEvent));
+            _timedEventLists[_activeTimedEventList].Add(new TimedGameEvent(timePeriod, gameEvent));
         }
 
-        /// <summary>
-        /// Cancel the TimedEvent with the given id and remove it from the EventBus.
-        /// returns false if event was not contained, and true otherwise.
-        /// </summary>
         public bool CancelTimedEvent(uint eventId) {
             bool cancelled = false;
             _timedEventLists[_inactiveTimedEventList].Clear();
@@ -159,23 +151,16 @@ namespace DIKUArcade.Events
             return cancelled;
         }
 
-        /// <summary>
-        /// If event with the given id is contained, reset its time period to the provided TimePeriod.
-        /// return false if event was not contained, and true otherwise.
-        /// </summary>
         public bool ResetTimedEvent(uint eventId, TimePeriod timePeriod) {
             var search = _timedEventLists[_activeTimedEventList].FindIndex(e => e.GameEvent.Id == eventId);
             if (search >= 0) {
                 _timedEventLists[_activeTimedEventList][search] =
-                    new TimedGameEvent<T>(timePeriod, _timedEventLists[_activeTimedEventList][search].GameEvent);
+                    new TimedGameEvent(timePeriod, _timedEventLists[_activeTimedEventList][search].GameEvent);
                 return true;
             }
             return false;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool HasTimedEvent(uint eventId) {
             return _timedEventLists[_activeTimedEventList].FindIndex(e => e.GameEvent.Id == eventId) >= 0;
         }
@@ -183,7 +168,7 @@ namespace DIKUArcade.Events
         #endregion // TIMED_EVENTS
 
 
-        public void RegisterEvent(GameEvent<T> gameEvent)
+        public void RegisterEvent(GameEvent gameEvent)
         {
             try
             {
@@ -221,7 +206,7 @@ namespace DIKUArcade.Events
                     if (_eventQueues != null) {
                         while (!_eventQueues[eventType].IsEmpty()) {
                             var currentEvent = _eventQueues[eventType].Dequeue();
-                            if (currentEvent.To != default(IGameEventProcessor<T>))
+                            if (currentEvent.To != default(IGameEventProcessor))
                             {
                                 currentEvent.To.ProcessEvent(currentEvent);
                             }
@@ -245,11 +230,13 @@ namespace DIKUArcade.Events
                 throw new ArgumentNullException();
             }
 
+            ProcessTimedEvents();
+
             foreach(GameEventType eventType in processOrder) {
                 if (_eventQueues != null) {
                     while (!_eventQueues[eventType].IsEmpty()) {
                         var currentEvent = _eventQueues[eventType].Dequeue();
-                        if (currentEvent.To != default(IGameEventProcessor<T>))
+                        if (currentEvent.To != default(IGameEventProcessor))
                         {
                             currentEvent.To.ProcessEvent(currentEvent);
                         }

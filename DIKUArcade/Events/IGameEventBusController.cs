@@ -2,7 +2,7 @@
 
 namespace DIKUArcade.Events
 {
-    public interface IGameEventBusController<T>
+    public interface IGameEventBusController
     {
         /// <summary>
         /// Initialize the game event bus with a list of event types that need to be processed. 
