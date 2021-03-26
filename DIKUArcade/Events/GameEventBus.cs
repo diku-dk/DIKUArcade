@@ -106,10 +106,8 @@ namespace DIKUArcade.Events
 
         #region TIMED_EVENTS
 
-        public void RegisterTimedEvent(GameEventType eventType, GameEvent<T> gameEvent, TimePeriod timePeriod)
+        public void RegisterTimedEvent(GameEvent<T> gameEvent, TimePeriod timePeriod)
         {
-            gameEvent.EventType = eventType;
-
             // do not insert already registered events:
             if (gameEvent.Id != default(uint)) {
                 if (_timedEventLists[_activeTimedEventList].Exists(e => e.GameEvent.Id == gameEvent.Id)) {
@@ -142,7 +140,8 @@ namespace DIKUArcade.Events
         }
 
         /// <summary>
-        /// return false if event was not contained
+        /// Cancel the TimedEvent with the given id and remove it from the EventBus.
+        /// returns false if event was not contained, and true otherwise.
         /// </summary>
         public bool CancelTimedEvent(uint eventId) {
             bool cancelled = false;
@@ -222,7 +221,12 @@ namespace DIKUArcade.Events
                     if (_eventQueues != null) {
                         while (!_eventQueues[eventType].IsEmpty()) {
                             var currentEvent = _eventQueues[eventType].Dequeue();
-                            if (_eventProcessors != null) {
+                            if (currentEvent.To != default(IGameEventProcessor<T>))
+                            {
+                                currentEvent.To.ProcessEvent(currentEvent);
+                            }
+                            else if (_eventProcessors != null)
+                            {
                                 foreach (var eventProcessor in _eventProcessors[eventType]) {
                                     eventProcessor.ProcessEvent(currentEvent);
                                     

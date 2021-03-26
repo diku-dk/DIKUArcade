@@ -1,4 +1,3 @@
 TESTING:
 * Removing resize handler multiple times in a row, and similar tests!
-* Transparent window framebuffer! (Ubuntu: proper desktop manager, not I3)
 * Changes in DIKUArcade.Window.DefaultResizeHandler()
