@@ -1,7 +1,12 @@
+using System;
 using DIKUArcade.GUI;
+using DIKUArcade.Input;
 using DIKUArcade.Timers;
 
 namespace DIKUArcade {
+    /// <summary>
+    /// Abstract base class for any DIKUArcade game.
+    /// </summary>
     public abstract class DIKUGame {
         protected Window window;
         private GameTimer gameTimer;
@@ -10,31 +15,53 @@ namespace DIKUArcade {
             window = new Window(windowArgs);
         }
 
+        /// <summary>
+        /// Override this method to update game logic.
+        /// </summary>
         public abstract void Update();
 
+        /// <summary>
+        /// Override this method to render game entities.
+        /// </summary>
         public abstract void Render();
 
+        /// <summary>
+        /// Enter the game loop and run the game.
+        /// This method will never return.
+        /// </summary>
         public void Run() {
             System.Console.WriteLine("Game.Run()");
             gameTimer = new GameTimer(30, 30);
 
-            while (window.IsRunning()) {
-                gameTimer.MeasureTime();
-                window.PollEvents();
+            try
+            {
+                while (window.IsRunning()) {
+                    gameTimer.MeasureTime();
+                    window.PollEvents();
 
-                while (gameTimer.ShouldUpdate()) {
-                    Update();
+                    while (gameTimer.ShouldUpdate()) {
+                        Update();
+                    }
+
+                    if (gameTimer.ShouldRender()) {
+                        window.Clear();
+                        Render();
+                        window.SwapBuffers();
+                    }
+
+                    if (gameTimer.ShouldReset()) {
+
+                    }
                 }
 
-                if (gameTimer.ShouldRender()) {
-                    window.Clear();
-                    Render();
-                    window.SwapBuffers();
-                }
+                window.DestroyWindow();
+            }
+            catch(Exception ex) {
+                Console.WriteLine("DIKUArcade.DIKUGame caught an exception. See message below:" + Environment.NewLine);
+                Console.WriteLine(ex);
 
-                if (gameTimer.ShouldReset()) {
-
-                }
+                Console.WriteLine(Environment.NewLine + "Terminating program...");
+                Environment.Exit(1);
             }
         }
     }

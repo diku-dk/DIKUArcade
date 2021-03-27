@@ -11,8 +11,7 @@ using DIKUArcade.Input;
 
 namespace DIKUArcade.GUI {
     /// <summary>
-    /// Create an OpenTK window wrapper, where we only show
-    /// relevant data members and hide unneeded functionality.
+    /// This class represents a graphical window in the DIKUArcade game engine.
     /// </summary>
     public class Window {
         private static uint screenShotCounter;
@@ -138,6 +137,10 @@ namespace DIKUArcade.GUI {
             AddDefaultKeyEventHandler();
         }
 
+        ~Window() {
+            if (window != null) this.DestroyWindow();
+        }
+
 
         #region WINDOW_RESIZE
 
@@ -188,6 +191,10 @@ namespace DIKUArcade.GUI {
             window.KeyDown -= DefaultKeyEventHandler;
         }
 
+        /// <summary>
+        /// Attach the specified keyHandler method argument to this window object.
+        /// All key inputs will thereafter be directed to this keyHandler.
+        /// </summary>
         public void SetKeyEventHandler(Action<KeyboardAction,KeyboardKey> keyHandler) {
             RemoveDefaultKeyEventHandler();
             window.KeyDown += args => {
@@ -208,11 +215,22 @@ namespace DIKUArcade.GUI {
         }
 
         /// <summary>
-        /// Close the Window.
+        /// Sets the window running variable to false such that calls to
+        /// `IsRunning()` afterwards will return false. This will allow one
+        /// to exit the game loop.
         /// </summary>
         public void CloseWindow() {
             isRunning = false;
+        }
+
+        /// <summary>
+        /// Close the underlying OpenTK window object.
+        /// Do not call this method outside the engine.
+        /// </summary>
+        public void DestroyWindow() {
             window.Close();
+            window.Dispose();
+            window = null;
         }
 
         /// <summary>
