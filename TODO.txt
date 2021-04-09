@@ -1,0 +1,3 @@
+TESTING:
+* Removing resize handler multiple times in a row, and similar tests!
+* Changes in DIKUArcade.Window.DefaultResizeHandler()

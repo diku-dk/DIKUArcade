@@ -1,29 +1,30 @@
-﻿namespace DIKUArcade.State {
+﻿using DIKUArcade.Input;
+
+namespace DIKUArcade.State {
     public interface IGameState {
         /// <summary>
-        /// The game loop can be structured differently depending on what the
-        /// current game state needs.
+        /// Reset this state to set its private variables to their initial default
+        /// values. This is useful when e.g. leaving a game and entering a new game,
+        /// where calling this method could reset the player's position, reset the
+        /// score counter, or perform other similar actions.
         /// </summary>
-        void GameLoop();
-        /// <summary>
-        /// Use this method to initialize all the GameState's variables.
-        /// Call this method at the end of the constuctor.
-        /// </summary>
-        void InitializeGameState();
+        void ResetState();
+
         /// <summary>
         /// Update all variables that are being used by this GameState.
         /// </summary>
-        void UpdateGameLogic();
+        void UpdateState();
+        
         /// <summary>
         /// Render all entities in this GameState
         /// </summary>
         void RenderState();
+        
         /// <summary>
         /// Each state can react to key events, delegated from the host StateMachine.
         /// </summary>
-        /// <param name="keyAction">Eiter "KEY_PRESS" or "KEY_RELEASE".</param>
-        /// <param name="keyValue">The string key value (see DIKUArcade.Input.KeyTransformer
-        /// for details).</param>
-        void HandleKeyEvent(string keyValue, string keyAction);
+        /// <param name="KeyboardAction">Enumeration representing key press/release.</param>
+        /// <param name="KeyboardKey">Enumeration representing the keyboard key.</param>
+        void HandleKeyEvent(KeyboardAction action, KeyboardKey key);
     }
 }
