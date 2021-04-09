@@ -1,63 +1,83 @@
 ﻿using System;
 using System.Collections.Generic;
-using DIKUArcade.EventBus;
+using DIKUArcade.Events;
 using NUnit.Framework;
 
-namespace DIKUArcadeUnitTests.GameEventBus
+namespace DIKUArcadeUnitTests.GameEventBusTests
 {
+    /// <summary>
+    /// SimpleGameProcessor is a mock-up processor for testing purposes.
+    /// </summary>
+    public class SimpleEventProcessor : IGameEventProcessor
+    {
+        /// <summary>
+        /// Counter for number of processes control events.
+        /// </summary>
+        public int EventCounterControl;
+        /// <summary>
+        /// Counter for number of processes sound events.
+        /// </summary>
+        public int EventCounterSound;
+
+        public void ProcessEvent(GameEvent gameEvent)
+        {
+            var eventType = gameEvent.EventType;
+            // Count events using integer fields
+            if (eventType == GameEventType.ControlEvent)
+                EventCounterControl++;
+            if (eventType == GameEventType.SoundEvent)
+                EventCounterSound++;
+        }
+    }
+
+
     [TestFixture]
     public class TestsEventBus
     {
         private readonly List<GameEventType> _registeredEvents= new List<GameEventType>() {
             GameEventType.ControlEvent, GameEventType.SoundEvent, GameEventType.StatusEvent
         };
-        private GameEventBus<object> _eb;
+
+        private GameEventBus _eb;
         private SimpleEventProcessor _simpleEventProcessor;
-        private GameEvent<object> _eventControl;
-        private GameEvent<object> _eventSound;
-
-        /// <summary>
-        /// SimpleGameProcessor is a mock-up processor for testing purposes.
-        /// </summary>
-        public class SimpleEventProcessor : IGameEventProcessor<object>
-        {
-            /// <summary>
-            /// Counter for number of processes control events.
-            /// </summary>
-            public int EventCounterControl;
-            /// <summary>
-            /// Counter for number of processes sound events.
-            /// </summary>
-            public int EventCounterSound;
-
-            public void ProcessEvent(GameEventType eventType, GameEvent<object> gameEvent)
-            {
-                // Count events using integer fields
-                if(eventType==GameEventType.ControlEvent)
-                    EventCounterControl++;
-                if (eventType == GameEventType.SoundEvent)
-                    EventCounterSound++;
-            }
-        }
+        private GameEvent _eventControl;
+        private GameEvent _eventSound;
 
         /// <summary>
         /// Setup event processor mock-up and events.
         /// </summary>
+        public TestsEventBus()
+        {
+            
+        }
+
+        /// <summary>
+        /// Reset event bus and event processor before calling each test method.
+        /// </summary>
         [SetUp]
         public void SetupEventBusForTests()
         {
-            _eb=new GameEventBus<object>();
+            _eb = new GameEventBus();
             _eb.InitializeEventBus(_registeredEvents);
 
             _simpleEventProcessor = new SimpleEventProcessor();
-
             _eb.Subscribe(GameEventType.ControlEvent, _simpleEventProcessor);
             _eb.Subscribe(GameEventType.SoundEvent, _simpleEventProcessor);
 
-            _eventControl = GameEventFactory<object>.CreateGameEventForAllProcessors(
-                GameEventType.ControlEvent, this, "Test1", "test", "test");
-            _eventSound = GameEventFactory<object>.CreateGameEventForAllProcessors(
-                GameEventType.SoundEvent, this, "Test2", "test", "test");
+            _eventControl = new GameEvent {
+                EventType = GameEventType.ControlEvent,
+                From = this,
+                Message = "Test2",
+                StringArg1 = "test",
+                StringArg2 = "test"
+            };
+            _eventSound = new GameEvent {
+                EventType = GameEventType.SoundEvent,
+                From = this,
+                Message = "Test2",
+                StringArg1 = "test",
+                StringArg2 = "test"
+            };
         }
 
         /// <summary>
@@ -272,10 +292,9 @@ namespace DIKUArcadeUnitTests.GameEventBus
         [Test]
         public void TestSubscribeGameEventProcessorArgumentNotNullException()
         {
-            Assert.Throws<ArgumentNullException>(delegate
-                {
-                    _eb.Subscribe(GameEventType.ControlEvent, default(IGameEventProcessor<object>));
-                });
+            Assert.Throws<ArgumentNullException>(delegate {
+                _eb.Subscribe(GameEventType.ControlEvent, default(IGameEventProcessor));
+            });
         }
 
         /// <summary>
@@ -286,7 +305,7 @@ namespace DIKUArcadeUnitTests.GameEventBus
         {
             Assert.Throws<ArgumentNullException>(delegate
             {
-                _eb.Subscribe(GameEventType.ControlEvent, default(IGameEventProcessor<object>));
+                _eb.Subscribe(GameEventType.ControlEvent, default(IGameEventProcessor));
             });
         }
     }
