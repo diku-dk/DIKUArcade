@@ -23,8 +23,8 @@ namespace DIKUArcade.State {
         /// <summary>
         /// Each state can react to key events, delegated from the host StateMachine.
         /// </summary>
-        /// <param name="KeyboardAction">Enumeration representing key press/release.</param>
-        /// <param name="KeyboardKey">Enumeration representing the keyboard key.</param>
+        /// <param name="action">Enumeration representing key press/release.</param>
+        /// <param name="key">Enumeration representing the keyboard key.</param>
         void HandleKeyEvent(KeyboardAction action, KeyboardKey key);
     }
 }
