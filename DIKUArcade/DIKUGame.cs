@@ -1,6 +1,5 @@
 using System;
 using DIKUArcade.GUI;
-using DIKUArcade.Input;
 using DIKUArcade.Timers;
 
 namespace DIKUArcade {
@@ -10,6 +9,12 @@ namespace DIKUArcade {
     public abstract class DIKUGame {
         protected Window window;
         private GameTimer gameTimer;
+
+        /// <summary>
+        /// The exact amount of captured updates in the last second.
+        /// Can be used for framerate independent calculations.
+        /// </summary>
+        public static int Timestep { get; private set; }
 
         public DIKUGame(WindowArgs windowArgs) {
             window = new Window(windowArgs);
@@ -50,7 +55,7 @@ namespace DIKUArcade {
                     }
 
                     if (gameTimer.ShouldReset()) {
-
+                        Timestep = gameTimer.CapturedUpdates;
                     }
                 }
 
