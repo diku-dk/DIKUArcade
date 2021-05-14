@@ -227,7 +227,7 @@ namespace DIKUArcade.GUI {
         /// Close the underlying OpenTK window object.
         /// Do not call this method outside the engine.
         /// </summary>
-        public void DestroyWindow() {
+        internal void DestroyWindow() {
             window.Close();
             window.Dispose();
             window = null;
