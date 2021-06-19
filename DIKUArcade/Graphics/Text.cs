@@ -21,6 +21,11 @@ namespace DIKUArcade.Graphics {
         private string text;
 
         /// <summary>
+        /// The font family for rendering the text string
+        /// </summary>
+        private string fontFamily;
+
+        /// <summary>
         /// The font size for the text string
         /// </summary>
         private int fontSize;
@@ -35,18 +40,8 @@ namespace DIKUArcade.Graphics {
         /// </summary>
         private System.Drawing.Color color;
 
-        /// <summary>
-        /// The font family of the text.
-        /// </summary>
-        private System.Drawing.Font font;
-
-        public Text(string text, Vec2F pos, Vec2F extent) {
-            this.text = text;
-            shape = new StationaryShape(pos, extent);
-            color = System.Drawing.Color.Black;
-            fontSize = 50;
-            font = new Font("Arial", fontSize);
-
+        private void GenTexture()
+        {
             // create a texture id
             textureId = GL.GenTexture();
 
@@ -75,11 +70,34 @@ namespace DIKUArcade.Graphics {
             CreateBitmapTexture();
         }
 
+        public Text(string text, Vec2F pos, Vec2F extent) {
+            this.text = text;
+            shape = new StationaryShape(pos, extent);
+            color = System.Drawing.Color.Black;
+            fontFamily = "Arial";
+            fontSize = 50;
+
+            GenTexture();
+        }
+
+        public Text(string text, Vec2F pos, Vec2F extent, System.Drawing.Color color, int fontSize)
+        {
+            this.text = text;
+            shape = new StationaryShape(pos, extent);
+            this.color = color;
+            fontFamily = "Arial";
+            this.fontSize = fontSize;
+
+            GenTexture();
+        }
+
         // This method assumes that
         private void CreateBitmapTexture() {
             BindTexture();
 
-            System.Drawing.Bitmap textBmp = new System.Drawing.Bitmap(500, 500); // match window size
+            //System.Drawing.Bitmap textBmp = new System.Drawing.Bitmap(1000, 1000); // match window size
+            //System.Drawing.Bitmap textBmp = new System.Drawing.Bitmap(fontSize * text.Length, fontSize); // match window size
+            System.Drawing.Bitmap textBmp = new System.Drawing.Bitmap(800, fontSize);
 
             // just allocate memory, so we can update efficiently using TexSubImage2D
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, textBmp.Width, textBmp.Height, 0,
@@ -89,7 +107,7 @@ namespace DIKUArcade.Graphics {
             {
                 gfx.Clear(System.Drawing.Color.Transparent);
                 // TODO: Could create an enumeration for choosing btw different font families!
-                Font drawFont = font;
+                Font drawFont = new Font(fontFamily, fontSize);
                 SolidBrush drawBrush = new SolidBrush(color);
 
                 // TODO: Maybe we should not use shape.Position here, because different coordinate system !!?
@@ -153,9 +171,10 @@ namespace DIKUArcade.Graphics {
         public void SetFont(string fontfamily) {
             // The loop below checks if said font is installed, if not defaults to Arial.
             var fontsCollection = new InstalledFontCollection();
-            foreach (var fontFamily in fontsCollection.Families) {
-                if (fontFamily.Name == fontfamily) {
-                    font = new Font(fontfamily, fontSize);
+            foreach (var font in fontsCollection.Families) {
+                if (font.Name == fontfamily) {
+                    this.fontFamily = font.Name;
+                    //font = new Font(fontfamily, fontSize);
                     break;
                 }
             }
