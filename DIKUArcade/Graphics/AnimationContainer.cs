@@ -36,6 +36,7 @@ namespace DIKUArcade.Graphics {
 
         /// <summary>
         /// Add an animation to this container. Return true if successful, otherwise false.
+        /// Performs a linear search in the internal animation array for an unoccupied space.
         /// </summary>
         /// <param name="shape"></param>
         /// <param name="duration"></param>
