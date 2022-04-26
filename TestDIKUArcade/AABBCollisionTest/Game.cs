@@ -39,17 +39,29 @@ public class Game : DIKUGame {
         }
 
         switch (key) {
-            case KeyboardKey.Left:
+            case KeyboardKey.KeyPad1:
+                MovePlayer(new Vec2F(-playerVelocity, -playerVelocity));
+                break;
+            case KeyboardKey.KeyPad2:
+                MovePlayer(new Vec2F(0.0f, -playerVelocity));
+                break;
+            case KeyboardKey.KeyPad3:
+                MovePlayer(new Vec2F(playerVelocity, -playerVelocity));
+                break;
+            case KeyboardKey.KeyPad4:
                 MovePlayer(new Vec2F(-playerVelocity, 0.0f));
                 break;
-            case KeyboardKey.Right:
+            case KeyboardKey.KeyPad6:
                 MovePlayer(new Vec2F(playerVelocity, 0.0f));
                 break;
-            case KeyboardKey.Up:
+            case KeyboardKey.KeyPad7:
+                MovePlayer(new Vec2F(-playerVelocity, playerVelocity));
+                break;
+            case KeyboardKey.KeyPad8:
                 MovePlayer(new Vec2F(0.0f, playerVelocity));
                 break;
-            case KeyboardKey.Down:
-                MovePlayer(new Vec2F(0.0f, -playerVelocity));
+            case KeyboardKey.KeyPad9:
+                MovePlayer(new Vec2F(playerVelocity, playerVelocity));
                 break;
             case KeyboardKey.Escape:
                 window.CloseWindow();
