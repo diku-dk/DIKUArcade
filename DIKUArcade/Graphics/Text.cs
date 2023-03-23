@@ -79,7 +79,7 @@ namespace DIKUArcade.Graphics {
         private void CreateBitmapTexture() {
             BindTexture();
 
-            System.Drawing.Bitmap textBmp = new System.Drawing.Bitmap(500, 500); // match window size
+            using System.Drawing.Bitmap textBmp = new System.Drawing.Bitmap(500, 500); // match window size
 
             // just allocate memory, so we can update efficiently using TexSubImage2D
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, textBmp.Width, textBmp.Height, 0,
@@ -103,7 +103,7 @@ namespace DIKUArcade.Graphics {
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, textBmp.Width, textBmp.Height, 0,
                 OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
             textBmp.UnlockBits(data);
-
+            
             UnbindTexture();
         }
 

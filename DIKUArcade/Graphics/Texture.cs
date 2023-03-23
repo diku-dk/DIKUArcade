@@ -37,7 +37,7 @@ namespace DIKUArcade.Graphics {
             {
                 throw new FileNotFoundException($"Error: The file \"{path}\" does not exist.");
             }
-            System.Drawing.Bitmap image = new System.Drawing.Bitmap(path);
+            using System.Drawing.Bitmap image = new System.Drawing.Bitmap(path);
             BitmapData data = image.LockBits(new System.Drawing.Rectangle(0, 0, image.Width, image.Height),
                 ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
