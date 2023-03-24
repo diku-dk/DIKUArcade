@@ -8,7 +8,7 @@ using DIKUArcade.Math;
 using OpenTK.Mathematics;
 
 namespace DIKUArcade.Graphics {
-    public class Text {
+    public class Text : IDisposable {
         // TODO: Add method for centering text (vertically, horizontally) within its shape!
         /// <summary>
         /// OpenGL texture handle
@@ -74,6 +74,12 @@ namespace DIKUArcade.Graphics {
             // create a texture
             CreateBitmapTexture();
         }
+        
+        ~Text()
+        {
+            Dispose(false);
+        }
+        
 
         // This method assumes that
         private void CreateBitmapTexture() {
@@ -89,13 +95,12 @@ namespace DIKUArcade.Graphics {
             {
                 gfx.Clear(System.Drawing.Color.Transparent);
                 // TODO: Could create an enumeration for choosing btw different font families!
-                Font drawFont = font;
-                SolidBrush drawBrush = new SolidBrush(color);
+                using SolidBrush drawBrush = new SolidBrush(color);
 
                 // TODO: Maybe we should not use shape.Position here, because different coordinate system !!?
                 System.Drawing.PointF drawPoint = new System.Drawing.PointF(shape.Position.X, shape.Position.Y);
 
-                gfx.DrawString(text, drawFont, drawBrush, drawPoint); // Draw as many strings as you need
+                gfx.DrawString(text, font, drawBrush, drawPoint); // Draw as many strings as you need
             }
 
             BitmapData data = textBmp.LockBits(new System.Drawing.Rectangle(0, 0, textBmp.Width, textBmp.Height),
@@ -103,7 +108,7 @@ namespace DIKUArcade.Graphics {
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, textBmp.Width, textBmp.Height, 0,
                 OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
             textBmp.UnlockBits(data);
-            
+
             UnbindTexture();
         }
 
@@ -152,9 +157,10 @@ namespace DIKUArcade.Graphics {
         /// <param name="fontfamily">The name of the font family</param>
         public void SetFont(string fontfamily) {
             // The loop below checks if said font is installed, if not defaults to Arial.
-            var fontsCollection = new InstalledFontCollection();
+            using var fontsCollection = new InstalledFontCollection();
             foreach (var fontFamily in fontsCollection.Families) {
                 if (fontFamily.Name == fontfamily) {
+                    font.Dispose();
                     font = new Font(fontfamily, fontSize);
                     break;
                 }
@@ -295,6 +301,21 @@ namespace DIKUArcade.Graphics {
 
             // unbind this texture
             UnbindTexture();
+        }
+        
+        private void Dispose(bool disposing)
+        {
+            GL.DeleteTexture(textureId);
+            if (disposing)
+            {
+                font.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

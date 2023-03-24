@@ -6,7 +6,7 @@ using OpenTK.Graphics.OpenGL;
 using DIKUArcade.Entities;
 
 namespace DIKUArcade.Graphics {
-    public class Texture {
+    public class Texture : IDisposable {
         /// <summary>
         /// OpenGL texture handle
         /// </summary>
@@ -97,7 +97,7 @@ namespace DIKUArcade.Graphics {
             {
                 throw new FileNotFoundException($"Error: The file \"{path}\" does not exist.");
             }
-            System.Drawing.Bitmap image = new System.Drawing.Bitmap(path);
+            using System.Drawing.Bitmap image = new System.Drawing.Bitmap(path);
             var width = (int)((float)image.Width / (float)stridesInImage);
             var posX = currentStride * width;
             BitmapData data = image.LockBits(new System.Drawing.Rectangle(posX, 0, width, image.Height),
@@ -129,7 +129,12 @@ namespace DIKUArcade.Graphics {
             // unbind the texture
             UnbindTexture();
         }
-
+        
+        ~Texture()
+        {
+            ReleaseUnmanagedResources();
+        }
+        
         private void BindTexture()
         {
             GL.BindTexture(TextureTarget.Texture2D, textureId);
@@ -200,7 +205,7 @@ namespace DIKUArcade.Graphics {
         
         public void Render(Shape shape)
         {
-
+            
             // bind this texture
             BindTexture();
 
@@ -221,6 +226,17 @@ namespace DIKUArcade.Graphics {
 
             // unbind this texture
             UnbindTexture();
+        }
+
+        private void ReleaseUnmanagedResources()
+        {
+            GL.DeleteTexture(textureId);
+        }
+        
+        public void Dispose()
+        {
+            ReleaseUnmanagedResources();
+            GC.SuppressFinalize(this);
         }
     }
 }

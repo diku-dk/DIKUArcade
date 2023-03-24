@@ -341,7 +341,7 @@ namespace DIKUArcade.GUI {
                 throw new ArgumentNullException("GraphicsContextMissingException");
             }
 
-            using var bmp = new Bitmap(window.ClientSize.X, window.ClientSize.Y, PixelFormat.Format24bppRgb);
+            var bmp = new Bitmap(window.ClientSize.X, window.ClientSize.Y, PixelFormat.Format24bppRgb);
             var data = bmp.LockBits(new System.Drawing.Rectangle(0, 0, window.ClientSize.X, window.ClientSize.Y),
                                     ImageLockMode.WriteOnly,
                                     PixelFormat.Format24bppRgb);
