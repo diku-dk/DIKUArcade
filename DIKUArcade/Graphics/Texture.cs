@@ -6,7 +6,7 @@ using OpenTK.Graphics.OpenGL;
 using DIKUArcade.Entities;
 
 namespace DIKUArcade.Graphics {
-    public class Texture : IDisposable {
+    public class Texture {
         /// <summary>
         /// OpenGL texture handle
         /// </summary>
@@ -129,12 +129,7 @@ namespace DIKUArcade.Graphics {
             // unbind the texture
             UnbindTexture();
         }
-        
-        ~Texture()
-        {
-            ReleaseUnmanagedResources();
-        }
-        
+
         private void BindTexture()
         {
             GL.BindTexture(TextureTarget.Texture2D, textureId);
@@ -226,17 +221,6 @@ namespace DIKUArcade.Graphics {
 
             // unbind this texture
             UnbindTexture();
-        }
-
-        private void ReleaseUnmanagedResources()
-        {
-            GL.DeleteTexture(textureId);
-        }
-        
-        public void Dispose()
-        {
-            ReleaseUnmanagedResources();
-            GC.SuppressFinalize(this);
         }
     }
 }
