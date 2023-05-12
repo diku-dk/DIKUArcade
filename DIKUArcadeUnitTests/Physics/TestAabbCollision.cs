@@ -36,7 +36,7 @@ namespace DIKUArcadeUnitTests.Physics {
             for (int i = 0; i < 20; i++) {
                 var data = CollisionDetection.Aabb(actor, solidBlockLeft);
                 if (data.Collision) {
-                    Assert.That(data.CollisionDir, Is.EqualTo(CollisionDirection.CollisionDirLeft));
+                    Assert.That(data.CollisionDir, Is.EqualTo(CollisionDirection.CollisionDirRight));
                     return;
                 }
                 actor.Position += actor.Direction;
@@ -51,7 +51,7 @@ namespace DIKUArcadeUnitTests.Physics {
             for (int i = 0; i < 20; i++) {
                 var data = CollisionDetection.Aabb(actor, solidBlockRight);
                 if (data.Collision) {
-                    Assert.That(data.CollisionDir, Is.EqualTo(CollisionDirection.CollisionDirRight));
+                    Assert.That(data.CollisionDir, Is.EqualTo(CollisionDirection.CollisionDirLeft));
                     return;
                 }
                 actor.Position += actor.Direction;
@@ -66,7 +66,7 @@ namespace DIKUArcadeUnitTests.Physics {
             for (int i = 0; i < 20; i++) {
                 var data = CollisionDetection.Aabb(actor, solidBlockUp);
                 if (data.Collision) {
-                    Assert.That(data.CollisionDir, Is.EqualTo(CollisionDirection.CollisionDirUp));
+                    Assert.That(data.CollisionDir, Is.EqualTo(CollisionDirection.CollisionDirDown));
                     return;
                 }
                 actor.Position += actor.Direction;
@@ -81,7 +81,7 @@ namespace DIKUArcadeUnitTests.Physics {
             for (int i = 0; i < 20; i++) {
                 var data = CollisionDetection.Aabb(actor, solidBlockDown);
                 if (data.Collision) {
-                    Assert.That(data.CollisionDir, Is.EqualTo(CollisionDirection.CollisionDirDown));
+                    Assert.That(data.CollisionDir, Is.EqualTo(CollisionDirection.CollisionDirUp));
                     return;
                 }
                 actor.Position += actor.Direction;
@@ -89,6 +89,68 @@ namespace DIKUArcadeUnitTests.Physics {
             Assert.IsTrue(false); // collision was supposed to happen
         }
 
+        // The following four sweeps demonstrate that collision detection is consistent, whether or
+        // not the actor comes straight at the block or at an angle.
+
+        [TestCase(-0.02f)]
+        [TestCase(-0.01f)]
+        [TestCase( 0.00f)]
+        [TestCase( 0.01f)]
+        [TestCase( 0.02f)]
+        public void SweepUp(float dx) {
+            actor.Direction.X = dx;
+            actor.Direction.Y = 1;
+
+            var actual = CollisionDetection.Aabb(actor, solidBlockUp);
+
+            Assert.AreEqual(true, actual.Collision);
+            Assert.AreEqual(CollisionDirection.CollisionDirDown, actual.CollisionDir);
+        }
+
+        [TestCase(-0.02f)]
+        [TestCase(-0.01f)]
+        [TestCase( 0.00f)]
+        [TestCase( 0.01f)]
+        [TestCase( 0.02f)]
+        public void SweepDown(float dx) {
+            actor.Direction.X = dx;
+            actor.Direction.Y = -1;
+
+            var actual = CollisionDetection.Aabb(actor, solidBlockDown);
+
+            Assert.AreEqual(true, actual.Collision);
+            Assert.AreEqual(CollisionDirection.CollisionDirUp, actual.CollisionDir);
+        }
+
+        [TestCase(-0.02f)]
+        [TestCase(-0.01f)]
+        [TestCase( 0.00f)]
+        [TestCase( 0.01f)]
+        [TestCase( 0.02f)]
+        public void SweepLeft(float dy) {
+            actor.Direction.X = -1;
+            actor.Direction.Y = dy;
+
+            var actual = CollisionDetection.Aabb(actor, solidBlockLeft);
+
+            Assert.AreEqual(true, actual.Collision);
+            Assert.AreEqual(CollisionDirection.CollisionDirRight, actual.CollisionDir);
+        }
+
+        [TestCase(-0.02f)]
+        [TestCase(-0.01f)]
+        [TestCase( 0.00f)]
+        [TestCase( 0.01f)]
+        [TestCase( 0.02f)]
+        public void SweepRight(float dy) {
+            actor.Direction.X = 1;
+            actor.Direction.Y = dy;
+
+            var actual = CollisionDetection.Aabb(actor, solidBlockRight);
+
+            Assert.AreEqual(true, actual.Collision);
+            Assert.AreEqual(CollisionDirection.CollisionDirLeft, actual.CollisionDir);
+        }
 
         // =====  NEGATIVE COLLISION TESTING  ===== //
 
