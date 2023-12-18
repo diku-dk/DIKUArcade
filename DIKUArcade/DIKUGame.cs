@@ -16,7 +16,13 @@ namespace DIKUArcade {
         /// </summary>
         public static int Timestep { get; private set; }
 
+        //[DllImport("libglfw.so.3")] // On Linux
+        //public static extern int glfwInit();
+
+
         public DIKUGame(WindowArgs windowArgs) {
+
+
             window = new Window(windowArgs);
         }
 

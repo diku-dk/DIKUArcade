@@ -47,5 +47,6 @@ namespace DIKUArcade.Entities {
         public static explicit operator StationaryShape(DynamicShape obj) {
             return new StationaryShape(obj.Position, obj.Extent);
         }
+
     }
 }
