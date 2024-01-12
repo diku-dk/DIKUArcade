@@ -1,5 +1,6 @@
 using System;
 using DIKUArcade.Entities;
+using OpenTK.Audio.OpenAL;
 
 namespace DIKUArcade.Graphics {
     /// A stub for an image, to use with entities that are non-drawable

@@ -30,11 +30,13 @@ namespace DIKUArcade.Entities {
         }
 
         public void RenderEntity() {
-            Image.Render(Shape);
+            if(!isDeleted){
+            Image.Render(Shape);}
         }
 
         public void RenderEntity(Camera camera) {
-            Image.Render(Shape, camera);
+            if(!isDeleted){
+            Image.Render(Shape, camera);}
         }
     }
 }

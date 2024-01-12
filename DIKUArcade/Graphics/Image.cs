@@ -23,6 +23,5 @@ namespace DIKUArcade.Graphics {
 
         public Texture GetTexture() {
             return texture;
-        }
     }
-}
+    }}

@@ -19,11 +19,15 @@ namespace DIKUArcade.Graphics {
         /// The string value for the text
         /// </summary>
         private string text;
+        public int getFontSize (){
+            return this.fontSize;
+        }
 
         /// <summary>
         /// The font size for the text string
         /// </summary>
         private int fontSize;
+        //public int FontSize {get; private set;}
 
         /// <summary>
         /// The position and size of the text
@@ -44,7 +48,7 @@ namespace DIKUArcade.Graphics {
             this.text = text;
             shape = new StationaryShape(pos, extent);
             color = System.Drawing.Color.Black;
-            fontSize = 50;
+            fontSize = 100;
             font = new Font("Arial", fontSize);
 
             // create a texture id
@@ -283,7 +287,7 @@ namespace DIKUArcade.Graphics {
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref modelViewMatrix);
 
-            GL.Color4(1f,1f,1f,1f);
+            GL.Color4(0.1f,0.1f,0.1f,1f);
             GL.Begin(PrimitiveType.Quads);
 
             GL.TexCoord2(0, 1); GL.Vertex2(0.0f, 0.0f);                      // Top Left

@@ -9,10 +9,14 @@ using OpenTK.Windowing.Common;
 using OpenTK.Graphics.OpenGL;
 using DIKUArcade.Input;
 
+using DIKUArcade.Events;
+
 namespace DIKUArcade.GUI {
     /// <summary>
     /// This class represents a graphical window in the DIKUArcade game engine.
     /// </summary>
+   // public class Window: IGameEventProcessor {
+
     public class Window {
         private static uint screenShotCounter;
 
@@ -373,5 +377,6 @@ namespace DIKUArcade.GUI {
             bmp.Save(path);
             Console.WriteLine($"Screenshot saved as: {path}");
         }
+
     }
 }
