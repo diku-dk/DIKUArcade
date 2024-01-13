@@ -48,7 +48,7 @@ namespace DIKUArcade.Graphics {
             this.text = text;
             shape = new StationaryShape(pos, extent);
             color = System.Drawing.Color.Black;
-            fontSize = 100;
+            fontSize = 50;
             font = new Font("Arial", fontSize);
 
             // create a texture id
