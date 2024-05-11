@@ -1,212 +1,212 @@
-﻿using System;
+﻿namespace DIKUArcade.Graphics;
+
+using System;
 using System.Drawing.Imaging;
 using System.IO;
 using OpenTK.Mathematics;
 using OpenTK.Graphics.OpenGL;
 using DIKUArcade.Entities;
 
-namespace DIKUArcade.Graphics {
-    public class Texture {
-        /// <summary>
-        /// OpenGL texture handle
-        /// </summary>
-        public static double offsetX = 0.0;
-        public static double offsetY = 0.0;
-        private int textureId;
+public class Texture {
+    /// <summary>
+    /// OpenGL texture handle
+    /// </summary>
+    public static double offsetX = 0.0;
+    public static double offsetY = 0.0;
+    private int textureId;
 
-        public Texture(string filename) {
-            // create a texture id
-            textureId = GL.GenTexture();
+    public Texture(string filename) {
+        // create a texture id
+        textureId = GL.GenTexture();
 
-            // bind this new texture id
-            BindTexture();
+        // bind this new texture id
+        BindTexture();
 
-            // find base path
-            var dir = new DirectoryInfo(Path.GetDirectoryName(
-                System.Reflection.Assembly.GetExecutingAssembly().Location));
+        // find base path
+        var dir = new DirectoryInfo(Path.GetDirectoryName(
+            System.Reflection.Assembly.GetExecutingAssembly().Location));
 
-            while (dir.Name != "bin") {
-                dir = dir.Parent;
-            }
+        while (dir.Name != "bin") {
             dir = dir.Parent;
-
-            // load image file
-            var path = Path.Combine(dir.FullName.ToString(), filename);
-            if (!File.Exists(path)) {
-                throw new FileNotFoundException($"Error: The file \"{path}\" does not exist.");
-            }
-            System.Drawing.Bitmap image = new System.Drawing.Bitmap(path);
-            BitmapData data = image.LockBits(new System.Drawing.Rectangle(0, 0, image.Width, image.Height),
-                ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-
-            // attach it to OpenGL context
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
-                data.Width, data.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra,
-                PixelType.UnsignedByte, data.Scan0);
-
-            image.UnlockBits(data);
-
-            // set texture properties, filters, blending functions, etc.
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
-                (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
-                (int)TextureMagFilter.Linear);
-
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-            GL.Enable(EnableCap.DepthTest);
-            GL.DepthFunc(DepthFunction.Lequal);
-
-            GL.Enable(EnableCap.Texture2D);
-            GL.Enable(EnableCap.AlphaTest);
-
-            GL.AlphaFunc(AlphaFunction.Gequal, 0.5f);
-
-            // unbind the texture
-            UnbindTexture();
         }
+        dir = dir.Parent;
 
-        public Texture(string filename, int currentStride, int stridesInImage) {
-            if (currentStride < 0 || currentStride >= stridesInImage || stridesInImage < 0) {
-                throw new ArgumentOutOfRangeException(
-                    $"Invalid stride numbers: ({currentStride}/{stridesInImage})");
-            }
-            // create a texture id
-            textureId = GL.GenTexture();
+        // load image file
+        var path = Path.Combine(dir.FullName.ToString(), filename);
+        if (!File.Exists(path)) {
+            throw new FileNotFoundException($"Error: The file \"{path}\" does not exist.");
+        }
+        System.Drawing.Bitmap image = new System.Drawing.Bitmap(path);
+        BitmapData data = image.LockBits(new System.Drawing.Rectangle(0, 0, image.Width, image.Height),
+            ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
-            // bind this new texture id
-            BindTexture();
+        // attach it to OpenGL context
+        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
+            data.Width, data.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra,
+            PixelType.UnsignedByte, data.Scan0);
 
-            // find base path
-            var dir = new DirectoryInfo(Path.GetDirectoryName(
-                System.Reflection.Assembly.GetExecutingAssembly().Location));
+        image.UnlockBits(data);
 
-            while (dir.Name != "bin") {
-                dir = dir.Parent;
-            }
+        // set texture properties, filters, blending functions, etc.
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
+            (int)TextureMinFilter.Linear);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
+            (int)TextureMagFilter.Linear);
+
+        GL.Enable(EnableCap.Blend);
+        GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+        GL.Enable(EnableCap.DepthTest);
+        GL.DepthFunc(DepthFunction.Lequal);
+
+        GL.Enable(EnableCap.Texture2D);
+        GL.Enable(EnableCap.AlphaTest);
+
+        GL.AlphaFunc(AlphaFunction.Gequal, 0.5f);
+
+        // unbind the texture
+        UnbindTexture();
+    }
+
+    public Texture(string filename, int currentStride, int stridesInImage) {
+        if (currentStride < 0 || currentStride >= stridesInImage || stridesInImage < 0) {
+            throw new ArgumentOutOfRangeException(
+                $"Invalid stride numbers: ({currentStride}/{stridesInImage})");
+        }
+        // create a texture id
+        textureId = GL.GenTexture();
+
+        // bind this new texture id
+        BindTexture();
+
+        // find base path
+        var dir = new DirectoryInfo(Path.GetDirectoryName(
+            System.Reflection.Assembly.GetExecutingAssembly().Location));
+
+        while (dir.Name != "bin") {
             dir = dir.Parent;
-
-            // load image file
-            var path = Path.Combine(dir.FullName.ToString(), filename);
-            if (!File.Exists(path)) {
-                throw new FileNotFoundException($"Error: The file \"{path}\" does not exist.");
-            }
-            System.Drawing.Bitmap image = new System.Drawing.Bitmap(path);
-            var width = (int)((float)image.Width / (float)stridesInImage);
-            var posX = currentStride * width;
-            BitmapData data = image.LockBits(new System.Drawing.Rectangle(posX, 0, width, image.Height),
-                ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-
-            // attach it to OpenGL context
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
-                data.Width, data.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra,
-                PixelType.UnsignedByte, data.Scan0);
-
-            image.UnlockBits(data);
-
-            // set texture properties, filters, blending functions, etc.
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
-                (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
-                (int)TextureMagFilter.Linear);
-
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-            GL.Enable(EnableCap.DepthTest);
-            GL.DepthFunc(DepthFunction.Lequal);
-
-            GL.Enable(EnableCap.Texture2D);
-            GL.Enable(EnableCap.AlphaTest);
-
-            GL.AlphaFunc(AlphaFunction.Gequal, 0.5f);
-
-            // unbind the texture
-            UnbindTexture();
         }
+        dir = dir.Parent;
 
-        private void BindTexture() {
-            GL.BindTexture(TextureTarget.Texture2D, textureId);
+        // load image file
+        var path = Path.Combine(dir.FullName.ToString(), filename);
+        if (!File.Exists(path)) {
+            throw new FileNotFoundException($"Error: The file \"{path}\" does not exist.");
         }
+        System.Drawing.Bitmap image = new System.Drawing.Bitmap(path);
+        var width = (int)((float)image.Width / (float)stridesInImage);
+        var posX = currentStride * width;
+        BitmapData data = image.LockBits(new System.Drawing.Rectangle(posX, 0, width, image.Height),
+            ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
-        private void UnbindTexture() {
-            GL.BindTexture(TextureTarget.Texture2D, 0); // 0 is invalid texture id
-        }
+        // attach it to OpenGL context
+        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
+            data.Width, data.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra,
+            PixelType.UnsignedByte, data.Scan0);
 
-        private Matrix4 CreateMatrix(Shape shape) {
-            // ensure that rotation is performed around the center of the shape
-            // instead of the bottom-left corner
-            var halfX = shape.Extent.X / 2.0f;
-            var halfY = shape.Extent.Y / 2.0f;
+        image.UnlockBits(data);
 
-            return Matrix4.CreateTranslation(-halfX, -halfY, 0.0f) *
-                   Matrix4.CreateRotationZ(shape.Rotation) *
-                   Matrix4.CreateTranslation(shape.Position.X + halfX, shape.Position.Y + halfY,
-                       0.0f);
-        }
-        
-        // Render things that are affected by a camera (if the game has one)
-        private Matrix4 CreateMatrix(Shape shape, Camera camera) {
-            // ensure that rotation is performed around the center of the shape
-            // instead of the bottom-left corner
-            var halfX = shape.Extent.X / 2.0f;
-            var halfY = shape.Extent.Y / 2.0f;
+        // set texture properties, filters, blending functions, etc.
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
+            (int)TextureMinFilter.Linear);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
+            (int)TextureMagFilter.Linear);
 
-            return Matrix4.CreateTranslation(
-                -halfX - camera.Offset.X,
-                -halfY - camera.Offset.Y,
-                0.0f) *
-                   Matrix4.CreateRotationZ(shape.Rotation) *
-                   Matrix4.CreateTranslation(shape.Position.X + halfX + camera.Offset.X,
-                    shape.Position.Y + halfY + camera.Offset.Y,
-                       0.0f);
-        }
+        GL.Enable(EnableCap.Blend);
+        GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+        GL.Enable(EnableCap.DepthTest);
+        GL.DepthFunc(DepthFunction.Lequal);
 
-        public void Render(Shape shape, Camera camera) {
-            // bind this texture
-            BindTexture();
+        GL.Enable(EnableCap.Texture2D);
+        GL.Enable(EnableCap.AlphaTest);
 
-            // render this texture
-            Matrix4 modelViewMatrix = CreateMatrix(shape, camera);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref modelViewMatrix);
+        GL.AlphaFunc(AlphaFunction.Gequal, 0.5f);
 
-            GL.Translate(camera.Offset.X, camera.Offset.Y, 0);
-            //GL.Scale(camera.Scale, camera.Scale, 1f);
-            GL.Color4(1f, 1f, 1f, 1f);
-            GL.Begin(PrimitiveType.Quads);
+        // unbind the texture
+        UnbindTexture();
+    }
 
-            GL.TexCoord2(0, 1); GL.Vertex2(0.0f, 0.0f);                      // Top Left
-            GL.TexCoord2(0, 0); GL.Vertex2(0.0f, shape.Extent.Y);            // Bottom Left
-            GL.TexCoord2(1, 0); GL.Vertex2(shape.Extent.X, shape.Extent.Y);  // Bottom Right
-            GL.TexCoord2(1, 1); GL.Vertex2(shape.Extent.X, 0.0f);            // Top Right
+    private void BindTexture() {
+        GL.BindTexture(TextureTarget.Texture2D, textureId);
+    }
 
-            GL.End();
+    private void UnbindTexture() {
+        GL.BindTexture(TextureTarget.Texture2D, 0); // 0 is invalid texture id
+    }
 
-            // unbind this texture
-            UnbindTexture();
-        }
-        
-        public void Render(Shape shape) {
-            // bind this texture
-            BindTexture();
+    private Matrix4 CreateMatrix(Shape shape) {
+        // ensure that rotation is performed around the center of the shape
+        // instead of the bottom-left corner
+        var halfX = shape.Extent.X / 2.0f;
+        var halfY = shape.Extent.Y / 2.0f;
 
-            // render this texture
-            Matrix4 modelViewMatrix = CreateMatrix(shape);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref modelViewMatrix);
+        return Matrix4.CreateTranslation(-halfX, -halfY, 0.0f) *
+                Matrix4.CreateRotationZ(shape.Rotation) *
+                Matrix4.CreateTranslation(shape.Position.X + halfX, shape.Position.Y + halfY,
+                    0.0f);
+    }
+    
+    // Render things that are affected by a camera (if the game has one)
+    private Matrix4 CreateMatrix(Shape shape, Camera camera) {
+        // ensure that rotation is performed around the center of the shape
+        // instead of the bottom-left corner
+        var halfX = shape.Extent.X / 2.0f;
+        var halfY = shape.Extent.Y / 2.0f;
 
-            GL.Color4(1f, 1f, 1f, 1f);
-            GL.Begin(PrimitiveType.Quads);
+        return Matrix4.CreateTranslation(
+            -halfX - camera.Offset.X,
+            -halfY - camera.Offset.Y,
+            0.0f) *
+                Matrix4.CreateRotationZ(shape.Rotation) *
+                Matrix4.CreateTranslation(shape.Position.X + halfX + camera.Offset.X,
+                shape.Position.Y + halfY + camera.Offset.Y,
+                    0.0f);
+    }
 
-            GL.TexCoord2(0, 1); GL.Vertex2(0.0f, 0.0f);                      // Top Left
-            GL.TexCoord2(0, 0); GL.Vertex2(0.0f, shape.Extent.Y);            // Bottom Left
-            GL.TexCoord2(1, 0); GL.Vertex2(shape.Extent.X, shape.Extent.Y);  // Bottom Right
-            GL.TexCoord2(1, 1); GL.Vertex2(shape.Extent.X, 0.0f);            // Top Right
+    public void Render(Shape shape, Camera camera) {
+        // bind this texture
+        BindTexture();
 
-            GL.End();
+        // render this texture
+        Matrix4 modelViewMatrix = CreateMatrix(shape, camera);
+        GL.MatrixMode(MatrixMode.Modelview);
+        GL.LoadMatrix(ref modelViewMatrix);
 
-            // unbind this texture
-            UnbindTexture();
-        }
+        GL.Translate(camera.Offset.X, camera.Offset.Y, 0);
+        //GL.Scale(camera.Scale, camera.Scale, 1f);
+        GL.Color4(1f, 1f, 1f, 1f);
+        GL.Begin(PrimitiveType.Quads);
+
+        GL.TexCoord2(0, 1); GL.Vertex2(0.0f, 0.0f);                      // Top Left
+        GL.TexCoord2(0, 0); GL.Vertex2(0.0f, shape.Extent.Y);            // Bottom Left
+        GL.TexCoord2(1, 0); GL.Vertex2(shape.Extent.X, shape.Extent.Y);  // Bottom Right
+        GL.TexCoord2(1, 1); GL.Vertex2(shape.Extent.X, 0.0f);            // Top Right
+
+        GL.End();
+
+        // unbind this texture
+        UnbindTexture();
+    }
+    
+    public void Render(Shape shape) {
+        // bind this texture
+        BindTexture();
+
+        // render this texture
+        Matrix4 modelViewMatrix = CreateMatrix(shape);
+        GL.MatrixMode(MatrixMode.Modelview);
+        GL.LoadMatrix(ref modelViewMatrix);
+
+        GL.Color4(1f, 1f, 1f, 1f);
+        GL.Begin(PrimitiveType.Quads);
+
+        GL.TexCoord2(0, 1); GL.Vertex2(0.0f, 0.0f);                      // Top Left
+        GL.TexCoord2(0, 0); GL.Vertex2(0.0f, shape.Extent.Y);            // Bottom Left
+        GL.TexCoord2(1, 0); GL.Vertex2(shape.Extent.X, shape.Extent.Y);  // Bottom Right
+        GL.TexCoord2(1, 1); GL.Vertex2(shape.Extent.X, 0.0f);            // Top Right
+
+        GL.End();
+
+        // unbind this texture
+        UnbindTexture();
     }
 }

@@ -1,6 +1,6 @@
-namespace DIKUArcade.Input {
-    public enum KeyboardLayout {
-        Danish,
-        English_US
-    }
+namespace DIKUArcade.Input;
+
+public enum KeyboardLayout {
+    Danish,
+    English_US
 }

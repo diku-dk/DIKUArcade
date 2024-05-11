@@ -1,23 +1,23 @@
-﻿using System.IO;
+﻿namespace DIKUArcade.Utilities;
 
-namespace DIKUArcade.Utilities {
-    public class FileIO {
+using System.IO;
 
-        /// <summary>
-        /// Return the platform-specific path of the current project directory
-        /// </summary>
-        /// <returns></returns>
-        public static string GetProjectPath() {
-            // find base path
-            var dir = new DirectoryInfo(Path.GetDirectoryName(
-                System.Reflection.Assembly.GetExecutingAssembly().Location));
+public class FileIO {
 
-            while (dir.Name != "bin") {
-                dir = dir.Parent;
-            }
+    /// <summary>
+    /// Return the platform-specific path of the current project directory
+    /// </summary>
+    /// <returns></returns>
+    public static string GetProjectPath() {
+        // find base path
+        var dir = new DirectoryInfo(Path.GetDirectoryName(
+            System.Reflection.Assembly.GetExecutingAssembly().Location));
+
+        while (dir.Name != "bin") {
             dir = dir.Parent;
-
-            return dir.FullName.ToString();
         }
+        dir = dir.Parent;
+
+        return dir.FullName.ToString();
     }
 }

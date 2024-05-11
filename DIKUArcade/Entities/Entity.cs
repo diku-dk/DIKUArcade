@@ -1,39 +1,39 @@
-﻿using DIKUArcade.Graphics;
+﻿namespace DIKUArcade.Entities;
 
-namespace DIKUArcade.Entities {
-    public class Entity {
-        public Shape Shape { get; set; }
-        public IBaseImage Image { get; set; }
-        private bool isDeleted;
+using DIKUArcade.Graphics;
 
-        public Entity(Shape shape, IBaseImage image) {
-            isDeleted = false;
-            Shape = shape;
-            Image = image;
-        }
+public class Entity {
+    public Shape Shape { get; set; }
+    public IBaseImage Image { get; set; }
+    private bool isDeleted;
 
-        /// <summary>
-        /// Make an Entity as ready for being deleted.
-        /// This functionality is needed for the EntityContainer class.
-        /// </summary>
-        public void DeleteEntity() {
-            isDeleted = true;
-        }
+    public Entity(Shape shape, IBaseImage image) {
+        isDeleted = false;
+        Shape = shape;
+        Image = image;
+    }
 
-        /// <summary>
-        /// Check if this Entity has been marked as ready for being deleted.
-        /// This functionality is needed for the EntityContainer class.
-        /// </summary>
-        public bool IsDeleted() {
-            return isDeleted;
-        }
+    /// <summary>
+    /// Make an Entity as ready for being deleted.
+    /// This functionality is needed for the EntityContainer class.
+    /// </summary>
+    public void DeleteEntity() {
+        isDeleted = true;
+    }
 
-        public void RenderEntity() {
-            Image.Render(Shape);
-        }
+    /// <summary>
+    /// Check if this Entity has been marked as ready for being deleted.
+    /// This functionality is needed for the EntityContainer class.
+    /// </summary>
+    public bool IsDeleted() {
+        return isDeleted;
+    }
 
-        public void RenderEntity(Camera camera) {
-            Image.Render(Shape, camera);
-        }
+    public void RenderEntity() {
+        Image.Render(Shape);
+    }
+
+    public void RenderEntity(Camera camera) {
+        Image.Render(Shape, camera);
     }
 }
