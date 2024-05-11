@@ -1,5 +1,4 @@
-namespace DIKUArcade.Events.Generic
-{
+namespace DIKUArcade.Events.Generic {
     /// <summary
     /// Generic interface equivalent for the DIKUArcade.Events.IGameEventBus.
     /// Interface for an event bus which may subscribe receivers to certain types of
@@ -7,8 +6,7 @@ namespace DIKUArcade.Events.Generic
     /// more registered event processors.
     /// </summary>
     /// <typeparam name="EventT">Enumeration type representing type of game events.</typeparam>
-    public interface IGameEventBus<EventT> where EventT : System.Enum
-    {
+    public interface IGameEventBus<EventT> where EventT : System.Enum {
         /// <summary>
         /// Subscribe a game event processor to process events of eventType.
         /// </summary>

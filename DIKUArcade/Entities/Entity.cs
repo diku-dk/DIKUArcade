@@ -4,7 +4,6 @@ namespace DIKUArcade.Entities {
     public class Entity {
         public Shape Shape { get; set; }
         public IBaseImage Image { get; set; }
-
         private bool isDeleted;
 
         public Entity(Shape shape, IBaseImage image) {

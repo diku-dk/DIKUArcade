@@ -4,15 +4,11 @@ using DIKUArcade.Events;
 using DIKUArcade.Timers;
 using System.Threading;
 
-namespace DIKUArcadeUnitTests.GameEventBusTests
-{
+namespace DIKUArcadeUnitTests.GameEventBusTests {
     [TestFixture]
-    public class TestTimedEvents
-    {
-        private class Helper : IGameEventProcessor
-        {
-            public void ProcessEvent(GameEvent gameEvent)
-            {
+    public class TestTimedEvents {
+        private class Helper : IGameEventProcessor {
+            public void ProcessEvent(GameEvent gameEvent) {
                 EventCounter++;
             }
 
@@ -25,8 +21,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         private GameEventBus _eventBus;
         private Helper _helper;
 
-        public TestTimedEvents()
-        {
+        public TestTimedEvents() {
             _helper = new Helper();
 
             _eventBus = new GameEventBus();
@@ -39,15 +34,13 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         }
 
         [SetUp]
-        public void Setup()
-        {
+        public void Setup() {
             _helper.ResetEventCounter();
             _eventBus.Flush();
         }
 
         [Test]
-        public void TestRegisterTimedEvent()
-        {
+        public void TestRegisterTimedEvent() {
             var e = new GameEvent {
                 EventType = GameEventType.TimedEvent,
                 From = this,
@@ -65,8 +58,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
 
         
         [Test]
-        public void TestResetTimedEvent()
-        {
+        public void TestResetTimedEvent() {
             // event for reset testing
             var e = new GameEvent {
                 EventType = GameEventType.TimedEvent,
@@ -117,8 +109,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
 
         
         [Test]
-        public void TestHasTimedEvent()
-        {
+        public void TestHasTimedEvent() {
             var e1 = new GameEvent {
                 EventType = GameEventType.StatusEvent,
                 From = this,
@@ -147,8 +138,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
 
 
         [Test]
-        public void TestCancelTimedEvent()
-        {
+        public void TestCancelTimedEvent() {
             // events for cancel testing
             var e1 = new GameEvent {
                 EventType = GameEventType.StatusEvent,
@@ -199,8 +189,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
 
 
         [Test]
-        public void TestAddOrResetTimedEvent()
-        {
+        public void TestAddOrResetTimedEvent() {
             // event for reset testing
             var e = new GameEvent {
                 EventType = GameEventType.TimedEvent,

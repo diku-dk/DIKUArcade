@@ -35,7 +35,6 @@ namespace DIKUArcade.Entities {
             Direction = dir;
         }
 
-
         /// <summary>
         /// Overrides the default Shape.Move() method to add
         /// this object's direction to its position.

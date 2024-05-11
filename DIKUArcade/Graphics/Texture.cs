@@ -25,16 +25,14 @@ namespace DIKUArcade.Graphics {
             var dir = new DirectoryInfo(Path.GetDirectoryName(
                 System.Reflection.Assembly.GetExecutingAssembly().Location));
 
-            while (dir.Name != "bin")
-            {
+            while (dir.Name != "bin") {
                 dir = dir.Parent;
             }
             dir = dir.Parent;
 
             // load image file
             var path = Path.Combine(dir.FullName.ToString(), filename);
-            if (!File.Exists(path))
-            {
+            if (!File.Exists(path)) {
                 throw new FileNotFoundException($"Error: The file \"{path}\" does not exist.");
             }
             System.Drawing.Bitmap image = new System.Drawing.Bitmap(path);
@@ -68,10 +66,8 @@ namespace DIKUArcade.Graphics {
             UnbindTexture();
         }
 
-        public Texture(string filename, int currentStride, int stridesInImage)
-        {
-            if (currentStride < 0 || currentStride >= stridesInImage || stridesInImage < 0)
-            {
+        public Texture(string filename, int currentStride, int stridesInImage) {
+            if (currentStride < 0 || currentStride >= stridesInImage || stridesInImage < 0) {
                 throw new ArgumentOutOfRangeException(
                     $"Invalid stride numbers: ({currentStride}/{stridesInImage})");
             }
@@ -85,16 +81,14 @@ namespace DIKUArcade.Graphics {
             var dir = new DirectoryInfo(Path.GetDirectoryName(
                 System.Reflection.Assembly.GetExecutingAssembly().Location));
 
-            while (dir.Name != "bin")
-            {
+            while (dir.Name != "bin") {
                 dir = dir.Parent;
             }
             dir = dir.Parent;
 
             // load image file
             var path = Path.Combine(dir.FullName.ToString(), filename);
-            if (!File.Exists(path))
-            {
+            if (!File.Exists(path)) {
                 throw new FileNotFoundException($"Error: The file \"{path}\" does not exist.");
             }
             System.Drawing.Bitmap image = new System.Drawing.Bitmap(path);
@@ -130,18 +124,15 @@ namespace DIKUArcade.Graphics {
             UnbindTexture();
         }
 
-        private void BindTexture()
-        {
+        private void BindTexture() {
             GL.BindTexture(TextureTarget.Texture2D, textureId);
         }
 
-        private void UnbindTexture()
-        {
+        private void UnbindTexture() {
             GL.BindTexture(TextureTarget.Texture2D, 0); // 0 is invalid texture id
         }
 
-        private Matrix4 CreateMatrix(Shape shape)
-        {
+        private Matrix4 CreateMatrix(Shape shape) {
             // ensure that rotation is performed around the center of the shape
             // instead of the bottom-left corner
             var halfX = shape.Extent.X / 2.0f;
@@ -154,8 +145,7 @@ namespace DIKUArcade.Graphics {
         }
         
         // Render things that are affected by a camera (if the game has one)
-        private Matrix4 CreateMatrix(Shape shape, Camera camera)
-        {
+        private Matrix4 CreateMatrix(Shape shape, Camera camera) {
             // ensure that rotation is performed around the center of the shape
             // instead of the bottom-left corner
             var halfX = shape.Extent.X / 2.0f;
@@ -171,9 +161,7 @@ namespace DIKUArcade.Graphics {
                        0.0f);
         }
 
-        public void Render(Shape shape, Camera camera)
-        {
-
+        public void Render(Shape shape, Camera camera) {
             // bind this texture
             BindTexture();
 
@@ -198,9 +186,7 @@ namespace DIKUArcade.Graphics {
             UnbindTexture();
         }
         
-        public void Render(Shape shape)
-        {
-
+        public void Render(Shape shape) {
             // bind this texture
             BindTexture();
 

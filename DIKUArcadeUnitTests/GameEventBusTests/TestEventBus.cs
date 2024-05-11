@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using DIKUArcade.Events;
 using NUnit.Framework;
 
-namespace DIKUArcadeUnitTests.GameEventBusTests
-{
+namespace DIKUArcadeUnitTests.GameEventBusTests {
     /// <summary>
     /// SimpleGameProcessor is a mock-up processor for testing purposes.
     /// </summary>
-    public class SimpleEventProcessor : IGameEventProcessor
-    {
+    public class SimpleEventProcessor : IGameEventProcessor {
         /// <summary>
         /// Counter for number of processes control events.
         /// </summary>
@@ -19,8 +17,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         /// </summary>
         public int EventCounterSound;
 
-        public void ProcessEvent(GameEvent gameEvent)
-        {
+        public void ProcessEvent(GameEvent gameEvent) {
             var eventType = gameEvent.EventType;
             // Count events using integer fields
             if (eventType == GameEventType.ControlEvent)
@@ -32,8 +29,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
 
 
     [TestFixture]
-    public class TestsEventBus
-    {
+    public class TestsEventBus {
         private readonly List<GameEventType> _registeredEvents= new List<GameEventType>() {
             GameEventType.ControlEvent, GameEventType.SoundEvent, GameEventType.StatusEvent
         };
@@ -46,17 +42,14 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         /// <summary>
         /// Setup event processor mock-up and events.
         /// </summary>
-        public TestsEventBus()
-        {
-            
+        public TestsEventBus() {
         }
 
         /// <summary>
         /// Reset event bus and event processor before calling each test method.
         /// </summary>
         [SetUp]
-        public void SetupEventBusForTests()
-        {
+        public void SetupEventBusForTests() {
             _eb = new GameEventBus();
             _eb.InitializeEventBus(_registeredEvents);
 
@@ -84,8 +77,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         /// Generate five events and process them in parallel. Afterwards check the counts of events.
         /// </summary>
         [Test]
-        public void TestEventBusSimpleCount5Test()
-        {
+        public void TestEventBusSimpleCount5Test() {
             _eb.RegisterEvent(_eventControl);
             _eb.RegisterEvent(_eventSound);
             _eb.RegisterEvent(_eventControl);
@@ -102,8 +94,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         /// Generate three events and process them in parallel. Afterwards check the counts of events.
         /// </summary>
         [Test]
-        public void TestEventBusSimpleCount3Test()
-        {
+        public void TestEventBusSimpleCount3Test() {
             _eb.RegisterEvent(_eventControl);
             _eb.RegisterEvent(_eventSound);
             _eb.RegisterEvent(_eventControl);
@@ -118,8 +109,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         /// Generate five events and process them sequentially. Afterwards check the counts of events.
         /// </summary>
         [Test]
-        public void TestEventBusSimpleCount5TestSeq()
-        {
+        public void TestEventBusSimpleCount5TestSeq() {
             _eb.RegisterEvent(_eventControl);
             _eb.RegisterEvent(_eventSound);
             _eb.RegisterEvent(_eventControl);
@@ -136,8 +126,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         /// Generate three events and process them sequentially. Afterwards check the counts of events.
         /// </summary>
         [Test]
-        public void TestEventBusSimpleCount3TestSeq()
-        {
+        public void TestEventBusSimpleCount3TestSeq() {
             _eb.RegisterEvent(_eventControl);
             _eb.RegisterEvent(_eventSound);
             _eb.RegisterEvent(_eventControl);
@@ -164,10 +153,8 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         [TestCase(199)]
         [TestCase(1024)]
         [TestCase(2048)]
-        public void TestEventBusSimpleCountParametricTest(int numEventGroups)
-        {
-            for (int iter=0; iter < numEventGroups; iter++)
-            {
+        public void TestEventBusSimpleCountParametricTest(int numEventGroups) {
+            for (int iter=0; iter < numEventGroups; iter++) {
                 _eb.RegisterEvent(_eventControl);
                 _eb.RegisterEvent(_eventSound);
                 _eb.RegisterEvent(_eventControl);
@@ -195,10 +182,8 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         [TestCase(199)]
         [TestCase(1024)]
         [TestCase(2048)]
-        public void TestEventBusSimpleCountParametricTestSequentially(int numEventGroups)
-        {
-            for (int iter=0; iter < numEventGroups; iter++)
-            {
+        public void TestEventBusSimpleCountParametricTestSequentially(int numEventGroups) {
+            for (int iter=0; iter < numEventGroups; iter++) {
                 _eb.RegisterEvent(_eventControl);
                 _eb.RegisterEvent(_eventSound);
                 _eb.RegisterEvent(_eventControl);
@@ -222,15 +207,13 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         [TestCase(10)]
         [TestCase(20)]
         [TestCase(256)]
-        public void TestConcurrentListeners(int numListeners)
-        {
+        public void TestConcurrentListeners(int numListeners) {
             _eb.RegisterEvent(_eventControl);
             _eb.RegisterEvent(_eventSound);
             _eb.RegisterEvent(_eventControl);
 
             List<SimpleEventProcessor> listOfProcessors= new List<SimpleEventProcessor>();
-            for (int iter = 0; iter < numListeners; iter++)
-            {
+            for (int iter = 0; iter < numListeners; iter++) {
                 var processor= new SimpleEventProcessor();
                 listOfProcessors.Add(processor);
                 _eb.Subscribe(GameEventType.ControlEvent, processor);
@@ -241,8 +224,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
 
             Assert.That(_simpleEventProcessor.EventCounterControl == 2);
             Assert.That(_simpleEventProcessor.EventCounterSound == 1);
-            foreach (var processor in listOfProcessors)
-            {
+            foreach (var processor in listOfProcessors) {
                 Assert.That(processor.EventCounterControl == 2);
                 Assert.That(processor.EventCounterSound == 1);
             }
@@ -260,15 +242,13 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         [TestCase(10)]
         [TestCase(20)]
         [TestCase(256)]
-        public void TestConcurrentListenersSequentially(int numListeners)
-        {
+        public void TestConcurrentListenersSequentially(int numListeners) {
             _eb.RegisterEvent(_eventControl);
             _eb.RegisterEvent(_eventSound);
             _eb.RegisterEvent(_eventControl);
 
             List<SimpleEventProcessor> listOfProcessors= new List<SimpleEventProcessor>();
-            for (int iter = 0; iter < numListeners; iter++)
-            {
+            for (int iter = 0; iter < numListeners; iter++) {
                 var processor= new SimpleEventProcessor();
                 listOfProcessors.Add(processor);
                 _eb.Subscribe(GameEventType.ControlEvent, processor);
@@ -279,8 +259,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
 
             Assert.That(_simpleEventProcessor.EventCounterControl == 2);
             Assert.That(_simpleEventProcessor.EventCounterSound == 1);
-            foreach (var processor in listOfProcessors)
-            {
+            foreach (var processor in listOfProcessors) {
                 Assert.That(processor.EventCounterControl == 2);
                 Assert.That(processor.EventCounterSound == 1);
             }
@@ -290,8 +269,7 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         /// Checks that exceptions are raised if the processor reference is null. Absence of undesired behavior.
         /// </summary>
         [Test]
-        public void TestSubscribeGameEventProcessorArgumentNotNullException()
-        {
+        public void TestSubscribeGameEventProcessorArgumentNotNullException() {
             Assert.Throws<ArgumentNullException>(delegate {
                 _eb.Subscribe(GameEventType.ControlEvent, default(IGameEventProcessor));
             });
@@ -301,10 +279,8 @@ namespace DIKUArcadeUnitTests.GameEventBusTests
         /// Checks that exceptions are raised if the processor reference is null. Absence of undesired behavior.
         /// </summary>
         [Test]
-        public void TestUnsubscribeGameEventProcessorArgumentNotNullException()
-        {
-            Assert.Throws<ArgumentNullException>(delegate
-            {
+        public void TestUnsubscribeGameEventProcessorArgumentNotNullException() {
+            Assert.Throws<ArgumentNullException>(delegate {
                 _eb.Subscribe(GameEventType.ControlEvent, default(IGameEventProcessor));
             });
         }

@@ -32,16 +32,13 @@ namespace DIKUArcade.Graphics {
                 && offsetRelativeTo.Y <= innerBounds.Position.Y + innerBounds.Extent.Y - 0.03f) {
                     //innerBounds.Direction = new Vec2F(0.0f, 0.0f);
                     return;
-                }
-            else {
+            } else {
                 // Calculate new offset
                 // If the player has driven out the left side of the box
-                if (offsetRelativeTo.X < innerBounds.Position.X)
-                {
+                if (offsetRelativeTo.X < innerBounds.Position.X) {
                     innerBounds.Position.X = offsetRelativeTo.X;
                     //innerBounds.Direction.X = offsetRelativeTo.X - innerBounds.Position.X; 
-                }
-                else if (offsetRelativeTo.X > innerBounds.Position.X + innerBounds.Extent.X - 0.03f) {
+                } else if (offsetRelativeTo.X > innerBounds.Position.X + innerBounds.Extent.X - 0.03f) {
                     innerBounds.Position.X = (offsetRelativeTo.X - innerBounds.Extent.X - 0.03f);
                     //innerBounds.Direction.X = (offsetRelativeTo.X - (innerBounds.Position.X + innerBounds.Extent.X -0.03f));
                 }
@@ -54,22 +51,20 @@ namespace DIKUArcade.Graphics {
                 if (-Offset.X < WorldShape.Position.X) { // Left side
                         Offset.X = -WorldShape.Position.X;
                         innerBounds.Position.X = offsetRelativeTo.X;//WorldShape.Position.X + innerBounds.Extent.X / 2.0f; 
-                    }
+                }
                 if (-Offset.X + 1f > WorldShape.Position.X + WorldShape.Extent.X) { // Right side
                      Offset.X = -(WorldShape.Position.X + WorldShape.Extent.X - 1f);
                      innerBounds.Position.X = offsetRelativeTo.X - 0.03f;//WorldShape.Extent.X - innerBounds.Extent.X; 
-                    } 
-                if (-Offset.Y      < WorldShape.Position.Y) // Top
-                    { Offset.Y = -WorldShape.Position.Y;
-                    innerBounds.Position.Y = offsetRelativeTo.Y; }
-                if (-Offset.Y + 1f > WorldShape.Position.Y + WorldShape.Extent.Y) // Bottom
-                    { 
+                } 
+                if (-Offset.Y      < WorldShape.Position.Y) { // Top
+                    Offset.Y = -WorldShape.Position.Y;
+                    innerBounds.Position.Y = offsetRelativeTo.Y;
+                }
+                if (-Offset.Y + 1f > WorldShape.Position.Y + WorldShape.Extent.Y) { // Bottom
                         Offset.Y = -(WorldShape.Position.Y + WorldShape.Extent.Y - 1.0f); 
                         innerBounds.Position.Y = offsetRelativeTo.Y - 0.03f;
-                    }
-             
+                }
             }
-            
         }
 
         public void Render() {

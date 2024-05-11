@@ -2,12 +2,9 @@ using System.Collections.Generic;
 using DIKUArcade.Events;
 using NUnit.Framework;
 
-namespace DIKUArcadeUnitTests
-{
-    class TestGameEventSender
-    {
-        public void SendEvent(GameEventBus eventBus, IGameEventProcessor to, int intValue)
-        {
+namespace DIKUArcadeUnitTests {
+    class TestGameEventSender {
+        public void SendEvent(GameEventBus eventBus, IGameEventProcessor to, int intValue) {
             this.Value = intValue;
             var e = new GameEvent {
                 EventType = GameEventType.GraphicsEvent,
@@ -21,30 +18,25 @@ namespace DIKUArcadeUnitTests
         public int Value { get; private set; }
     }
 
-    class TestGameEventReceiver : IGameEventProcessor
-    {
+    class TestGameEventReceiver : IGameEventProcessor {
         public int Value { get; private set; }
 
-        public void ProcessEvent(GameEvent gameEvent)
-        {
+        public void ProcessEvent(GameEvent gameEvent) {
             Value = gameEvent.IntArg1;
         }
     }
 
-    class TestGameEventReceiverGetSender : IGameEventProcessor
-    {
+    class TestGameEventReceiverGetSender : IGameEventProcessor {
         public int Value { get; private set; }
 
-        public void ProcessEvent(GameEvent gameEvent)
-        {
+        public void ProcessEvent(GameEvent gameEvent) {
             var sender = gameEvent.From as TestGameEventSender;
             Value = sender?.Value ?? -1;
         }
     }
 
     [TestFixture]
-    public class TestGameEvent
-    {
+    public class TestGameEvent {
         private GameEventBus _eventBus;
 
         private TestGameEventSender _sender;
@@ -65,8 +57,7 @@ namespace DIKUArcadeUnitTests
         }
 
         [Test]
-        public void TestSenderReceiver()
-        {
+        public void TestSenderReceiver() {
             _sender.SendEvent(_eventBus, _receiver1, 1);
             _sender.SendEvent(_eventBus, _receiver2, 2);
             _eventBus.ProcessEvents();
@@ -76,8 +67,7 @@ namespace DIKUArcadeUnitTests
         }
 
         [Test]
-        public void TestGetSender()
-        {
+        public void TestGetSender() {
             _sender.SendEvent(_eventBus, _receiverGetSender, 55);
             _eventBus.ProcessEvents();
             Assert.AreEqual(55, _receiverGetSender.Value);

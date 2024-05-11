@@ -1,13 +1,10 @@
 ﻿using NUnit.Framework;
 
-namespace DIKUArcadeUnitTests
-{
+namespace DIKUArcadeUnitTests {
     [TestFixture]
-    public class Tests
-    {
+    public class Tests {
         [Test]
-        public void Test1()
-        {
+        public void Test1() {
             Assert.True(true);
         }
     }

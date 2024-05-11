@@ -1,14 +1,11 @@
 ﻿using DIKUArcade.Events;
 using NUnit.Framework;
 
-namespace DIKUArcadeUnitTests.GameEventBusTests
-{
+namespace DIKUArcadeUnitTests.GameEventBusTests {
     [TestFixture]
-    class TestEventQueue
-    {
+    class TestEventQueue {
         [Test]
-        public void CreateEventQueue()
-        {
+        public void CreateEventQueue() {
             GameEventQueue<GameEvent> geq = new GameEventQueue<GameEvent>();
 
             var res1 = new GameEvent {

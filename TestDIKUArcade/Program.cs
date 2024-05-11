@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 
 internal class Program {
-
     private static void SafeClose(object sender, ConsoleCancelEventArgs args) {
         args.Cancel = true; // Don't end process.
         Console.Clear();

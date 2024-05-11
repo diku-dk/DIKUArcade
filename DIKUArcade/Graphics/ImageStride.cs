@@ -51,8 +51,7 @@ namespace DIKUArcade.Graphics {
             timerOffset = RandomGenerator.Generator.Next(100);
 
             textures = new List<Texture>(imgs);
-            foreach (string imgFile in imageFiles)
-            {
+            foreach (string imgFile in imageFiles) {
                 textures.Add(new Texture(imgFile));
             }
         }
@@ -80,8 +79,7 @@ namespace DIKUArcade.Graphics {
             timerOffset = RandomGenerator.Generator.Next(100);
 
             textures = new List<Texture>(imgs);
-            foreach (Image img in images)
-            {
+            foreach (Image img in images) {
                 textures.Add(img.GetTexture());
             }
         }
@@ -104,8 +102,7 @@ namespace DIKUArcade.Graphics {
             timerOffset = RandomGenerator.Generator.Next(100);
 
             textures = new List<Texture>(imgs);
-            foreach (Image img in images)
-            {
+            foreach (Image img in images) {
                 textures.Add(img.GetTexture());
             }
         }

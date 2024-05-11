@@ -15,7 +15,6 @@ public class Game : DIKUGame {
         text.GetShape().ScaleXFromCenter(3.2f);
     }
 
-
     public override void Render() {
         text.RenderText();
     }

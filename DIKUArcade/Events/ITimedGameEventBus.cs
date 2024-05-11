@@ -1,12 +1,10 @@
 using DIKUArcade.Timers;
 
-namespace DIKUArcade.Events
-{
+namespace DIKUArcade.Events {
     /// <summary>
     /// Interface for an event bus which can handle timed events.
     /// </summary>
-    public interface ITimedGameEventBus
-    {
+    public interface ITimedGameEventBus {
         /// <summary>
         /// Register an event within the event bus, which is to be processed only after
         /// the specified TimePeriod has passed.

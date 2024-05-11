@@ -1,12 +1,10 @@
-namespace DIKUArcade.Events
-{
+namespace DIKUArcade.Events {
     /// <summary>
     /// Interface for an event bus which may subscribe receivers to certain types of
     /// events, unsubsribe them again, and register events to be processed for one or
     /// more registered event processors.
     /// </summary>
-    public interface IGameEventBus
-    {
+    public interface IGameEventBus {
         /// <summary>
         /// Subscribe a game event processor to process events of eventType.
         /// </summary>

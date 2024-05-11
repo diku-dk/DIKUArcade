@@ -1,15 +1,13 @@
 using DIKUArcade.Timers;
 
-namespace DIKUArcade.Events.Generic
-{
+namespace DIKUArcade.Events.Generic {
     /// <summary>
     /// Generic version of the DIKUArcade.Events.TimedGameEvent struct.
     /// Represents a GameEvent together with an expiration time.
     /// When a TimedGameEvent has expired it is ready for processing by a GameEventBus.
     /// </summary>
     /// <typeparam name="EventT">Enumeration type representing type of game events.</typeparam>
-    public struct TimedGameEvent<EventT> where EventT : System.Enum
-    {
+    public struct TimedGameEvent<EventT> where EventT : System.Enum {
         /// <summary>
         /// The GameEvent<EventT> which this object wraps around.
         /// </summary>

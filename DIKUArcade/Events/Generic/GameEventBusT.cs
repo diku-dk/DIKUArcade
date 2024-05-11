@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DIKUArcade.Timers;
 
-namespace DIKUArcade.Events.Generic
-{
+namespace DIKUArcade.Events.Generic {
     /// <summary>
     /// Generic version of the DIKUArcade.Events.GameEventBus class, which uses the generic type EventT
     /// as the underlying event type enum.
@@ -15,8 +14,7 @@ namespace DIKUArcade.Events.Generic
     /// </summary>
     /// <typeparam name="EventT">Enumeration type representing type of game events.</typeparam>
     public class GameEventBus<EventT> : IGameEventBus<EventT>, ITimedGameEventBus<EventT>,
-        IGameEventBusController<EventT> where EventT : System.Enum
-    {
+        IGameEventBusController<EventT> where EventT : System.Enum {
         private bool _initialized = false;
 
         /// <summary>
@@ -45,14 +43,12 @@ namespace DIKUArcade.Events.Generic
             _inactiveTimedEventList = (_inactiveTimedEventList + 1) % 2;
         }
 
-
         /// <summary>
         /// Initialized the event bus to handle the specified event types.
         /// An exception is thrown if called on an already initialized GameEventBus.
         /// </summary>
         /// <exception cref="InvalidOperationException"></exception>
-        public void InitializeEventBus(ICollection<EventT> eventTypeList)
-        {
+        public void InitializeEventBus(ICollection<EventT> eventTypeList) {
             if (_initialized) {
                 throw new InvalidOperationException("GameEventBus is already initialized!");
             }
@@ -76,32 +72,24 @@ namespace DIKUArcade.Events.Generic
             _initialized = true;
         }
 
-        public void Subscribe(EventT eventType, IGameEventProcessor<EventT> gameEventProcessor)
-        {
+        public void Subscribe(EventT eventType, IGameEventProcessor<EventT> gameEventProcessor) {
             if (gameEventProcessor == default(IGameEventProcessor<EventT>))
                 throw new ArgumentNullException("Parameter gameEventProcessor must not be null.");
 
-            try
-            {
+            try {
                 _eventProcessors?[eventType].Add(gameEventProcessor);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new Exception($"Could not subscribe event processor. Check eventType! {e}");
             }
         }
 
-        public void Unsubscribe(EventT eventType, IGameEventProcessor<EventT> gameEventProcessor)
-        {
+        public void Unsubscribe(EventT eventType, IGameEventProcessor<EventT> gameEventProcessor) {
             if (gameEventProcessor == default(IGameEventProcessor<EventT>))
                 throw new ArgumentNullException("Parameter gameEventProcessor must not be null.");
 
-            try
-            {
+            try {
                 _eventProcessors?[eventType].Remove(gameEventProcessor);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new Exception($"Could not unsubsribe event processor. Check eventType or processor is unregistered! {e}");
             }
         }
@@ -109,8 +97,7 @@ namespace DIKUArcade.Events.Generic
 
         #region TIMED_EVENTS
 
-        public void RegisterTimedEvent(GameEvent<EventT> gameEvent, TimePeriod timePeriod)
-        {
+        public void RegisterTimedEvent(GameEvent<EventT> gameEvent, TimePeriod timePeriod) {
             // do not insert already registered events:
             if (gameEvent.Id != default(uint)) {
                 if (_timedEventLists[_activeTimedEventList].Exists(e => e.GameEvent.Id == gameEvent.Id)) {
@@ -170,14 +157,10 @@ namespace DIKUArcade.Events.Generic
         #endregion // TIMED_EVENTS
 
 
-        public void RegisterEvent(GameEvent<EventT> gameEvent)
-        {
-            try
-            {
+        public void RegisterEvent(GameEvent<EventT> gameEvent) {
+            try {
                 _eventQueues?[gameEvent.EventType].Enqueue(gameEvent);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new Exception($"Could not register event. Did you Initialize the EventBus with {e.Message}");
             }
         }
@@ -208,12 +191,9 @@ namespace DIKUArcade.Events.Generic
                     if (_eventQueues != null) {
                         while (!_eventQueues[eventType].IsEmpty()) {
                             var currentEvent = _eventQueues[eventType].Dequeue();
-                            if (currentEvent.To != default(IGameEventProcessor<EventT>))
-                            {
+                            if (currentEvent.To != default(IGameEventProcessor<EventT>)) {
                                 currentEvent.To.ProcessEvent(currentEvent);
-                            }
-                            else if (_eventProcessors != null)
-                            {
+                            } else if (_eventProcessors != null) {
                                 foreach (var eventProcessor in _eventProcessors[eventType]) {
                                     eventProcessor.ProcessEvent(currentEvent);
                                     
@@ -223,7 +203,6 @@ namespace DIKUArcade.Events.Generic
                         }
                     }
             }));
-
             // semantic of Parallel.ForEach is it blocks until all parallel threads are finished
         }
 
@@ -238,11 +217,9 @@ namespace DIKUArcade.Events.Generic
                 if (_eventQueues != null) {
                     while (!_eventQueues[eventType].IsEmpty()) {
                         var currentEvent = _eventQueues[eventType].Dequeue();
-                        if (currentEvent.To != default(IGameEventProcessor<EventT>))
-                        {
+                        if (currentEvent.To != default(IGameEventProcessor<EventT>)) {
                             currentEvent.To.ProcessEvent(currentEvent);
-                        }
-                        else if (_eventProcessors != null) {
+                        } else if (_eventProcessors != null) {
                             foreach (var eventProcessor in _eventProcessors[eventType]) {
                                 eventProcessor.ProcessEvent(currentEvent);
                                 if (_breakExecution) return;
@@ -253,33 +230,27 @@ namespace DIKUArcade.Events.Generic
             }
         }
 
-        public void ProcessEvents()
-        {
+        public void ProcessEvents() {
             if (_eventQueues != null) ProcessEvents(_eventQueues.Keys);
         }
 
-        public void ProcessEventsSequentially()
-        {
+        public void ProcessEventsSequentially() {
             if (_eventQueues != null) ProcessEventsSequentially(_eventQueues.Keys);
         }
 
-        public void BreakProcessing()
-        {
+        public void BreakProcessing() {
             _breakExecution = true;
         }
 
-        public void ResetBreakProcessing()
-        {
+        public void ResetBreakProcessing() {
             _breakExecution = false;
         }
 
-        public void Flush()
-        {
+        public void Flush() {
             BreakProcessing();
 
             if (_eventQueues == null) return;
-            foreach (var eventType in _eventQueues.Keys)
-            {
+            foreach (var eventType in _eventQueues.Keys) {
                 _eventQueues[eventType].Flush();
             }
         }

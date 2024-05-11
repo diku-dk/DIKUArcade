@@ -1,11 +1,9 @@
-﻿namespace DIKUArcade.Events
-{
+﻿namespace DIKUArcade.Events {
     /// <summary>
     /// GameEventTypes identifying the different event systems in the game framework.
     /// E.g. `PlayerEvent` can be issued to a player object.
     /// </summary>
-    public enum GameEventType
-    {
+    public enum GameEventType {
         // TODO: Add/remove enumerations so that all relevant event types can be covered
         PlayerEvent,
         GraphicsEvent,

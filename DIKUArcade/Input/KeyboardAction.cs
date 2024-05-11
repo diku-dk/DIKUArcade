@@ -1,7 +1,5 @@
-namespace DIKUArcade.Input
-{
-    public enum KeyboardAction
-    {
+namespace DIKUArcade.Input {
+    public enum KeyboardAction {
         KeyPress,
         KeyRelease
     }

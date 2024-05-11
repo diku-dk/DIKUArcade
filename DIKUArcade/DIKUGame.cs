@@ -38,8 +38,7 @@ namespace DIKUArcade {
             System.Console.WriteLine("Game.Run()");
             gameTimer = new GameTimer(30, 30);
 
-            try
-            {
+            try {
                 while (window.IsRunning()) {
                     gameTimer.MeasureTime();
                     window.PollEvents();
@@ -60,8 +59,7 @@ namespace DIKUArcade {
                 }
 
                 window.DestroyWindow();
-            }
-            catch(Exception ex) {
+            } catch(Exception ex) {
                 Console.WriteLine("DIKUArcade.DIKUGame caught an exception. See message below:" + Environment.NewLine);
                 Console.WriteLine(ex);
 

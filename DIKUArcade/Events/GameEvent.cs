@@ -1,11 +1,9 @@
-﻿namespace DIKUArcade.Events
-{
+﻿namespace DIKUArcade.Events {
     /// <summary>
     /// Represents an event which may be processed by certain subscribers of an event bus,
     /// and contains data fields which may be relevant to the receiver(s) of the event.
     /// </summary>
-    public struct GameEvent
-    {
+    public struct GameEvent {
         /// <summary>
         ///  EventType is a classifier to distinguish event system parts, e.g. sound, graphics and game logic.
         /// </summary>

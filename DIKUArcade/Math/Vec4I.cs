@@ -49,8 +49,7 @@
 
         public override int GetHashCode() {
             // Source: http://stackoverflow.com/a/263416/5801152
-            unchecked // Overflow is fine, just wrap
-            {
+            unchecked { // Overflow is fine, just wrap 
                 var hash = 17;
                 hash = hash * 23 + X.GetHashCode();
                 hash = hash * 23 + Y.GetHashCode();

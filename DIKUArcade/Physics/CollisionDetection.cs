@@ -55,17 +55,13 @@ namespace DIKUArcade.Physics {
             }
 
             // inactive movement in x-direction
-            else if(System.Math.Abs(actor.Direction.X) < 1e-6f)
-            {
+            else if(System.Math.Abs(actor.Direction.X) < 1e-6f) {
                 float entryDistanceY, exitDistanceY;
-                if(actor.Direction.Y < 0.0f)
-                {
+                if(actor.Direction.Y < 0.0f) {
                     entryDistanceY = staUpperRight.Y - dynLowerLeft.Y;
                     exitDistanceY = staLowerLeft.Y - dynUpperRight.Y;
                     data.CollisionDir = CollisionDirection.CollisionDirDown;
-                }
-                else
-                {
+                } else {
                     entryDistanceY = staLowerLeft.Y - dynUpperRight.Y;
                     exitDistanceY = staUpperRight.Y - dynLowerLeft.Y;
                     data.CollisionDir = CollisionDirection.CollisionDirUp;
@@ -76,29 +72,22 @@ namespace DIKUArcade.Physics {
 
                 bool xOverlaps = staUpperRight.X > dynLowerLeft.X && staLowerLeft.X < dynUpperRight.X;
 
-                if(entryTimeY < exitTimeY && entryTimeY >= 0.0f && entryTimeY < 1.0f && xOverlaps)
-                {
+                if(entryTimeY < exitTimeY && entryTimeY >= 0.0f && entryTimeY < 1.0f && xOverlaps) {
                     data.DirectionFactor.Y = entryTimeY;
                     data.Collision = true;
                     return data;
-                }
-                else
-                {
+                } else {
                     return data;
                 }
             }
             // inactive movement in y-direction
-            else if(System.Math.Abs(actor.Direction.Y) < 1e-6f)
-            {
+            else if(System.Math.Abs(actor.Direction.Y) < 1e-6f) {
                 float entryDistanceX, exitDistanceX;
-                if(actor.Direction.X < 0.0f)
-                {
+                if(actor.Direction.X < 0.0f) {
                     entryDistanceX = staUpperRight.X - dynLowerLeft.X;
                     exitDistanceX = staLowerLeft.X - dynUpperRight.X;
                     data.CollisionDir = CollisionDirection.CollisionDirLeft;
-                }
-                else
-                {
+                } else {
                     entryDistanceX = staLowerLeft.X - dynUpperRight.X;
                     exitDistanceX = staUpperRight.X - dynLowerLeft.X;
                     data.CollisionDir = CollisionDirection.CollisionDirRight;
@@ -109,36 +98,28 @@ namespace DIKUArcade.Physics {
 
                 bool yOverlaps = staUpperRight.Y > dynLowerLeft.Y && staLowerLeft.Y < dynUpperRight.Y;
 
-                if(entryTimeX < exitTimeX && entryTimeX >= 0.0f && entryTimeX < 1.0f && yOverlaps)
-                {
+                if(entryTimeX < exitTimeX && entryTimeX >= 0.0f && entryTimeX < 1.0f && yOverlaps) {
                     data.DirectionFactor.X = entryTimeX;
                     data.Collision = true;
                 }
                 return data;
             }
             // active movement in both x- and y-direction
-            else
-            {
+            else {
                 var entryDistance = new Vec2F();
                 var exitDistance = new Vec2F();
 
-                if(actor.Direction.X < 0.0f)
-                {
+                if(actor.Direction.X < 0.0f) {
                     entryDistance.X = staUpperRight.X - dynLowerLeft.X;
                     exitDistance.X = staLowerLeft.X - dynUpperRight.X;
-                }
-                else
-                {
+                } else {
                     entryDistance.X = staLowerLeft.X - dynUpperRight.X;
                     exitDistance.X = staUpperRight.X - dynLowerLeft.X;
                 }
-                if(actor.Direction.Y < 0.0f)
-                {
+                if(actor.Direction.Y < 0.0f) {
                     entryDistance.Y = staUpperRight.Y - dynLowerLeft.Y;
                     exitDistance.Y = staLowerLeft.Y - dynUpperRight.Y;
-                }
-                else
-                {
+                } else {
                     entryDistance.Y = staLowerLeft.Y - dynUpperRight.Y;
                     exitDistance.Y = staUpperRight.Y - dynLowerLeft.Y;
                 }
@@ -150,19 +131,15 @@ namespace DIKUArcade.Physics {
                 float exitTimeMin = System.Math.Min(exitTime.X, exitTime.Y);
 
                 if(entryTimeMax < exitTimeMin && (entryTime.X >= 0.0f || entryTime.Y >= 0.0f) &&
-                   entryTime.X < 1.0f && entryTime.Y < 1.0f)
-                {
-                    if (entryTime.X > entryTime.Y)
-                    {
+                   entryTime.X < 1.0f && entryTime.Y < 1.0f) {
+                    if (entryTime.X > entryTime.Y) {
                         data.DirectionFactor.X = entryTimeMax;
                         if (actor.Direction.X < 0.0f) {
                             data.CollisionDir = CollisionDirection.CollisionDirRight;
                         } else {
                             data.CollisionDir = CollisionDirection.CollisionDirLeft;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         data.DirectionFactor.Y = entryTimeMax;
                         if (actor.Direction.Y < 0.0f) {
                             data.CollisionDir = CollisionDirection.CollisionDirUp;
@@ -173,9 +150,7 @@ namespace DIKUArcade.Physics {
 
                     data.Collision = true;
                     return data;
-                }
-                else
-                {
+                } else {
                     return data;
                 }
             }

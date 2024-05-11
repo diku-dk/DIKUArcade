@@ -85,8 +85,7 @@ namespace DIKUArcade.Graphics {
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, textBmp.Width, textBmp.Height, 0,
                 OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
 
-            using (System.Drawing.Graphics gfx = System.Drawing.Graphics.FromImage(textBmp))
-            {
+            using (System.Drawing.Graphics gfx = System.Drawing.Graphics.FromImage(textBmp)) {
                 gfx.Clear(System.Drawing.Color.Transparent);
                 // TODO: Could create an enumeration for choosing btw different font families!
                 Font drawFont = font;

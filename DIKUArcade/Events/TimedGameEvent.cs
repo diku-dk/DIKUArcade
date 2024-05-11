@@ -5,8 +5,7 @@ namespace DIKUArcade.Events {
     /// Represents a GameEvent together with an expiration time.
     /// When a TimedGameEvent has expired it is ready for processing by a GameEventBus.
     /// </summary>
-    public struct TimedGameEvent
-    {
+    public struct TimedGameEvent {
         /// <summary>
         /// The GameEvent which this object wraps around.
         /// </summary>

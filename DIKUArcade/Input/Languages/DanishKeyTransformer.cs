@@ -2,17 +2,13 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using DIKUArcade.Input;
 using System;
 
-namespace DIKUArcade.Input.Languages
-{
+namespace DIKUArcade.Input.Languages {
     /// <summary>
     /// Represents the Danish keyboard layout.
     /// </summary>
-    public class DanishKeyTransformer : IKeyTransformer
-    {
-        public KeyboardKey TransformKey(Keys key)
-        {
-            switch (key)
-            {
+    public class DanishKeyTransformer : IKeyTransformer {
+        public KeyboardKey TransformKey(Keys key) {
+            switch (key) {
                 case Keys.Unknown: return KeyboardKey.Unknown;
                 case Keys.Space: return KeyboardKey.Space;
                 case Keys.Apostrophe: return KeyboardKey.Danish_OE;

@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace DIKUArcade.Events
-{
+namespace DIKUArcade.Events {
     /// <summary>
     /// Interface for an event bus which may process events, specified by the list of GameEventType's
     /// provided with the `InitializedEventBus` method.
     /// </summary>
-    public interface IGameEventBusController
-    {
+    public interface IGameEventBusController {
         /// <summary>
         /// Initialize the game event bus with a list of event types that need to be processed. 
         /// The architecture is static and does not allow additional event types after the initialization.

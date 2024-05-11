@@ -2,8 +2,7 @@ namespace DIKUArcade.Input {
     /// <summary>
     /// Enum of keyboard keys.
     /// </summary>
-    public enum KeyboardKey
-    {
+    public enum KeyboardKey {
         /// <summary>
         /// Matches the case of an invalid, non-existent, or unsupported keyboard key.
         /// </summary>
