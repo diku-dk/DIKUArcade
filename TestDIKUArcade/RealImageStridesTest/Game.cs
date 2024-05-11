@@ -8,7 +8,6 @@ using DIKUArcade.Entities;
 using DIKUArcade.Math;
 
 public class Game : DIKUGame {
-
     private EntityContainer entities;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
         window.SetKeyEventHandler(KeyHandler);

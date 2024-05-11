@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 
 public class Game : DIKUGame, IGameEventProcessor {
-
     private Random random;
     private GameEventBus eventBus;
     public Game(WindowArgs windowArgs) : base(windowArgs) {

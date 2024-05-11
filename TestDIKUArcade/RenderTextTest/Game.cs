@@ -6,7 +6,6 @@ using DIKUArcade.Graphics;
 using DIKUArcade.Math;
 
 public class Game : DIKUGame {
-
     private Text text;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
         text = new Text("MIN TEXT", new Vec2F(0.25f, 0.25f), new Vec2F(0.25f, 0.25f));
