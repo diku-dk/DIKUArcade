@@ -8,7 +8,6 @@ using DIKUArcade.Input;
 using DIKUArcade.Graphics;
 
 public class Game : DIKUGame {
-
     private Animation animation;
     private StationaryShape shape;
     private List<Image> strides;

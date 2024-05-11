@@ -4,7 +4,6 @@ using DIKUArcade.GUI;
 using System;
 
 public class AnimationsTest : ITestable {
-
     public void RunTest() {
         var windowArgs = new WindowArgs() {
             Title = "AnimationsTest"

@@ -1,13 +1,13 @@
-﻿using System;
+﻿namespace DIKUArcade.Utilities;
 
-namespace DIKUArcade.Utilities {
-    public class RandomGenerator {
-        public static Random Generator { get; private set; }
+using System;
 
-        static RandomGenerator() {
-            if (RandomGenerator.Generator == null) {
-                RandomGenerator.Generator = new Random();
-            }
+public class RandomGenerator {
+    public static Random Generator { get; private set; }
+
+    static RandomGenerator() {
+        if (RandomGenerator.Generator == null) {
+            RandomGenerator.Generator = new Random();
         }
     }
 }

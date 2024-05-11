@@ -8,7 +8,6 @@ using DIKUArcade.Input;
 using DIKUArcade.Math;
 
 public class Game : DIKUGame {
-
     private Entity actor0;
     private Entity actor1;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
