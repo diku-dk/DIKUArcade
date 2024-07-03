@@ -1,0 +1,172 @@
+﻿namespace DIKUArcadeUnitTests.GameEventBusTests.Action;
+
+using DIKUArcade.Timers;
+using DIKUArcade.Events.Action;
+using System.Threading;
+using NUnit.Framework;
+
+[TestFixture]
+public class TestsTimedEventBus {
+
+    private GameEventBus eventBus;
+    private SomeGameEvent SomeGameEvent;
+    private int SomeGameEventCount;
+
+    private void SomeEventListener(SomeGameEvent gameEvent) {
+        SomeGameEvent = gameEvent;
+        SomeGameEventCount++;
+    }
+
+    /// <summary>
+    /// Reset event bus and event action before calling each test method.
+    /// </summary>
+    [SetUp]
+    public void Setup() {
+        eventBus = new GameEventBus();
+
+        SomeGameEvent = new SomeGameEvent(1729);
+
+        SomeGameEventCount = 0;
+    }
+
+    [Test]
+    public void TestRegisterTimedEvent() {
+        eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
+        eventBus.RegisterTimedEvent(SomeGameEvent, 0, TimePeriod.NewMilliseconds(500));
+        eventBus.ProcessEventsSequentially();
+        Assert.AreEqual(0, SomeGameEventCount);
+
+        Thread.Sleep(550);
+        eventBus.ProcessEventsSequentially();
+        Assert.AreEqual(1, SomeGameEventCount);
+    }
+
+    [Test]
+    public void TestResetTimedEvent() {
+        eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
+        // event for reset testing
+        eventBus.RegisterTimedEvent(SomeGameEvent, 0, TimePeriod.NewMilliseconds(1000));
+
+        // event which should stay in event bus for a very long time,
+        // and not be disturbed by resetting the other event multiple times.
+        eventBus.RegisterTimedEvent(SomeGameEvent, 1, TimePeriod.NewSeconds(30.0));
+
+        // time has not passed yet, so event should not have been processed
+        Thread.Sleep(100);
+        eventBus.ProcessEventsSequentially();
+        Assert.AreEqual(0, SomeGameEventCount);
+
+        // reset event timer
+        bool reset = eventBus.ResetTimedEvent(0, TimePeriod.NewMilliseconds(100));
+        Assert.IsTrue(reset);
+
+        Thread.Sleep(150);
+        eventBus.ProcessEventsSequentially();
+        Assert.AreEqual(1, SomeGameEventCount);
+
+        // try to reset event timer again,
+        // should fail because event has been processed
+        bool resetFail = eventBus.ResetTimedEvent(0, TimePeriod.NewMilliseconds(100));
+        Assert.IsFalse(resetFail);
+
+        // because event was not contained, we could not reset it.
+        // Thus, event should not be contained, and if we call ProcessEventsSequentially
+        // it should NOT be processed again - verified by the EventCounter.
+        Thread.Sleep(150);
+        eventBus.ProcessEventsSequentially();
+        Assert.AreEqual(1, SomeGameEventCount);
+
+        // test that resetting did not disturb the other event
+        Assert.IsTrue(eventBus.HasTimedEvent(1));
+    }
+
+    [Test]
+    public void TestHasTimedEvent() {
+        eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
+        eventBus.RegisterTimedEvent(SomeGameEvent, 0, TimePeriod.NewMilliseconds(100));
+        eventBus.RegisterTimedEvent(SomeGameEvent, 1, TimePeriod.NewMilliseconds(2000));
+
+        // sleep 150ms.
+        // This should timeout e1 but not e2
+        Thread.Sleep(150);
+
+        eventBus.ProcessEventsSequentially();
+        Assert.AreEqual(1, SomeGameEventCount);
+        Assert.IsFalse(eventBus.HasTimedEvent(0));
+        Assert.IsTrue(eventBus.HasTimedEvent(1));
+    }
+
+    [Test]
+    public void TestCancelTimedEvent() {
+        eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
+        // events for cancel testing
+        eventBus.RegisterTimedEvent(SomeGameEvent, 0, TimePeriod.NewMilliseconds(100));
+        eventBus.RegisterTimedEvent(SomeGameEvent, 1, TimePeriod.NewMilliseconds(2000));
+
+        // event which should stay in event bus for a very long time,
+        // and not be disturbed by cancelling the other event multiple times.
+        eventBus.RegisterTimedEvent(SomeGameEvent, 2, TimePeriod.NewSeconds(30.0));
+
+        // sleep 150ms.
+        // This should timeout event 1 but not event 2
+        Thread.Sleep(150);
+
+        // cancel event 1 which was timed out and ready for processing
+        eventBus.CancelTimedEvent(0);
+
+        // cancel event 2 which is not timed out
+        eventBus.CancelTimedEvent(1);
+
+        // check that both events were removed
+        Assert.IsFalse(eventBus.HasTimedEvent(0));
+        Assert.IsFalse(eventBus.HasTimedEvent(1));
+
+        // now check that neither event will be processed
+        eventBus.ProcessEventsSequentially();
+        Assert.AreEqual(0, SomeGameEventCount);
+
+        // test that cancelling did not disturb the other event
+        Assert.IsTrue(eventBus.HasTimedEvent(2));
+    }
+
+    [Test]
+    public void TestAddOrResetTimedEvent() {
+        eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
+
+        // event for reset testing
+        eventBus.RegisterTimedEvent(SomeGameEvent, 0, TimePeriod.NewMilliseconds(100));
+
+        // event which should stay in event bus for a very long time,
+        // and not be disturbed by resetting the other event multiple times.
+        eventBus.RegisterTimedEvent(SomeGameEvent, 1, TimePeriod.NewSeconds(30.0));
+
+        // time out the event and process
+        Thread.Sleep(150);
+        eventBus.ProcessEventsSequentially();
+        Assert.AreEqual(1, SomeGameEventCount);
+
+        // now, add the event again
+        eventBus.AddOrResetTimedEvent(SomeGameEvent, 0, TimePeriod.NewMilliseconds(100));
+
+        // time out the event and process again
+        Thread.Sleep(150);
+        eventBus.ProcessEventsSequentially();
+        Assert.AreEqual(2, SomeGameEventCount);
+
+        // add the event one more time,
+        // but this time with a longer time period
+        eventBus.AddOrResetTimedEvent(SomeGameEvent, 0, TimePeriod.NewMilliseconds(2000));
+
+        // now reset it to a short time period
+        eventBus.AddOrResetTimedEvent(SomeGameEvent, 0, TimePeriod.NewMilliseconds(100));
+
+        // time out the event and process again,
+        // and test that the reset worked
+        Thread.Sleep(150);
+        eventBus.ProcessEventsSequentially();
+        Assert.AreEqual(3, SomeGameEventCount);
+
+        // test that resetting did not disturb the other event
+        Assert.IsTrue(eventBus.HasTimedEvent(1));
+    }
+}
