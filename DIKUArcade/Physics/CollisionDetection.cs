@@ -1,6 +1,6 @@
 ﻿using System;
 using DIKUArcade.Entities;
-using DIKUArcade.Math;
+using System.Numerics;
 
 namespace DIKUArcade.Physics {
 
@@ -14,17 +14,17 @@ namespace DIKUArcade.Physics {
             /*
             var data = new CollisionData {
                 Collision = false,
-                VelocityFactor = new Vec2F(1.0f, 1.0f),
+                VelocityFactor = new Vector2(1.0f, 1.0f),
                 CollisionDir = CollisionVelocity.CollisionDirUnchecked
             };
 
             var circRadius = shape.Extent.Y/2;
-            var circCenter = new Vec2F(shape.Position.X + shape.Extent.X/2, shape.Position.Y + shape.Extent.Y/2);
+            var circCenter = new Vector2(shape.Position.X + shape.Extent.X/2, shape.Position.Y + shape.Extent.Y/2);
 
-            var staLowerLeft = new Vec2F(shape.Position.X, shape.Position.Y);
-            var staUpperRight = new Vec2F(shape.Position.X + shape.Extent.X,
+            var staLowerLeft = new Vector2(shape.Position.X, shape.Position.Y);
+            var staUpperRight = new Vector2(shape.Position.X + shape.Extent.X,
                 shape.Position.Y + shape.Extent.Y);
-            var staCenter = new Vec2F(shape.Position.X + shape.Extent.X/2, shape.Position.Y + shape.Extent.Y/2);
+            var staCenter = new Vector2(shape.Position.X + shape.Extent.X/2, shape.Position.Y + shape.Extent.Y/2);
 
             var D = circCenter - staCenter;
 
@@ -37,16 +37,16 @@ namespace DIKUArcade.Physics {
         public static CollisionData Aabb(DynamicShape actor, Shape shape) {
             var data = new CollisionData {
                 Collision = false,
-                VelocityFactor = new Vec2F(1.0f, 1.0f),
+                VelocityFactor = new Vector2(1.0f, 1.0f),
                 CollisionDir = CollisionDirection.CollisionDirUnchecked
             };
 
-            var dynLowerLeft = new Vec2F(actor.Position.X, actor.Position.Y);
-            var dynUpperRight = new Vec2F(actor.Position.X + actor.Extent.X,
+            var dynLowerLeft = new Vector2(actor.Position.X, actor.Position.Y);
+            var dynUpperRight = new Vector2(actor.Position.X + actor.Extent.X,
                 actor.Position.Y + actor.Extent.Y);
 
-            var staLowerLeft = new Vec2F(shape.Position.X, shape.Position.Y);
-            var staUpperRight = new Vec2F(shape.Position.X + shape.Extent.X,
+            var staLowerLeft = new Vector2(shape.Position.X, shape.Position.Y);
+            var staUpperRight = new Vector2(shape.Position.X + shape.Extent.X,
                 shape.Position.Y + shape.Extent.Y);
 
             // inactive movement in both x- and y-direction
@@ -78,7 +78,7 @@ namespace DIKUArcade.Physics {
 
                 if(entryTimeY < exitTimeY && entryTimeY >= 0.0f && entryTimeY < 1.0f && xOverlaps)
                 {
-                    data.VelocityFactor.Y = entryTimeY;
+                    data.VelocityFactor = new Vector2(data.VelocityFactor.X, entryTimeY);
                     data.Collision = true;
                     return data;
                 }
@@ -111,7 +111,7 @@ namespace DIKUArcade.Physics {
 
                 if(entryTimeX < exitTimeX && entryTimeX >= 0.0f && entryTimeX < 1.0f && yOverlaps)
                 {
-                    data.VelocityFactor.X = entryTimeX;
+                    data.VelocityFactor = new Vector2(entryTimeX, data.VelocityFactor.Y);
                     data.Collision = true;
                 }
                 return data;
@@ -119,8 +119,8 @@ namespace DIKUArcade.Physics {
             // active movement in both x- and y-direction
             else
             {
-                var entryDistance = new Vec2F();
-                var exitDistance = new Vec2F();
+                var entryDistance = new Vector2();
+                var exitDistance = new Vector2();
 
                 if(actor.Velocity.X < 0.0f)
                 {
@@ -143,8 +143,8 @@ namespace DIKUArcade.Physics {
                     exitDistance.Y = staUpperRight.Y - dynLowerLeft.Y;
                 }
 
-                var entryTime = new Vec2F(entryDistance.X / actor.Velocity.X, entryDistance.Y / actor.Velocity.Y);
-                var exitTime = new Vec2F(exitDistance.X / actor.Velocity.X, exitDistance.Y / actor.Velocity.Y);
+                var entryTime = new Vector2(entryDistance.X / actor.Velocity.X, entryDistance.Y / actor.Velocity.Y);
+                var exitTime = new Vector2(exitDistance.X / actor.Velocity.X, exitDistance.Y / actor.Velocity.Y);
 
                 float entryTimeMax = System.Math.Max(entryTime.X, entryTime.Y);
                 float exitTimeMin = System.Math.Min(exitTime.X, exitTime.Y);
@@ -154,7 +154,7 @@ namespace DIKUArcade.Physics {
                 {
                     if (entryTime.X > entryTime.Y)
                     {
-                        data.VelocityFactor.X = entryTimeMax;
+                        data.VelocityFactor = new Vector2(entryTimeMax, data.VelocityFactor.Y);
                         if (actor.Velocity.X < 0.0f) {
                             data.CollisionDir = CollisionDirection.CollisionDirRight;
                         } else {
@@ -163,7 +163,7 @@ namespace DIKUArcade.Physics {
                     }
                     else
                     {
-                        data.VelocityFactor.Y = entryTimeMax;
+                        data.VelocityFactor = new Vector2(data.VelocityFactor.X, entryTimeMax);
                         if (actor.Velocity.Y < 0.0f) {
                             data.CollisionDir = CollisionDirection.CollisionDirUp;
                         } else {

@@ -5,7 +5,7 @@ using DIKUArcade.GUI;
 using DIKUArcade.Input;
 using DIKUArcade.Graphics;
 using DIKUArcade.Entities;
-using DIKUArcade.Math;
+using System.Numerics;
 
 public class Game : DIKUGame {
 
@@ -17,7 +17,7 @@ public class Game : DIKUGame {
 
         entities = new EntityContainer(10);
         for (int i = 0; i < 10; i++) {
-            var shape = new DynamicShape(new Vec2F(i * 0.1f, 0.9f), new Vec2F(0.1f, 0.1f));
+            var shape = new DynamicShape(new Vector2(i * 0.1f, 0.9f), new Vector2(0.1f, 0.1f));
             var stride = new ImageStride(80, images[0], images[1], images[2], images[3]);
             entities.AddDynamicEntity(shape, stride);
         }

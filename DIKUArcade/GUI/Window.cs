@@ -14,8 +14,6 @@ namespace DIKUArcade.GUI {
     /// </summary>
     public class Window {
 
-        private static uint screenShotCounter;
-
         private bool isRunning;
 
         /// <summary>

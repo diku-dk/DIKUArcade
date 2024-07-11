@@ -1,8 +1,8 @@
-﻿using DIKUArcade.Math;
+﻿using System.Numerics;
 
 namespace DIKUArcade.Physics {
     public class NewtonianForce {
-        //private Vec2F center;
+        //private Vector2 center;
 
         //private float falloff;
 

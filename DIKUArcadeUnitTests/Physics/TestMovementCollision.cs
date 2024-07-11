@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DIKUArcade.Entities;
-using DIKUArcade.Math;
+using System.Numerics;
 using DIKUArcade.Physics;
 using NUnit.Framework;
 
@@ -24,9 +24,9 @@ namespace DIKUArcadeUnitTests.Physics {
                     if (collision) {
                         Console.WriteLine($"Encountered collision:\n" +
                                           $"actor lower left: {actor.Position}\n" +
-                                          $"actor upper left: {actor.Position + new Vec2F(0.0f, actor.Extent.Y)}\n" +
+                                          $"actor upper left: {actor.Position + new Vector2(0.0f, actor.Extent.Y)}\n" +
                                           $"actor upper right: {actor.Position + actor.Extent}\n" +
-                                          $"actor upper left: {actor.Position + new Vec2F(actor.Extent.X, 0.0f)}\n" +
+                                          $"actor upper left: {actor.Position + new Vector2(actor.Extent.X, 0.0f)}\n" +
                                           $"obstacle pos: {obstacle.Position}\n" +
                                           $"obstacle extent: {obstacle.Extent}"
                         );
@@ -43,11 +43,11 @@ namespace DIKUArcadeUnitTests.Physics {
         /// </summary>
         [Test]
         public void TestMoveUp() {
-            var obstacleLeft = new StationaryShape(new Vec2F(0.0f, 0.0f), new Vec2F(0.4f, 1.0f));
-            var obstacleRight = new StationaryShape(new Vec2F(0.6f, 0.0f), new Vec2F(0.4f, 1.0f));
+            var obstacleLeft = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(0.4f, 1.0f));
+            var obstacleRight = new StationaryShape(new Vector2(0.6f, 0.0f), new Vector2(0.4f, 1.0f));
             var obstacles = new List<StationaryShape>() {obstacleLeft, obstacleRight};
 
-            var actor = new DynamicShape(new Vec2F(0.45f, 0.0f), new Vec2F(0.1f, 0.1f));
+            var actor = new DynamicShape(new Vector2(0.45f, 0.0f), new Vector2(0.1f, 0.1f));
             actor.Velocity.X = 0.0f;
             actor.Velocity.Y = 0.001f;
 
@@ -59,11 +59,11 @@ namespace DIKUArcadeUnitTests.Physics {
         /// </summary>
         [Test]
         public void TestMoveDown() {
-            var obstacleLeft = new StationaryShape(new Vec2F(0.0f, 0.0f), new Vec2F(0.4f, 1.0f));
-            var obstacleRight = new StationaryShape(new Vec2F(0.6f, 0.0f), new Vec2F(0.4f, 1.0f));
+            var obstacleLeft = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(0.4f, 1.0f));
+            var obstacleRight = new StationaryShape(new Vector2(0.6f, 0.0f), new Vector2(0.4f, 1.0f));
             var obstacles = new List<StationaryShape>() {obstacleLeft, obstacleRight};
 
-            var actor = new DynamicShape(new Vec2F(0.45f, 1.0f), new Vec2F(0.1f, 0.1f));
+            var actor = new DynamicShape(new Vector2(0.45f, 1.0f), new Vector2(0.1f, 0.1f));
             actor.Velocity.X = 0.0f;
             actor.Velocity.Y = -0.001f;
 
@@ -75,11 +75,11 @@ namespace DIKUArcadeUnitTests.Physics {
         /// </summary>
         [Test]
         public void TestMoveLeft() {
-            var obstacleLeft = new StationaryShape(new Vec2F(0.0f, 0.6f), new Vec2F(1.0f, 0.4f));
-            var obstacleRight = new StationaryShape(new Vec2F(0.0f, 0.0f), new Vec2F(1.0f, 0.4f));
+            var obstacleLeft = new StationaryShape(new Vector2(0.0f, 0.6f), new Vector2(1.0f, 0.4f));
+            var obstacleRight = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(1.0f, 0.4f));
             var obstacles = new List<StationaryShape>() {obstacleLeft, obstacleRight};
 
-            var actor = new DynamicShape(new Vec2F(0.0f, 0.45f), new Vec2F(0.1f, 0.1f));
+            var actor = new DynamicShape(new Vector2(0.0f, 0.45f), new Vector2(0.1f, 0.1f));
             actor.Velocity.X = 0.001f;
             actor.Velocity.Y = 0.0f;
 
@@ -91,11 +91,11 @@ namespace DIKUArcadeUnitTests.Physics {
         /// </summary>
         [Test]
         public void TestMoveRight() {
-            var obstacleLeft = new StationaryShape(new Vec2F(0.0f, 0.6f), new Vec2F(1.0f, 0.4f));
-            var obstacleRight = new StationaryShape(new Vec2F(0.0f, 0.0f), new Vec2F(1.0f, 0.4f));
+            var obstacleLeft = new StationaryShape(new Vector2(0.0f, 0.6f), new Vector2(1.0f, 0.4f));
+            var obstacleRight = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(1.0f, 0.4f));
             var obstacles = new List<StationaryShape>() {obstacleLeft, obstacleRight};
 
-            var actor = new DynamicShape(new Vec2F(0.9f, 0.45f), new Vec2F(0.1f, 0.1f));
+            var actor = new DynamicShape(new Vector2(0.9f, 0.45f), new Vector2(0.1f, 0.1f));
             actor.Velocity.X = -0.001f;
             actor.Velocity.Y = 0.0f;
 
@@ -111,18 +111,18 @@ namespace DIKUArcadeUnitTests.Physics {
             var obstacles = new List<StationaryShape>() {
                 // (pos, extent)
                 // upper-left triangle
-                new StationaryShape(new Vec2F(0.0f, 0.8f), new Vec2F(0.2f, 0.2f)),
-                new StationaryShape(new Vec2F(0.0f, 0.5f), new Vec2F(0.2f, 0.2f)),
-                new StationaryShape(new Vec2F(0.5f, 0.8f), new Vec2F(0.2f, 0.2f)),
+                new StationaryShape(new Vector2(0.0f, 0.8f), new Vector2(0.2f, 0.2f)),
+                new StationaryShape(new Vector2(0.0f, 0.5f), new Vector2(0.2f, 0.2f)),
+                new StationaryShape(new Vector2(0.5f, 0.8f), new Vector2(0.2f, 0.2f)),
 
                 // lower-right triangle
-                new StationaryShape(new Vec2F(0.8f, 0.0f), new Vec2F(0.2f, 0.2f)),
-                new StationaryShape(new Vec2F(0.5f, 0.0f), new Vec2F(0.2f, 0.2f)),
-                new StationaryShape(new Vec2F(0.8f, 0.5f), new Vec2F(0.2f, 0.2f))
+                new StationaryShape(new Vector2(0.8f, 0.0f), new Vector2(0.2f, 0.2f)),
+                new StationaryShape(new Vector2(0.5f, 0.0f), new Vector2(0.2f, 0.2f)),
+                new StationaryShape(new Vector2(0.8f, 0.5f), new Vector2(0.2f, 0.2f))
             };
 
             // (pos, extent, dir)
-            var actor = new DynamicShape(new Vec2F(0.0f, 0.0f), new Vec2F(0.09f, 0.09f), new Vec2F(0.001f, 0.001f));
+            var actor = new DynamicShape(new Vector2(0.0f, 0.0f), new Vector2(0.09f, 0.09f), new Vector2(0.001f, 0.001f));
 
             Assert.IsFalse(CheckActorMove(actor, obstacles, 1500));
         }
@@ -133,9 +133,9 @@ namespace DIKUArcadeUnitTests.Physics {
         [Test]
         public void StudentCheck() {
             // Copied in the exact parameters from assignment 9 debug run where it first fails
-            StationaryShape s = new StationaryShape(new Vec2F(0.9f, 0.739130437f), new Vec2F(0.025f, 0.0434782617f));
-            DynamicShape a = new DynamicShape(new Vec2F(0.744843602f, 0.783036947f),
-                new Vec2F(0.065f, 0.05f), new Vec2F(-0.00157072174f, -0.00205000024f));
+            StationaryShape s = new StationaryShape(new Vector2(0.9f, 0.739130437f), new Vector2(0.025f, 0.0434782617f));
+            DynamicShape a = new DynamicShape(new Vector2(0.744843602f, 0.783036947f),
+                new Vector2(0.065f, 0.05f), new Vector2(-0.00157072174f, -0.00205000024f));
 
             Assert.IsFalse(CollisionDetection.Aabb(a, s).Collision);
         }

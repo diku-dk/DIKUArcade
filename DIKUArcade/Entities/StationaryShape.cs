@@ -1,4 +1,4 @@
-﻿using DIKUArcade.Math;
+﻿using System.Numerics;
 
 namespace DIKUArcade.Entities {
     /// <summary>
@@ -7,11 +7,11 @@ namespace DIKUArcade.Entities {
     /// </summary>
     public class StationaryShape : Shape {
         public StationaryShape(float posX, float posY, float width, float height) {
-            Position = new Vec2F(posX, posY);
-            Extent = new Vec2F(width, height);
+            Position = new Vector2(posX, posY);
+            Extent = new Vector2(width, height);
         }
 
-        public StationaryShape(Vec2F pos, Vec2F extent) {
+        public StationaryShape(Vector2 pos, Vector2 extent) {
             Position = pos;
             Extent = extent;
         }

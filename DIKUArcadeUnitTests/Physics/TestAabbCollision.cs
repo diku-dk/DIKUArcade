@@ -1,5 +1,5 @@
 ﻿using DIKUArcade.Entities;
-using DIKUArcade.Math;
+using System.Numerics;
 using DIKUArcade.Physics;
 using NUnit.Framework;
 
@@ -14,16 +14,16 @@ namespace DIKUArcadeUnitTests.Physics {
         private StationaryShape solidBlockDown;
 
         public TestAabbCollision() {
-            solidBlockLeft  = new StationaryShape(new Vec2F(0.0f, 0.0f), new Vec2F(0.1f, 1.0f));
-            solidBlockRight = new StationaryShape(new Vec2F(1.0f, 0.0f), new Vec2F(0.1f, 1.0f));
-            solidBlockUp    = new StationaryShape(new Vec2F(0.0f, 1.0f), new Vec2F(1.0f, 0.1f));
-            solidBlockDown  = new StationaryShape(new Vec2F(0.0f, 0.0f), new Vec2F(1.0f, 0.1f));
+            solidBlockLeft  = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(0.1f, 1.0f));
+            solidBlockRight = new StationaryShape(new Vector2(1.0f, 0.0f), new Vector2(0.1f, 1.0f));
+            solidBlockUp    = new StationaryShape(new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.1f));
+            solidBlockDown  = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(1.0f, 0.1f));
             actorVelocity = 0.05f;
         }
 
         [SetUp]
         public void BeforeEachTest() {
-            actor = new DynamicShape(new Vec2F(0.5f, 0.5f), new Vec2F(0.1f, 0.1f));
+            actor = new DynamicShape(new Vector2(0.5f, 0.5f), new Vector2(0.1f, 0.1f));
         }
 
 
@@ -144,16 +144,16 @@ namespace DIKUArcadeUnitTests.Physics {
         // =====  TESTING COLLISION MULTIPLICATION FACTORS  ===== //
         [Test]
         public void TestCollisionMultiplicationFactorCloseness() {
-            var wall = new StationaryShape(new Vec2F(0.0f, 0.0f), new Vec2F(1.0f, 1.0f));
-            var move = new DynamicShape(new Vec2F(2.0f, 0.0f), new Vec2F(1.0f, 1.0f), new Vec2F(-1.0f, 0.0f));
+            var wall = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(1.0f, 1.0f));
+            var move = new DynamicShape(new Vector2(2.0f, 0.0f), new Vector2(1.0f, 1.0f), new Vector2(-1.0f, 0.0f));
             var data = CollisionDetection.Aabb(move, wall);
             Assert.IsFalse(data.Collision);
         }
 
         [Test]
         public void TestCollisionMultiplicationFactorExactness() {
-            var wall = new StationaryShape(new Vec2F(0.0f, 0.0f), new Vec2F(1.0f, 1.0f));
-            var move = new DynamicShape(new Vec2F(2.0f, 0.0f), new Vec2F(1.0f, 1.0f), new Vec2F(-2.0f, 0.0f));
+            var wall = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(1.0f, 1.0f));
+            var move = new DynamicShape(new Vector2(2.0f, 0.0f), new Vector2(1.0f, 1.0f), new Vector2(-2.0f, 0.0f));
             var data = CollisionDetection.Aabb(move, wall);
             Assert.AreEqual(data.VelocityFactor.X, 0.5f);
         }

@@ -1,16 +1,16 @@
-﻿using DIKUArcade.Math;
+﻿using System.Numerics;
 
 namespace DIKUArcade.Entities {
     public class DynamicShape : Shape {
         /// <summary>
         /// Only dynamic entities carry a velocity vector.
         /// </summary>
-        public Vec2F Velocity;
+        public Vector2 Velocity;
 
         public DynamicShape(float posX, float posY, float width, float height) {
-            Position = new Vec2F(posX, posY);
-            Velocity = new Vec2F();
-            Extent = new Vec2F(width, height);
+            Position = new Vector2(posX, posY);
+            Velocity = new Vector2();
+            Extent = new Vector2(width, height);
         }
 
         public DynamicShape(float posX, float posY, float width, float height,
@@ -19,19 +19,19 @@ namespace DIKUArcade.Entities {
             Velocity.Y = dirY;
         }
 
-        public DynamicShape(Vec2F pos, Vec2F extent) {
+        public DynamicShape(Vector2 pos, Vector2 extent) {
             Position = pos;
             Extent = extent;
-            Velocity = new Vec2F(0f, 0f); // init 0 to avoid problems
+            Velocity = new Vector2(0f, 0f); // init 0 to avoid problems
         }
 
-        public DynamicShape(Vec2F pos, Vec2F extent, Vec2F dir) {
+        public DynamicShape(Vector2 pos, Vector2 extent, Vector2 dir) {
             Position = pos;
             Extent = extent;
             Velocity = dir;
         }
 
-        public void ChangeVelocity(Vec2F dir) {
+        public void ChangeVelocity(Vector2 dir) {
             Velocity = dir;
         }
 

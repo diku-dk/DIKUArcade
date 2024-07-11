@@ -5,7 +5,7 @@ using DIKUArcade.GUI;
 using DIKUArcade.Input;
 using DIKUArcade.Graphics;
 using DIKUArcade.Entities;
-using DIKUArcade.Math;
+using System.Numerics;
 using System;
 using System.Collections.Generic;
 

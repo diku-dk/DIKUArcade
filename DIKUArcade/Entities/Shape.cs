@@ -1,4 +1,4 @@
-﻿using DIKUArcade.Math;
+﻿using System.Numerics;
 
 namespace DIKUArcade.Entities {
     public class Shape {
@@ -10,8 +10,8 @@ namespace DIKUArcade.Entities {
         /// <summary>
         /// Basic Shape properties
         /// </summary>
-        public Vec2F Position;
-        public Vec2F Extent { get; set; }
+        public Vector2 Position;
+        public Vector2 Extent { get; set; }
 
         /// <summary>
         /// Performs a downcast on this Shape instance to a
@@ -44,13 +44,14 @@ namespace DIKUArcade.Entities {
             Extent *= scale;
         }
 
-        public void Scale(Vec2F scalar) {
+        public void Scale(Vector2 scalar) {
             // This is doing pairwise vector multiplication!
             Extent *= scalar;
         }
-
+        /*
         public void ScaleX(float scale) {
-            Extent.X *= scale;
+            Extent.
+            Extent.X = Extent.X * scale;
         }
 
         public void ScaleY(float scale) {
@@ -72,17 +73,18 @@ namespace DIKUArcade.Entities {
             ScaleYFromCenter(scale);
         }
 
-        public void ScaleFromCenter(Vec2F scalar) {
+        public void ScaleFromCenter(Vector2 scalar) {
             ScaleXFromCenter(scalar.X);
             ScaleYFromCenter(scalar.Y);
         }
+        */
 
         /// <summary>
         /// Default Move method which does nothing.
         /// </summary>
         public virtual void Move() {}
 
-        public void Move(Vec2F mover) {
+        public void Move(Vector2 mover) {
             Position += mover;
         }
 
@@ -107,7 +109,7 @@ namespace DIKUArcade.Entities {
             Rotation = angleRadians;
         }
 
-        public void SetPosition(Vec2F newPosition) {
+        public void SetPosition(Vector2 newPosition) {
             Position = newPosition;
         }
     }
