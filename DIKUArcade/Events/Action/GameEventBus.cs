@@ -20,7 +20,7 @@ public class GameEventBus {
     private SortedList<uint, TimedGameEvent>[] timedEvents;
     private int activeTimedEvent = 0;
     private int inactiveTimedEvent = 1;
-    private static uint currId = 0;
+    private uint currId = 0;
 
     public GameEventBus() {
         subscribers = new Dictionary<Type, object>();
@@ -175,10 +175,13 @@ public class GameEventBus {
     /// <param name="period">
     /// The time it takes before the event expires.
     /// </param>
+    /// <return>
+    /// The ID of the event.
+    /// </return>
     /// <exception cref="System.ArgumentException">
     /// Thrown when the action have never been subscribed before.
     /// </exception>
-    public void RegisterTimedEvent<Arg>(Arg arg, TimePeriod timePeriod) {
+    public uint RegisterTimedEvent<Arg>(Arg arg, TimePeriod timePeriod) {
         var id = currId;
         currId++;
         if (HasTimedEvent(id)) {
@@ -187,6 +190,7 @@ public class GameEventBus {
 
         var timedEvent = new TimedGameEvent(arg!, timePeriod);
         timedEvents[activeTimedEvent].Add(id, timedEvent);
+        return id;
     }
 
     /// <summary>
