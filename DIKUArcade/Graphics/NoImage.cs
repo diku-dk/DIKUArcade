@@ -6,6 +6,5 @@ namespace DIKUArcade.Graphics {
     public class NoImage : IBaseImage {
         public NoImage() {}           
         public void Render(Shape shape) {}
-        public void Render(Shape shape, Camera camera) {}
     }
 }

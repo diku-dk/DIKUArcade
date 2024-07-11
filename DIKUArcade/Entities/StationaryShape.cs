@@ -2,7 +2,7 @@
 
 namespace DIKUArcade.Entities {
     /// <summary>
-    /// Similar to DynamicShape, but does not contain direction information,
+    /// Similar to DynamicShape, but does not contain velocity information,
     /// since a static object os not meant to be affected by game physics.
     /// </summary>
     public class StationaryShape : Shape {

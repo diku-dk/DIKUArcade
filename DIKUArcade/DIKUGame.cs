@@ -17,7 +17,7 @@ namespace DIKUArcade {
         public static int Timestep { get; private set; }
 
         public DIKUGame(WindowArgs windowArgs) {
-            window = new Window(windowArgs);
+            window = new Window();
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace DIKUArcade {
         /// This method will never return.
         /// </summary>
         public void Run() {
-            System.Console.WriteLine("Game.Run()");
+            Console.WriteLine("Game.Run()");
             gameTimer = new GameTimer(30, 30);
 
             try
@@ -49,9 +49,7 @@ namespace DIKUArcade {
                     }
 
                     if (gameTimer.ShouldRender()) {
-                        window.Clear();
                         Render();
-                        window.SwapBuffers();
                     }
 
                     if (gameTimer.ShouldReset()) {

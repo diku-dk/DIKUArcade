@@ -9,10 +9,10 @@ namespace DIKUArcade.Physics {
 
         /// <summary>
         /// This factor should be multiplied onto the actor shape's
-        /// direction vector to get the closest position to the
+        /// velocity vector to get the closest position to the
         /// incident object.
         /// </summary>
-        public Vec2F DirectionFactor { get; set; }
+        public Vec2F VelocityFactor { get; set; }
 
         /// <summary>
         /// The surface normal of the incident object, indicating

@@ -17,10 +17,6 @@ namespace DIKUArcade.Graphics {
         public void Render(Shape shape) {
             texture.Render(shape);
         }
-        public void Render(Shape shape, Camera camera) {
-            texture.Render(shape, camera);
-        }
-
         public Texture GetTexture() {
             return texture;
         }

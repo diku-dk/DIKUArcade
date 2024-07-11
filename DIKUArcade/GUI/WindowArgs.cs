@@ -7,7 +7,6 @@ namespace DIKUArcade.GUI {
     /// </summary>
     public class WindowArgs {
         /* Globalisation settings */
-        public KeyboardLayout KeyboardLayout { get; set; } = KeyboardLayout.Danish;
 
         /* Basic window properties */
         public string Title { get; set; } = "DIKUArcade";

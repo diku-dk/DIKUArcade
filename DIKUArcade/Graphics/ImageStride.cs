@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using DIKUArcade.Timers;
 using DIKUArcade.Entities;
-using DIKUArcade.Math;
 using DIKUArcade.Utilities;
 
 namespace DIKUArcade.Graphics {
@@ -28,63 +26,6 @@ namespace DIKUArcade.Graphics {
         /// same time.
         /// </summary>
         private double timerOffset;
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="milliseconds">Time between consecutive frames</param>
-        /// <param name="imageFiles">List of image files to include in strides</param>
-        public ImageStride(int milliseconds, params string[] imageFiles) {
-            if (milliseconds < 0) {
-                throw new ArgumentException("milliseconds must be a positive integer");
-            }
-            animFrequency = milliseconds;
-            animate = true;
-
-            int imgs = imageFiles.Length;
-            if (imgs == 0) {
-                // ReSharper disable once NotResolvedInText
-                throw new ArgumentNullException("At least one image file must be specified");
-            }
-            maxImageCount = imgs - 1;
-            currentImageCount = RandomGenerator.Generator.Next(imgs);
-            timerOffset = RandomGenerator.Generator.Next(100);
-
-            textures = new List<Texture>(imgs);
-            foreach (string imgFile in imageFiles)
-            {
-                textures.Add(new Texture(imgFile));
-            }
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="milliseconds">Time between consecutive frames</param>
-        /// <param name="images">List of images to include in strides</param>
-        public ImageStride(int milliseconds, params Image[] images) {
-            if (milliseconds < 0) {
-                throw new ArgumentException("milliseconds must be a positive integer");
-            }
-            animFrequency = milliseconds;
-            animate = true;
-
-            int imgs = images.Length;
-            if (imgs == 0) {
-                // ReSharper disable once NotResolvedInText
-                throw new ArgumentNullException("at least one image file must be specified");
-            }
-
-            maxImageCount = imgs - 1;
-            currentImageCount = RandomGenerator.Generator.Next(imgs);
-            timerOffset = RandomGenerator.Generator.Next(100);
-
-            textures = new List<Texture>(imgs);
-            foreach (Image img in images)
-            {
-                textures.Add(img.GetTexture());
-            }
-        }
 
         public ImageStride(int milliseconds, List<Image> images) {
             if (milliseconds < 0) {
@@ -182,10 +123,6 @@ namespace DIKUArcade.Graphics {
 
             // render the current texture object
             textures[currentImageCount].Render(shape);
-        }
-        public void Render(Shape shape, Camera camera) {
-            throw new NotImplementedException();
-            
         }
     }
 }
