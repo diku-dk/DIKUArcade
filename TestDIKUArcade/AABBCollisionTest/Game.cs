@@ -24,11 +24,11 @@ public class Game : DIKUGame {
     }
 
     public void MovePlayer(Vector2 dir) {
-        ((DynamicShape) player.Shape).Direction = dir;
+        ((DynamicShape) player.Shape).Velocity = dir;
         var collide = CollisionDetection.Aabb((DynamicShape) player.Shape, wall.Shape);
         if (collide.Collision) {
             Console.WriteLine($"CollisionDetection occured in direction {collide.CollisionDir}");
-            dir *= collide.DirectionFactor;
+            dir *= collide.VelocityFactor;
         }
         player.Shape.Position += dir;
     }
