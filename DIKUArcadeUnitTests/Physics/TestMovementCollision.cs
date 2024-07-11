@@ -10,7 +10,7 @@ namespace DIKUArcadeUnitTests.Physics {
     public class TestMovementCollision {
 
         /// <summary>
-        /// Move an actor in its predefined direction, checking for collisions
+        /// Move an actor in its predefined Velocity, checking for collisions
         /// with a list of obstacles.
         /// </summary>
         /// <returns>If any collision occured</returns>
@@ -48,8 +48,8 @@ namespace DIKUArcadeUnitTests.Physics {
             var obstacles = new List<StationaryShape>() {obstacleLeft, obstacleRight};
 
             var actor = new DynamicShape(new Vec2F(0.45f, 0.0f), new Vec2F(0.1f, 0.1f));
-            actor.Direction.X = 0.0f;
-            actor.Direction.Y = 0.001f;
+            actor.Velocity.X = 0.0f;
+            actor.Velocity.Y = 0.001f;
 
             Assert.IsFalse(CheckActorMove(actor, obstacles, 1000));
         }
@@ -64,8 +64,8 @@ namespace DIKUArcadeUnitTests.Physics {
             var obstacles = new List<StationaryShape>() {obstacleLeft, obstacleRight};
 
             var actor = new DynamicShape(new Vec2F(0.45f, 1.0f), new Vec2F(0.1f, 0.1f));
-            actor.Direction.X = 0.0f;
-            actor.Direction.Y = -0.001f;
+            actor.Velocity.X = 0.0f;
+            actor.Velocity.Y = -0.001f;
 
             Assert.IsFalse(CheckActorMove(actor, obstacles, 1000));
         }
@@ -80,8 +80,8 @@ namespace DIKUArcadeUnitTests.Physics {
             var obstacles = new List<StationaryShape>() {obstacleLeft, obstacleRight};
 
             var actor = new DynamicShape(new Vec2F(0.0f, 0.45f), new Vec2F(0.1f, 0.1f));
-            actor.Direction.X = 0.001f;
-            actor.Direction.Y = 0.0f;
+            actor.Velocity.X = 0.001f;
+            actor.Velocity.Y = 0.0f;
 
             Assert.IsFalse(CheckActorMove(actor, obstacles, 1000));
         }
@@ -96,8 +96,8 @@ namespace DIKUArcadeUnitTests.Physics {
             var obstacles = new List<StationaryShape>() {obstacleLeft, obstacleRight};
 
             var actor = new DynamicShape(new Vec2F(0.9f, 0.45f), new Vec2F(0.1f, 0.1f));
-            actor.Direction.X = -0.001f;
-            actor.Direction.Y = 0.0f;
+            actor.Velocity.X = -0.001f;
+            actor.Velocity.Y = 0.0f;
 
             Assert.IsFalse(CheckActorMove(actor, obstacles, 1000));
         }

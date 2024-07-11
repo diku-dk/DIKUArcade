@@ -18,7 +18,7 @@ namespace DIKUArcade.Entities {
         /// DynamicShape. If the downcast fails, a new
         /// DynamicShape is returned instead with this Shape's
         /// Position and Extent properties, and a default (0,0)
-        /// Direction vector.
+        /// Velocity vector.
         /// </summary>
         /// <returns></returns>
         public DynamicShape AsDynamicShape() {

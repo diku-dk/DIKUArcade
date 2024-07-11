@@ -61,14 +61,6 @@ namespace DIKUArcade.Entities {
             }
         }
 
-        /// <summary>
-        /// Render all entities in this EntityContainer
-        /// </summary>
-        public void RenderEntities(Camera camera) {
-            foreach (Entity entity in entities) {
-                entity.Image.Render(entity.Shape, camera);
-            }
-        }
 
         /// <summary>
         /// Remove all entities from this container
