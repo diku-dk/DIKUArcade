@@ -1,4 +1,4 @@
-﻿using DIKUArcade.Math;
+﻿using System.Numerics;
 
 namespace DIKUArcade.Physics {
     public class CollisionData {
@@ -12,7 +12,7 @@ namespace DIKUArcade.Physics {
         /// velocity vector to get the closest position to the
         /// incident object.
         /// </summary>
-        public Vec2F VelocityFactor { get; set; }
+        public Vector2 VelocityFactor { get; set; }
 
         /// <summary>
         /// The surface normal of the incident object, indicating

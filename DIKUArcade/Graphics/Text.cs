@@ -1,6 +1,6 @@
 ﻿using System;
 using DIKUArcade.Entities;
-using DIKUArcade.Math;
+using System.Numerics;
 
 namespace DIKUArcade.Graphics {
     public class Text {
@@ -20,7 +20,7 @@ namespace DIKUArcade.Graphics {
         /// </summary>
         private StationaryShape shape;
 
-        public Text(string text, Vec2F pos, Vec2F extent) {
+        public Text(string text, Vector2 pos, Vector2 extent) {
             this.text = text;
             shape = new StationaryShape(pos, extent);
             fontSize = 50;
@@ -69,19 +69,10 @@ namespace DIKUArcade.Graphics {
         /// <summary>
         /// Change text color
         /// </summary>
-        /// <param name="vec">Vec3F containing the RGB color values.</param>
+        /// <param name="vec">Vector3 containing the RGB color values.</param>
         /// <exception cref="ArgumentOutOfRangeException">Normalized color values must be
         /// between 0 and 1.</exception>
-        public void SetColor(Vec3F vec) {
-        }
-
-        /// <summary>
-        /// Change text color
-        /// </summary>
-        /// <param name="vec">Vec3I containing the RGB color values.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Color values must be
-        /// between 0 and 255.</exception>
-        public void SetColor(Vec3I vec) {
+        public void SetColor(Vector3 vec) {
         }
 
         /// <summary>
@@ -91,26 +82,6 @@ namespace DIKUArcade.Graphics {
         /// <exception cref="ArgumentOutOfRangeException">Color values must be
         /// between 0 and 255.</exception>
         public void SetColor(int a, int r, int g, int b) {
-
-        }
-
-        /// <summary>
-        /// Change text color
-        /// </summary>
-        /// <param name="vec">Vec4I containing the ARGB color values.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Color values must be
-        /// between 0 and 255.</exception>
-        public void SetColor(Vec4I vec) {
-
-        }
-
-        /// <summary>
-        /// Change text color
-        /// </summary>
-        /// <param name="vec">Vec3F containing the RGB color values.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Normalized color values must be
-        /// between 0 and 1.</exception>
-        public void SetColor(Vec4F vec) {
 
         }
 

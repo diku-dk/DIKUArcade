@@ -1,6 +1,6 @@
 ﻿using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
-using DIKUArcade.Math;
+using System.Numerics;
 using NUnit.Framework;
 
 namespace DIKUArcadeUnitTests.Entities {
@@ -10,9 +10,9 @@ namespace DIKUArcadeUnitTests.Entities {
         private Image image;
 
         public TestShapeConversion() {
-            var pos = new Vec2F(5.0f, 3.0f);
-            var ext = new Vec2F(10.0f, 6.0f);
-            var dir = new Vec2F(1.0f, 1.0f);
+            var pos = new Vector2(5.0f, 3.0f);
+            var ext = new Vector2(10.0f, 6.0f);
+            var dir = new Vector2(1.0f, 1.0f);
             shape = new DynamicShape(pos, ext, dir);
             image = null;
         }
