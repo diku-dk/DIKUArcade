@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
+using System.Threading;
 
 namespace DIKUArcade.Entities {
     public class Shape {
@@ -48,36 +50,36 @@ namespace DIKUArcade.Entities {
             // This is doing pairwise vector multiplication!
             Extent *= scalar;
         }
-        /*
+        
         public void ScaleX(float scale) {
-            Extent.
-            Extent.X = Extent.X * scale;
+            Extent = new Vector2(Extent.X * scale, Extent.Y);
         }
 
         public void ScaleY(float scale) {
-            Extent.Y *= scale;
+            Extent = new Vector2(Extent.X, Extent.Y * scale);
         }
 
         public void ScaleXFromCenter(float scale) {
-            Position.X = (Position.X + Extent.X / 2.0f) - ((Extent.X / 2.0f) * scale);
-            Extent.X *= scale;
+            var posX = (Position.X + Extent.X / 2.0f) - ((Extent.X / 2.0f) * scale);
+            Position = new Vector2(posX, Position.Y);
+            Extent = new Vector2(Extent.X * scale, Extent.Y);
         }
 
         public void ScaleYFromCenter(float scale) {
-            Position.Y = (Position.Y + Extent.Y / 2.0f) - (Extent.Y / 2.0f * scale);
-            Extent.Y *= scale;
+            var posY = (Position.Y + Extent.Y / 2.0f) - (Extent.Y / 2.0f * scale);
+            Position = new Vector2(Position.X, posY);
+            Extent = new Vector2(Extent.X, Extent.Y * scale);
         }
+
+        public void ScaleFromCenter(Vector2 scaling) {
+            Position = (Position + Extent / 2.0f) - (Extent / 2.0f * scaling);
+            Extent *= scaling; 
+        }
+        
 
         public void ScaleFromCenter(float scale) {
-            ScaleXFromCenter(scale);
-            ScaleYFromCenter(scale);
+            ScaleFromCenter(new Vector2(scale, scale));
         }
-
-        public void ScaleFromCenter(Vector2 scalar) {
-            ScaleXFromCenter(scalar.X);
-            ScaleYFromCenter(scalar.Y);
-        }
-        */
 
         /// <summary>
         /// Default Move method which does nothing.
@@ -97,20 +99,22 @@ namespace DIKUArcade.Entities {
         }
 
         public void Move(float x, float y) {
-            MoveX(x);
-            MoveY(y);
+            Move(new Vector2(x, y));
         }
 
         public void Rotate(float angleRadians) {
             Rotation += angleRadians;
+            throw new NotImplementedException();
         }
 
         public void SetRotation(float angleRadians) {
             Rotation = angleRadians;
+            throw new NotImplementedException();
         }
 
         public void SetPosition(Vector2 newPosition) {
             Position = newPosition;
+            throw new NotImplementedException();
         }
     }
 }

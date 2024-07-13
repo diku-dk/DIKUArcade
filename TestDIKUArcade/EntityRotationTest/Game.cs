@@ -22,10 +22,10 @@ public class Game : DIKUGame {
         }
 
         switch (key) {
-            case KeyboardKey.Num_1:
+            case KeyboardKey.Num1:
                 entity.Shape.Rotate((float)System.Math.PI / 16.0f);
                 break;
-            case KeyboardKey.Num_2:
+            case KeyboardKey.Num2:
                 entity.Shape.Rotate((float)System.Math.PI / -16.0f);
                 break;
             case KeyboardKey.Escape:
@@ -34,7 +34,7 @@ public class Game : DIKUGame {
         }
     }
 
-    public override void Render() { 
+    public override void Render(WindowContext ctx) { 
         entity.RenderEntity();
     }
 

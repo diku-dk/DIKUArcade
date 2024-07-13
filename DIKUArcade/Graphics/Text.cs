@@ -1,6 +1,7 @@
 ﻿using System;
 using DIKUArcade.Entities;
 using System.Numerics;
+using DIKUArcade.GUI;
 
 namespace DIKUArcade.Graphics {
     public class Text {
@@ -8,27 +9,18 @@ namespace DIKUArcade.Graphics {
         /// <summary>
         /// The string value for the text
         /// </summary>
-        private string text;
 
-        /// <summary>
-        /// The font size for the text string
-        /// </summary>
-        private int fontSize;
-
-        /// <summary>
-        /// The position and size of the text
-        /// </summary>
+        private Lowlevel.Text lowlevelText;
         private StationaryShape shape;
 
-        public Text(string text, Vector2 pos, Vector2 extent) {
-            this.text = text;
-            shape = new StationaryShape(pos, extent);
-            fontSize = 50;
-        }
-
-        // This method assumes that
-        private void CreateBitmapTexture() {
-
+        public Text(string text, Vector2 position) {
+            var fontSize = 50;
+            if (Lowlevel.Text.FontFamilies.Count == 0) {
+                throw new Exception("There are no fonts available.");
+            }
+            var fontfamily = Lowlevel.Text.FontFamilies[0];
+            lowlevelText = new Lowlevel.Text(position, text, Lowlevel.Color.White, fontfamily, fontSize);
+            shape = new StationaryShape(lowlevelText.Position, lowlevelText.Extent);
         }
 
         public StationaryShape GetShape() {
@@ -40,7 +32,8 @@ namespace DIKUArcade.Graphics {
         /// </summary>
         /// <param name="newText">The new text string</param>
         public void SetText(string newText) {
-            text = newText;
+            lowlevelText.Text = newText;
+            shape.Extent = shape.Extent;
         }
 
         /// <summary>
@@ -54,8 +47,8 @@ namespace DIKUArcade.Graphics {
                 // ReSharper disable once NotResolvedInText
                 throw  new ArgumentOutOfRangeException("Font size must be a positive integer");
             }
-            fontSize = newSize;
-            CreateBitmapTexture();
+            lowlevelText.Size = newSize;
+            shape.Extent = shape.Extent;
         }
 
         /// <summary>
@@ -63,7 +56,9 @@ namespace DIKUArcade.Graphics {
         /// If the font is not installed defaults to Arial.
         /// </summary>
         /// <param name="fontfamily">The name of the font family</param>
-        public void SetFont(string fontfamily) {
+        public void SetFont(Lowlevel.FontFamily fontfamily) {
+            lowlevelText.FontFamily = fontfamily;
+            shape.Extent = shape.Extent;
         }
 
         /// <summary>
@@ -72,33 +67,36 @@ namespace DIKUArcade.Graphics {
         /// <param name="vec">Vector3 containing the RGB color values.</param>
         /// <exception cref="ArgumentOutOfRangeException">Normalized color values must be
         /// between 0 and 1.</exception>
-        public void SetColor(Vector3 vec) {
+        public void SetColor(int r, int g, int b) {
+            lowlevelText.Color = Lowlevel.fromRgb(r, g, b);
         }
 
         /// <summary>
         /// Change text color
         /// </summary>
-        /// <param name="vec">Vec4I containing the ARGB color values.</param>
+        /// <param name="vec">Vec4I containing the RGBA color values.</param>
         /// <exception cref="ArgumentOutOfRangeException">Color values must be
         /// between 0 and 255.</exception>
-        public void SetColor(int a, int r, int g, int b) {
-
+        public void SetColor(int r, int g, int b, int a) {
+            lowlevelText.Color = Lowlevel.fromRgba(r, g, b, a);
         }
 
         /// <summary>
         /// Change text color
         /// </summary>
         /// <param name="newColor">System.Drawing.Color containing new color channel values.</param>
-        public void SetColor(System.Drawing.Color newColor) {
-
+        public void SetColor(Lowlevel.Color newColor) {
+            lowlevelText.Color = newColor;
         }
 
         
         public void ScaleText(float scale) {
+            lowlevelText.Scale(new Vector2(scale, scale));
+            shape.Extent = shape.Extent;
         }
         
-        public void RenderText() {
-            
+        public void RenderText(WindowContext ctx) {
+            lowlevelText.Render(ctx.Get());
         }
     }
 }
