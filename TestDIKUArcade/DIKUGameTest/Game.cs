@@ -16,10 +16,10 @@ public class Game : DIKUGame {
             return;
         }
         switch (key) {
-            case KeyboardKey.Num_1:
+            case KeyboardKey.Num1:
                 window.SetClearColor(128, 52, 43);
                 break;
-            case KeyboardKey.Num_2:
+            case KeyboardKey.Num2:
                 window.SetClearColor(28, 108, 218);
                 break;
             case KeyboardKey.F1:
@@ -31,7 +31,7 @@ public class Game : DIKUGame {
         }
     }
 
-    public override void Render() { 
+    public override void Render(WindowContext ctx) { 
         
     }
 

@@ -16,7 +16,7 @@ namespace DIKUArcade.Graphics {
         private bool animate;
 
         private List<Texture> textures;
-        private readonly int maxImageCount;
+        private int maxImageCount;
         private int currentImageCount;
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace DIKUArcade.Graphics {
         /// </summary>
         private double timerOffset;
 
-        public ImageStride(int milliseconds, List<Image> images) {
+        private void Init(int milliseconds, List<Image> images) {
             if (milliseconds < 0) {
                 throw new ArgumentException("milliseconds must be a positive integer");
             }
@@ -49,6 +49,14 @@ namespace DIKUArcade.Graphics {
             {
                 textures.Add(img.GetTexture());
             }
+        }
+
+        public ImageStride(int milliseconds, List<Image> images) {
+            Init(milliseconds, images);
+        }
+
+        public ImageStride(int milliseconds, params Image[] images) {
+            Init(milliseconds, new List<Image>(images));
         }
 
         /// <summary>

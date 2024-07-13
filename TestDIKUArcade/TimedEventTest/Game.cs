@@ -51,7 +51,7 @@ public class Game : DIKUGame, IGameEventProcessor {
         }
     }
 
-    public override void Render() { }
+    public override void Render(WindowContext ctx) { }
 
     public override void Update() {
         eventBus.ProcessEvents();

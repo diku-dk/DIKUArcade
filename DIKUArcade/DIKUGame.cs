@@ -17,7 +17,11 @@ namespace DIKUArcade {
         public static int Timestep { get; private set; }
 
         public DIKUGame(WindowArgs windowArgs) {
-            window = new Window();
+            window = new Window(windowArgs);
+        }
+
+        ~DIKUGame() {
+            window.Dispose();
         }
 
         /// <summary>
@@ -28,7 +32,7 @@ namespace DIKUArcade {
         /// <summary>
         /// Override this method to render game entities.
         /// </summary>
-        public abstract void Render();
+        public abstract void Render(WindowContext ctx);
 
         /// <summary>
         /// Enter the game loop and run the game.
@@ -49,15 +53,14 @@ namespace DIKUArcade {
                     }
 
                     if (gameTimer.ShouldRender()) {
-                        Render();
+                        window.Render(Render);
                     }
 
                     if (gameTimer.ShouldReset()) {
                         Timestep = gameTimer.CapturedUpdates;
                     }
                 }
-
-                window.DestroyWindow();
+                window.CloseWindow();
             }
             catch(Exception ex) {
                 Console.WriteLine("DIKUArcade.DIKUGame caught an exception. See message below:" + Environment.NewLine);

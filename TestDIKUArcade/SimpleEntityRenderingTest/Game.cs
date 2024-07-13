@@ -21,7 +21,7 @@ public class Game : DIKUGame {
         var imgs1 = new ImageStride(250, img0, img1);
 
         var shape0 = new DynamicShape(new Vector2(0.0f, 0.0f), new Vector2(0.5f, 0.5f));
-        var shape1 = new DynamicShape(new Vector2(0.0f, 0.5f), shape0.Extent.Copy());
+        var shape1 = new DynamicShape(new Vector2(0.0f, 0.5f), shape0.Extent);
 
         actor0 = new Entity(shape0, imgs0);
         actor1 = new Entity(shape1, imgs1);
@@ -63,7 +63,7 @@ public class Game : DIKUGame {
         }
     }
 
-    public override void Render() {
+    public override void Render(WindowContext ctx) {
         actor0.RenderEntity();
         actor1.RenderEntity();
     }
