@@ -59,11 +59,12 @@ public class Window : IDisposable {
 
     public void Dispose () {
         Cleanup();
-        GC.SuppressFinalize(this);
     }
 
     public void Render(Action<WindowContext> renderer) {
-        window.Render(lowlevel => renderer(new WindowContext(lowlevel)));
+        window.Render(lowlevel =>
+            renderer(new WindowContext(lowlevel, window.Width, window.Height))
+        );
     }
 
     ~Window() {
