@@ -11,7 +11,8 @@ namespace DIKUArcade.Graphics {
         /// </summary>
 
         private Lowlevel.Text lowlevelText;
-        private StationaryShape shape;
+
+        public Vector2 Position { get; private set; }
 
         public Text(string text, Vector2 position) {
             var fontSize = 50;
@@ -20,11 +21,11 @@ namespace DIKUArcade.Graphics {
             }
             var fontfamily = Lowlevel.Text.FontFamilies[0];
             lowlevelText = new Lowlevel.Text(Vector2.Zero, text, Lowlevel.Color.White, fontfamily, fontSize);
-            shape = new StationaryShape(position, lowlevelText.Extent);
+            Position = position;
         }
 
-        public StationaryShape GetShape() {
-            return shape;
+        public Vector2 Extent(Vector2 windowSize) {
+            return lowlevelText.Extent / windowSize;
         }
 
         /// <summary>
@@ -92,8 +93,7 @@ namespace DIKUArcade.Graphics {
         }
         
         public void RenderText(WindowContext ctx) {
-            Console.WriteLine(lowlevelText.Position);
-            lowlevelText.SetPosition(shape.Position * ctx.Size);
+            lowlevelText.SetPosition(Position);
             lowlevelText.Render(ctx.Get());
         }
     }

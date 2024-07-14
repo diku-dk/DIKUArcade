@@ -5,10 +5,8 @@ namespace DIKUArcade.GUI;
 
 public struct WindowContext {
     private Lowlevel.DrawingContext ctx;
-    public readonly Vector2 Size;
-    internal WindowContext(Lowlevel.DrawingContext ctx, int width, int height) {
+    internal WindowContext(Lowlevel.DrawingContext ctx) {
         this.ctx = ctx;
-        Size = new Vector2(width, height);
     }
 
     public Lowlevel.DrawingContext Get() {
