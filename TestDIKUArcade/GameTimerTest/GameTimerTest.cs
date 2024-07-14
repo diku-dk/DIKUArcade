@@ -23,15 +23,14 @@ public class GameTimerTest : ITestable {
         };
         foreach (var text in new []{fps, ups}) {
             text.SetColor(255, 255, 255);
-            text.SetFontSize(80);
-            text.GetShape().ScaleYFromCenter(1.2f);
+            // text.SetFontSize(80);
+            // text.GetShape().ScaleYFromCenter(1.2f);
         }
         while (win.IsRunning()) {
             win.PollEvents();
             timer.MeasureTime();
             while (timer.ShouldUpdate()) { }
             if (timer.ShouldRender()) {
-                win.Clear();
                 // render game objects
                 win.Render(render);
             }
