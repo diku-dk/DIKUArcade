@@ -10,30 +10,39 @@ namespace DIKUArcade.Graphics {
         /// The string value for the text
         /// </summary>
 
-        private Lowlevel.Text lowlevelText;
-
-        public Vector2 Position { get; private set; }
-
-        public Text(string text, Vector2 position) {
-            var fontSize = 50;
-            if (Lowlevel.Text.FontFamilies.Count == 0) {
-                throw new Exception("There are no fonts available.");
-            }
-            var fontfamily = Lowlevel.Text.FontFamilies[0];
-            lowlevelText = new Lowlevel.Text(Vector2.Zero, text, Lowlevel.Color.White, fontfamily, fontSize);
-            Position = position;
+        private Lowlevel.PathCollection path;
+        private int size = 50;
+        private Lowlevel.FontFamily fontFamily;
+        private Lowlevel.Font font;
+        private string text;
+        private Lowlevel.Color color = Lowlevel.Color.Black;
+        public Vector2 Position { get; set; }
+        static Matrix3x2 Move(Vector2 extent, int width, int height) {
+            return new Matrix3x2(
+                width, 0.0f,
+                0.0f, -height,
+                0.0f, height + -extent.Y
+            );
         }
 
-        public Vector2 Extent(Vector2 windowSize) {
-            return lowlevelText.Extent / windowSize;
+        public Text(string text, Vector2 position) {
+            if (Lowlevel.fontFamilies.Count == 0) {
+                throw new Exception("There are no fonts available.");
+            }
+            Position = position;
+            this.text = text;
+            fontFamily = Lowlevel.fontFamilies[0];
+            font = Lowlevel.makeFont(fontFamily, size);
+            path = Lowlevel.createText(text, font);
         }
 
         /// <summary>
         /// Set the text string for this Text object.
         /// </summary>
         /// <param name="newText">The new text string</param>
-        public void SetText(string newText) {
-            lowlevelText.Text = newText;
+        public void SetText(string text) {
+            this.text = text;
+            path = Lowlevel.createText(text, font);
         }
 
         /// <summary>
@@ -42,12 +51,14 @@ namespace DIKUArcade.Graphics {
         /// <param name="newSize">The new font size</param>
         /// <exception cref="ArgumentOutOfRangeException">Font size must be a
         /// positive integer.</exception>
-        public void SetFontSize(int newSize) {
-            if (newSize < 0) {
+        public void SetFontSize(int size) {
+            if (size < 0) {
                 // ReSharper disable once NotResolvedInText
                 throw  new ArgumentOutOfRangeException("Font size must be a positive integer");
             }
-            lowlevelText.Size = newSize;
+            this.size = size;
+            font = Lowlevel.makeFont(fontFamily, size);
+            path = Lowlevel.createText(text, font);
         }
 
         /// <summary>
@@ -56,7 +67,9 @@ namespace DIKUArcade.Graphics {
         /// </summary>
         /// <param name="fontfamily">The name of the font family</param>
         public void SetFont(Lowlevel.FontFamily fontfamily) {
-            lowlevelText.FontFamily = fontfamily;
+            this.fontFamily = fontfamily;
+            font = Lowlevel.makeFont(fontFamily, size);
+            path = Lowlevel.createText(text, font);
         }
 
         /// <summary>
@@ -66,7 +79,7 @@ namespace DIKUArcade.Graphics {
         /// <exception cref="ArgumentOutOfRangeException">Normalized color values must be
         /// between 0 and 1.</exception>
         public void SetColor(int r, int g, int b) {
-            lowlevelText.Color = Lowlevel.fromRgb(r, g, b);
+            color = Lowlevel.fromRgb(r, g, b);
         }
 
         /// <summary>
@@ -76,25 +89,24 @@ namespace DIKUArcade.Graphics {
         /// <exception cref="ArgumentOutOfRangeException">Color values must be
         /// between 0 and 255.</exception>
         public void SetColor(int r, int g, int b, int a) {
-            lowlevelText.Color = Lowlevel.fromRgba(r, g, b, a);
+            color = Lowlevel.fromRgba(r, g, b, a);
         }
 
         /// <summary>
         /// Change text color
         /// </summary>
         /// <param name="newColor">System.Drawing.Color containing new color channel values.</param>
-        public void SetColor(Lowlevel.Color newColor) {
-            lowlevelText.Color = newColor;
+        public void SetColor(Lowlevel.Color color) {
+            this.color = color;
         }
 
         
         public void ScaleText(float scale) {
-            lowlevelText.Scale(new Vector2(scale, scale));
+            // lowlevelText.Scale(new Vector2(scale, scale));
         }
         
         public void RenderText(WindowContext ctx) {
-            lowlevelText.SetPosition(Position);
-            lowlevelText.Render(ctx.Get());
+            Lowlevel.renderBrushPath(color, path, ctx.Get());
         }
     }
 }

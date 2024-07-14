@@ -63,7 +63,7 @@ public class Window : IDisposable {
 
     public void Render(Action<WindowContext> renderer) {
         window.Render(lowlevel =>
-            renderer(new WindowContext(lowlevel))
+            renderer(new WindowContext(lowlevel, window.Width, window.Height))
         );
     }
 
