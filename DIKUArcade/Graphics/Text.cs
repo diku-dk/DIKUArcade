@@ -19,8 +19,8 @@ namespace DIKUArcade.Graphics {
                 throw new Exception("There are no fonts available.");
             }
             var fontfamily = Lowlevel.Text.FontFamilies[0];
-            lowlevelText = new Lowlevel.Text(position, text, Lowlevel.Color.White, fontfamily, fontSize);
-            shape = new StationaryShape(lowlevelText.Position, lowlevelText.Extent);
+            lowlevelText = new Lowlevel.Text(Vector2.Zero, text, Lowlevel.Color.White, fontfamily, fontSize);
+            shape = new StationaryShape(position, lowlevelText.Extent);
         }
 
         public StationaryShape GetShape() {
@@ -33,7 +33,6 @@ namespace DIKUArcade.Graphics {
         /// <param name="newText">The new text string</param>
         public void SetText(string newText) {
             lowlevelText.Text = newText;
-            shape.Extent = shape.Extent;
         }
 
         /// <summary>
@@ -48,7 +47,6 @@ namespace DIKUArcade.Graphics {
                 throw  new ArgumentOutOfRangeException("Font size must be a positive integer");
             }
             lowlevelText.Size = newSize;
-            shape.Extent = shape.Extent;
         }
 
         /// <summary>
@@ -58,7 +56,6 @@ namespace DIKUArcade.Graphics {
         /// <param name="fontfamily">The name of the font family</param>
         public void SetFont(Lowlevel.FontFamily fontfamily) {
             lowlevelText.FontFamily = fontfamily;
-            shape.Extent = shape.Extent;
         }
 
         /// <summary>
@@ -92,10 +89,11 @@ namespace DIKUArcade.Graphics {
         
         public void ScaleText(float scale) {
             lowlevelText.Scale(new Vector2(scale, scale));
-            shape.Extent = shape.Extent;
         }
         
         public void RenderText(WindowContext ctx) {
+            Console.WriteLine(lowlevelText.Position);
+            lowlevelText.SetPosition(shape.Position * ctx.Size);
             lowlevelText.Render(ctx.Get());
         }
     }
