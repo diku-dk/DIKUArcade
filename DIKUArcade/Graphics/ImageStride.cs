@@ -15,7 +15,7 @@ namespace DIKUArcade.Graphics {
         private double lastTime;
         private bool animate;
 
-        private List<Texture> textures;
+        private List<Texture> textures = new List<Texture>();
         private int maxImageCount;
         private int currentImageCount;
 
@@ -27,31 +27,34 @@ namespace DIKUArcade.Graphics {
         /// </summary>
         private double timerOffset;
 
-        private void Init(int milliseconds, List<Image> images) {
+        private void Init(int milliseconds, IEnumerable<Image> images) {
             if (milliseconds < 0) {
                 throw new ArgumentException("milliseconds must be a positive integer");
             }
             animFrequency = milliseconds;
             animate = true;
 
-            int imgs = images.Count;
-            if (imgs == 0) {
+            int count = 0;
+            foreach (Image img in images) {
+                textures.Add(img.GetTexture());
+                count++;
+            }
+            maxImageCount = count - 1;
+
+            if (count == 0) {
                 // ReSharper disable once NotResolvedInText
                 throw new ArgumentNullException("at least one image file must be specified");
             }
 
-            maxImageCount = imgs - 1;
-            currentImageCount = RandomGenerator.Generator.Next(imgs);
+            currentImageCount = RandomGenerator.Generator.Next(count);
             timerOffset = RandomGenerator.Generator.Next(100);
-
-            textures = new List<Texture>(imgs);
-            foreach (Image img in images)
-            {
-                textures.Add(img.GetTexture());
-            }
         }
 
         public ImageStride(int milliseconds, List<Image> images) {
+            Init(milliseconds, images);
+        }
+
+        public ImageStride(int milliseconds, IEnumerable<Image> images) {
             Init(milliseconds, images);
         }
 

@@ -20,11 +20,13 @@ namespace DIKUArcade.Events
         /// <summary>
         /// Dictionary of registered event processors for a given game event type.
         /// </summary>
-        private Dictionary<GameEventType, ICollection<IGameEventProcessor>> _eventProcessors;
+        private Dictionary<GameEventType, ICollection<IGameEventProcessor>> _eventProcessors =
+            new Dictionary<GameEventType, ICollection<IGameEventProcessor>>();
         /// <summary>
         /// Dictionary of game event queues for different game event types.
         /// </summary>
-        private Dictionary<GameEventType, GameEventQueue<GameEvent>> _eventQueues;
+        private Dictionary<GameEventType, GameEventQueue<GameEvent>> _eventQueues =
+            new Dictionary<GameEventType, GameEventQueue<GameEvent>>();
         /// <summary>
         /// Stops processing the pipeline, e.g. needed due real-time constraints.
         /// </summary>
@@ -36,7 +38,11 @@ namespace DIKUArcade.Events
         /// </summary>
         private int _activeTimedEventList = 0;
         private int _inactiveTimedEventList = 1;
-        private List<TimedGameEvent>[] _timedEventLists;
+        private List<TimedGameEvent>[] _timedEventLists =
+            new List<TimedGameEvent>[2] {
+                new List<TimedGameEvent>(),
+                new List<TimedGameEvent>()
+            };
 
         private void SwapTimedEventLists() {
             _activeTimedEventList = (_activeTimedEventList + 1) % 2;
@@ -55,8 +61,8 @@ namespace DIKUArcade.Events
                 throw new InvalidOperationException("GameEventBus is already initialized!");
             }
 
-            _eventProcessors= new Dictionary<GameEventType, ICollection<IGameEventProcessor>>();
-            _eventQueues= new Dictionary<GameEventType, GameEventQueue<GameEvent>>();
+            _eventProcessors = new Dictionary<GameEventType, ICollection<IGameEventProcessor>>();
+            _eventQueues = new Dictionary<GameEventType, GameEventQueue<GameEvent>>();
 
             if (eventTypeList != null) {
                 foreach (var eventType in eventTypeList)

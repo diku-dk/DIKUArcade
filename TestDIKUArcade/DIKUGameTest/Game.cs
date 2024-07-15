@@ -31,7 +31,7 @@ public class Game : DIKUGame {
         }
     }
 
-    public override void Render(WindowContext ctx) { 
+    public override void Render() { 
         
     }
 

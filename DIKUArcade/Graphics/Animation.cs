@@ -12,12 +12,12 @@ namespace DIKUArcade.Graphics {
         /// <summary>
         /// Position and Extent of this animation
         /// </summary>
-        public StationaryShape Shape { get; set; }
+        public StationaryShape? Shape { get; set; }
 
         /// <summary>
         /// ImageStride used for animation
         /// </summary>
-        public ImageStride Stride { get; set; }
+        public ImageStride? Stride { get; set; }
 
         private double timeOfCreation;
 
@@ -34,7 +34,7 @@ namespace DIKUArcade.Graphics {
         }
 
         public void RenderAnimation() {
-            Stride.Render(Shape);
+            Stride?.Render(Shape!);
         }
 
         public void ResetAnimation() {

@@ -22,11 +22,13 @@ namespace DIKUArcade.Events.Generic
         /// <summary>
         /// Dictionary of registered event processors for a given game event type.
         /// </summary>
-        private Dictionary<EventT, ICollection<IGameEventProcessor<EventT>>> _eventProcessors;
+        private Dictionary<EventT, ICollection<IGameEventProcessor<EventT>>> _eventProcessors =
+            new Dictionary<EventT, ICollection<IGameEventProcessor<EventT>>>();
         /// <summary>
         /// Dictionary of game event queues for different game event types.
         /// </summary>
-        private Dictionary<EventT, GameEventQueue<GameEvent<EventT>>> _eventQueues;
+        private Dictionary<EventT, GameEventQueue<GameEvent<EventT>>> _eventQueues =
+            new Dictionary<EventT, GameEventQueue<GameEvent<EventT>>>();
         /// <summary>
         /// Stops processing the pipeline, e.g. needed due real-time constraints.
         /// </summary>
@@ -36,7 +38,12 @@ namespace DIKUArcade.Events.Generic
         /// List of events which must be processed after a specified time interval has passed.
         /// We use a double-buffered system.
         /// </summary>
-        private List<TimedGameEvent<EventT>>[] _timedEventLists;
+        private List<TimedGameEvent<EventT>>[] _timedEventLists =
+            new List<TimedGameEvent<EventT>>[2] {
+                new List<TimedGameEvent<EventT>>(),
+                new List<TimedGameEvent<EventT>>()
+            };
+        
         private int _activeTimedEventList = 0;
         private int _inactiveTimedEventList = 1;
 
@@ -57,8 +64,8 @@ namespace DIKUArcade.Events.Generic
                 throw new InvalidOperationException("GameEventBus is already initialized!");
             }
 
-            _eventProcessors= new Dictionary<EventT, ICollection<IGameEventProcessor<EventT>>>();
-            _eventQueues= new Dictionary<EventT, GameEventQueue<GameEvent<EventT>>>();
+            _eventProcessors = new Dictionary<EventT, ICollection<IGameEventProcessor<EventT>>>();
+            _eventQueues = new Dictionary<EventT, GameEventQueue<GameEvent<EventT>>>();
 
             if (eventTypeList != null) {
                 foreach (var eventType in eventTypeList)

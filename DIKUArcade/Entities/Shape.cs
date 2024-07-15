@@ -9,11 +9,27 @@ namespace DIKUArcade.Entities {
         /// </summary>
         public float Rotation { get; set; }
 
+        internal Action<Vector2> onPositionSet { get; set; } = _ => { };
+        internal Action<Vector2> onExtentSet { get; set; } = _ => { };
+        private Vector2 extent;
+        private Vector2 position;
         /// <summary>
         /// Basic Shape properties
         /// </summary>
-        public Vector2 Position;
-        public Vector2 Extent { get; set; }
+        public Vector2 Position {
+            get => position;
+            set {
+                position = value;
+                onPositionSet(position);
+            }
+        }
+        public Vector2 Extent {
+            get => extent;
+            set {
+                extent = value;
+                onExtentSet(extent);
+            }
+        }
 
         /// <summary>
         /// Performs a downcast on this Shape instance to a
@@ -60,19 +76,19 @@ namespace DIKUArcade.Entities {
         }
 
         public void ScaleXFromCenter(float scale) {
-            var posX = (Position.X + Extent.X / 2.0f) - ((Extent.X / 2.0f) * scale);
+            var posX = Position.X + Extent.X / 2.0f - (Extent.X / 2.0f * scale);
             Position = new Vector2(posX, Position.Y);
             Extent = new Vector2(Extent.X * scale, Extent.Y);
         }
 
         public void ScaleYFromCenter(float scale) {
-            var posY = (Position.Y + Extent.Y / 2.0f) - (Extent.Y / 2.0f * scale);
+            var posY = Position.Y + Extent.Y / 2.0f - (Extent.Y / 2.0f * scale);
             Position = new Vector2(Position.X, posY);
             Extent = new Vector2(Extent.X, Extent.Y * scale);
         }
 
         public void ScaleFromCenter(Vector2 scaling) {
-            Position = (Position + Extent / 2.0f) - (Extent / 2.0f * scaling);
+            Position = Position + Extent / 2.0f - (Extent / 2.0f * scaling);
             Extent *= scaling; 
         }
         
@@ -91,11 +107,11 @@ namespace DIKUArcade.Entities {
         }
 
         public void MoveX(float move) {
-            Position.X += move;
+            Move(new Vector2(move, 0));
         }
 
         public void MoveY(float move) {
-            Position.Y += move;
+            Move(new Vector2(0, move));
         }
 
         public void Move(float x, float y) {

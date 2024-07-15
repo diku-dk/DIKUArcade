@@ -34,12 +34,12 @@ public class Game : DIKUGame {
 
         switch (key) {
             case KeyboardKey.Left:
-                actor0.Shape.Position.X -= 0.03f;
-                actor1.Shape.Position.X -= 0.03f;
+                actor0.Shape.MoveX(-0.03f);
+                actor1.Shape.MoveX(-0.03f);
                 break;
             case KeyboardKey.Right:
-                actor0.Shape.Position.X += 0.03f;
-                actor1.Shape.Position.X += 0.03f;
+                actor0.Shape.MoveX(-0.03f);
+                actor1.Shape.MoveX(-0.03f);
                 break;
             case KeyboardKey.KeyPadSubtract:
                 actor0.Shape.Scale(1.1f);
@@ -63,7 +63,7 @@ public class Game : DIKUGame {
         }
     }
 
-    public override void Render(WindowContext ctx) {
+    public override void Render() {
         actor0.RenderEntity();
         actor1.RenderEntity();
     }

@@ -1,6 +1,11 @@
 ﻿namespace DIKUArcade.GUI;
 
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Dynamic;
+using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
+using DIKUArcade.Entities;
 using DIKUArcade.Input;
 
 
@@ -8,13 +13,27 @@ using DIKUArcade.Input;
 /// This class represents a graphical window in the DIKUArcade game engine.
 /// </summary>
 public class Window : IDisposable {
-    private KeyTransformer transformer = new KeyTransformer();
-    private Lowlevel.Window window;
+    private readonly KeyTransformer transformer = new KeyTransformer();
+    private readonly Lowlevel.Window window;
     private bool isRunning = true;
     private Action<KeyboardAction,KeyboardKey> keyHandler = (k, a) => { };
+    public int Width { get => window.Width; }
+    public int Height { get => window.Height; }
+    public Vector2 WindowSize {
+        get => new Vector2(Width, Height);
+    }
+    public WindowContext? WindowContext { get; private set; }
 
     public Window(WindowArgs windowArgs) {
         window = new Lowlevel.Window(windowArgs.Title, windowArgs.Width, windowArgs.Height);
+    }
+
+    public Matrix3x2 View(Vector2 extent) {
+        return new Matrix3x2(
+            Width, 0.0f,
+            0.0f, -Height,
+            0.0f, Height - (extent.Y * Height)
+        );
     }
 
     private void InternalKeyHandler(Lowlevel.InternalEvent ev) {
@@ -62,9 +81,20 @@ public class Window : IDisposable {
     }
 
     public void Render(Action<WindowContext> renderer) {
-        window.Render(lowlevel =>
-            renderer(new WindowContext(lowlevel, window.Width, window.Height))
-        );
+        window.Render(lowlevel => {
+            var ctx = new WindowContext(lowlevel, window.Width, window.Height);
+            WindowContext = ctx;
+            renderer(ctx);
+            WindowContext = null;
+        });
+    }
+
+    public void Render(Action renderer) {
+        window.Render(lowlevel => {
+            WindowContext = new WindowContext(lowlevel, window.Width, window.Height);
+            renderer();
+            WindowContext = null;
+        });
     }
 
     ~Window() {
@@ -87,5 +117,9 @@ public class Window : IDisposable {
 
     public void Clear() {
         window.Clear();
+    }
+
+    internal Vector2 MeasureText(string text, Lowlevel.Font font) {
+        return window.MeasureText(text, font);
     }
 }
