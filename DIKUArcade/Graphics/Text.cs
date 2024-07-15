@@ -31,10 +31,7 @@ public class Text {
         fontFamily = Lowlevel.fontFamilies[0];
         font = Lowlevel.makeFont(fontFamily, size);
         path = Lowlevel.createText(text, font);
-        var lowlevelExtent = LowlevelExtent;
-        var mat = Matrix3x2.CreateScale(1.0f / lowlevelExtent.X, 1.0f / lowlevelExtent.Y);
-        path = Lowlevel.transformPath(path, mat);
-        Shape.Extent = lowlevelExtent / window.WindowSize;
+        Shape.Extent = LowlevelExtent / window.WindowSize;
         Shape.Position = position;
     }
 
@@ -45,10 +42,7 @@ public class Text {
     public void SetText(string text) {
         this.text = text;
         path = Lowlevel.createText(text, font);
-        var lowlevelExtent = LowlevelExtent;
-        var mat = Matrix3x2.CreateScale(1.0f / lowlevelExtent.X, 1.0f / lowlevelExtent.Y);
-        path = Lowlevel.transformPath(path, mat);
-        Shape.Extent = lowlevelExtent / window.WindowSize;
+        Shape.Extent = LowlevelExtent / window.WindowSize;
     }
 
     /// <summary>
@@ -66,10 +60,7 @@ public class Text {
         this.size = size;
         font = Lowlevel.makeFont(fontFamily, size);
         path = Lowlevel.createText(text, font);
-        var lowlevelExtent = LowlevelExtent;
-        var mat = Matrix3x2.CreateScale(1.0f / lowlevelExtent.X, 1.0f / lowlevelExtent.Y);
-        path = Lowlevel.transformPath(path, mat);
-        Shape.Extent = lowlevelExtent / window.WindowSize;
+        Shape.Extent = LowlevelExtent / window.WindowSize;
     }
 
     /// <summary>
@@ -81,10 +72,7 @@ public class Text {
         this.fontFamily = fontFamily;
         font = Lowlevel.makeFont(fontFamily, size);
         path = Lowlevel.createText(text, font);
-        var lowlevelExtent = LowlevelExtent;
-        var mat = Matrix3x2.CreateScale(1.0f / lowlevelExtent.X, 1.0f / lowlevelExtent.Y);
-        path = Lowlevel.transformPath(path, mat);
-        Shape.Extent = lowlevelExtent / window.WindowSize;
+        Shape.Extent = LowlevelExtent / window.WindowSize;
     }
 
     /// <summary>
@@ -128,7 +116,7 @@ public class Text {
     }
 
     private Vector2 WindowExtent() {
-        return Shape.Extent * window.WindowSize;
+        return Shape.Extent * window.WindowSize / LowlevelExtent;
     }
 
     private Matrix3x2 WindowMatrix() {
