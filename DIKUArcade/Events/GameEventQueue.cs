@@ -48,7 +48,9 @@ namespace DIKUArcade.Events
         int ICollection.Count => _queue.Count;
 
         public bool IsSynchronized { get; }
-        public object SyncRoot { get; }
+#pragma warning disable CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
+        public object? SyncRoot { get; }
+#pragma warning restore CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
 
         int IReadOnlyCollection<TP>.Count => _queue.Count;
 
@@ -67,9 +69,9 @@ namespace DIKUArcade.Events
         /// <returns>A game event from event queue.</returns>
         public TP Dequeue()
         {
-            TP gameEvent;
+            TP? gameEvent;
             _queue.TryDequeue(out gameEvent);
-            return gameEvent;
+            return gameEvent!;
         }
 
         /// <summary>
@@ -87,7 +89,7 @@ namespace DIKUArcade.Events
         /// </summary>
         public void Flush()
         {
-            TP gameEventDummy;
+            TP? gameEventDummy;
             while(!_queue.IsEmpty)
             {
                 _queue.TryDequeue(out gameEventDummy);

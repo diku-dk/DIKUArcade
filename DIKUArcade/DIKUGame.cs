@@ -8,7 +8,7 @@ namespace DIKUArcade {
     /// </summary>
     public abstract class DIKUGame {
         protected Window window;
-        private GameTimer gameTimer;
+        private GameTimer? gameTimer;
 
         /// <summary>
         /// The exact amount of captured updates in the last second.
@@ -32,14 +32,13 @@ namespace DIKUArcade {
         /// <summary>
         /// Override this method to render game entities.
         /// </summary>
-        public abstract void Render(WindowContext ctx);
+        public abstract void Render();
 
         /// <summary>
         /// Enter the game loop and run the game.
         /// This method will never return.
         /// </summary>
         public void Run() {
-            Console.WriteLine("Game.Run()");
             gameTimer = new GameTimer(30, 30);
 
             try
@@ -69,6 +68,8 @@ namespace DIKUArcade {
                 Console.WriteLine(Environment.NewLine + "Terminating program...");
                 Environment.Exit(1);
             }
+
+            gameTimer = null;
         }
     }
 }

@@ -9,15 +9,16 @@ namespace DIKUArcade.Utilities {
         /// <returns></returns>
         public static string GetProjectPath() {
             // find base path
-            var dir = new DirectoryInfo(Path.GetDirectoryName(
-                System.Reflection.Assembly.GetExecutingAssembly().Location));
+            var loc = Path.GetDirectoryName(
+                System.Reflection.Assembly.GetExecutingAssembly().Location);
+            var dir = new DirectoryInfo(loc!);
 
-            while (dir.Name != "bin") {
+            while (dir!.Name != "bin") {
                 dir = dir.Parent;
             }
             dir = dir.Parent;
 
-            return dir.FullName.ToString();
+            return dir!.FullName.ToString();
         }
     }
 }

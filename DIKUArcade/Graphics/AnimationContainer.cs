@@ -5,7 +5,7 @@ namespace DIKUArcade.Graphics {
     public class AnimationContainer {
         internal class OccupyValue<T> {
             public bool Occupied { get; set; }
-            public T Value;
+            public T? Value;
         }
 
         private OccupyValue<Animation>[] container;
@@ -45,7 +45,7 @@ namespace DIKUArcade.Graphics {
                 var anim = container[i];
                 if (!anim.Occupied) {
                     anim.Occupied = true;
-                    anim.Value.Shape.Position = shape.Position;
+                    anim.Value!.Shape!.Position = shape.Position;
                     anim.Value.Shape.Extent = shape.Extent;
                     anim.Value.Duration = duration;
                     anim.Value.Stride = stride;
@@ -61,7 +61,7 @@ namespace DIKUArcade.Graphics {
         /// </summary>
         public void RenderAnimations() {
             foreach (var animation in container) {
-                if (animation.Occupied && animation.Value.IsActive()) {
+                if (animation.Occupied && animation.Value!.IsActive()) {
                     animation.Value.RenderAnimation();
                 } else {
                     animation.Occupied = false;
