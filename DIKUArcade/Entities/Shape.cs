@@ -8,28 +8,12 @@ namespace DIKUArcade.Entities {
         /// Shape's rotational angle measured in radians.
         /// </summary>
         public float Rotation { get; set; }
-
-        internal Action<Vector2> onPositionSet { get; set; } = _ => { };
-        internal Action<Vector2> onExtentSet { get; set; } = _ => { };
-        private Vector2 extent;
-        private Vector2 position;
+        
         /// <summary>
         /// Basic Shape properties
         /// </summary>
-        public Vector2 Position {
-            get => position;
-            set {
-                position = value;
-                onPositionSet(position);
-            }
-        }
-        public Vector2 Extent {
-            get => extent;
-            set {
-                extent = value;
-                onExtentSet(extent);
-            }
-        }
+        public Vector2 Position { get; set; }
+        public Vector2 Extent { get; set; }
 
         /// <summary>
         /// Performs a downcast on this Shape instance to a

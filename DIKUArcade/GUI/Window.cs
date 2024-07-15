@@ -28,7 +28,7 @@ public class Window : IDisposable {
         window = new Lowlevel.Window(windowArgs.Title, windowArgs.Width, windowArgs.Height);
     }
 
-    public Matrix3x2 View(Vector2 extent) {
+    public Matrix3x2 Matrix(Vector2 extent) {
         return new Matrix3x2(
             Width, 0.0f,
             0.0f, -Height,
@@ -78,15 +78,6 @@ public class Window : IDisposable {
 
     public void Dispose () {
         Cleanup();
-    }
-
-    public void Render(Action<WindowContext> renderer) {
-        window.Render(lowlevel => {
-            var ctx = new WindowContext(lowlevel, window.Width, window.Height);
-            WindowContext = ctx;
-            renderer(ctx);
-            WindowContext = null;
-        });
     }
 
     public void Render(Action renderer) {
