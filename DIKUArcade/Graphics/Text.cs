@@ -122,19 +122,30 @@ public class Text {
     public void ScaleText(Vector2 scaling) {
         Shape.Extent *= scaling;
     }
+
+    private Vector2 WindowPosition() {
+        return Vector2.Transform(Shape.Position, window.Matrix(Shape.Extent));
+    }
+
+    private Vector2 WindowExtent() {
+        return Shape.Extent * window.WindowSize;
+    }
+
+    private Matrix3x2 WindowMatrix() {
+        var windowPosition = WindowPosition();
+        var windowExtent = WindowExtent();
+        return new Matrix3x2(
+            windowExtent.X, 0,
+            0, windowExtent.Y,
+            windowPosition.X, windowPosition.Y
+        );
+    }
     
     public void RenderText() {
         if (window.WindowContext is null)
             return;
 
-        var windowPosition = Vector2.Transform(Shape.Position, window.Matrix(Shape.Extent));
-
-        var transMatrix = new Matrix3x2(
-            Shape.Extent.X * window.Width, 0,
-            0, Shape.Extent.Y * window.Height,
-            windowPosition.X, windowPosition.Y
-        );
-        var newPath = Lowlevel.transformPath(path, transMatrix);
+        var newPath = Lowlevel.transformPath(path, WindowMatrix());
         Lowlevel.renderBrushPath(color, newPath, window.WindowContext.Value.Get());
     }
 }

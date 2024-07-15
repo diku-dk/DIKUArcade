@@ -10,10 +10,10 @@ public class Game : DIKUGame {
 
     private Text text;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        text = new Text(window, "MIN TEXT", new Vector2(0.25f, 0.5f));
+        text = new Text(window, "MY TEXT", new Vector2(0.25f, 0.5f));
         text.SetColor(0, 255, 0, 255);
         text.Shape.Rotation = (float) Math.PI / -3.0f;
-        text.Shape.ScaleYFromCenter(3.2f);
+        text.Shape.ScaleYFromCenter(7f);
     }
 
 
