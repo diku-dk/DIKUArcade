@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 public class Text {
-
     private Lowlevel.PathCollection path;
     private int size = 50;
     private Lowlevel.FontFamily fontFamily;
@@ -16,47 +15,10 @@ public class Text {
     private string text;
     private Lowlevel.Color color = Lowlevel.Color.White;
     private readonly Window window;
-    private Matrix3x2 viewMatrix;
-    private Matrix3x2 windowMatrix;
-    private readonly object lockShape = new object();
-    private StationaryShape shape = new StationaryShape(0, 0, 0, 0);
-    public StationaryShape Shape {
-        get {
-            lock (lockShape) {
-                return shape;
-            }
-        }
-        set {
-            lock (lockShape) {
-                shape = value;
-            }
-        }
-    }
+    public StationaryShape Shape { get; set; } = new StationaryShape(0, 0, 0, 0);
 
     private Vector2 LowlevelExtent {
         get => window.MeasureText(text, font);
-    }
-
-    private void UpdateExtent(Vector2 extent) {
-        viewMatrix = window.View(Shape.Extent);
-        UpdatePosition(Shape.Position);
-    }
-
-    private void UpdatePosition(Vector2 position) {
-        var windowPosition = Vector2.Transform(Shape.Position, viewMatrix);
-        windowMatrix = Matrix3x2.CreateTranslation(windowPosition);
-    }
-
-    // This is completely insane. For some reason MeasureText gives the wrong size of text in the
-    // beginning.
-    // This should be thread safe since the window size is never changed because the window can not
-    // be resized.
-    private void Update() {
-        if (Shape.Extent != Vector2.Zero)
-            return;
-
-        Shape.Extent = LowlevelExtent / window.WindowSize;
-        Thread.Sleep(100);
     }
 
     public Text(Window window, string text, Vector2 position) {
@@ -64,17 +26,16 @@ public class Text {
             throw new Exception("There are no fonts available.");
         }
         
-        Shape.onExtentSet += UpdateExtent;
-        Shape.onPositionSet += UpdatePosition;
         this.window = window;
         this.text = text;
         fontFamily = Lowlevel.fontFamilies[0];
         font = Lowlevel.makeFont(fontFamily, size);
         path = Lowlevel.createText(text, font);
-        Shape.Extent = LowlevelExtent / window.WindowSize;
+        var lowlevelExtent = LowlevelExtent;
+        var mat = Matrix3x2.CreateScale(1.0f / lowlevelExtent.X, 1.0f / lowlevelExtent.Y);
+        path = Lowlevel.transformPath(path, mat);
+        Shape.Extent = lowlevelExtent / window.WindowSize;
         Shape.Position = position;
-
-        Task.Run(() => Update());
     }
 
     /// <summary>
@@ -84,7 +45,10 @@ public class Text {
     public void SetText(string text) {
         this.text = text;
         path = Lowlevel.createText(text, font);
-        Shape.Extent = LowlevelExtent / window.WindowSize;
+        var lowlevelExtent = LowlevelExtent;
+        var mat = Matrix3x2.CreateScale(1.0f / lowlevelExtent.X, 1.0f / lowlevelExtent.Y);
+        path = Lowlevel.transformPath(path, mat);
+        Shape.Extent = lowlevelExtent / window.WindowSize;
     }
 
     /// <summary>
@@ -98,10 +62,14 @@ public class Text {
             // ReSharper disable once NotResolvedInText
             throw  new ArgumentOutOfRangeException("Font size must be a positive integer.");
         }
+
         this.size = size;
         font = Lowlevel.makeFont(fontFamily, size);
         path = Lowlevel.createText(text, font);
-        Shape.Extent = LowlevelExtent / window.WindowSize;
+        var lowlevelExtent = LowlevelExtent;
+        var mat = Matrix3x2.CreateScale(1.0f / lowlevelExtent.X, 1.0f / lowlevelExtent.Y);
+        path = Lowlevel.transformPath(path, mat);
+        Shape.Extent = lowlevelExtent / window.WindowSize;
     }
 
     /// <summary>
@@ -113,7 +81,10 @@ public class Text {
         this.fontFamily = fontFamily;
         font = Lowlevel.makeFont(fontFamily, size);
         path = Lowlevel.createText(text, font);
-        Shape.Extent = LowlevelExtent / window.WindowSize;
+        var lowlevelExtent = LowlevelExtent;
+        var mat = Matrix3x2.CreateScale(1.0f / lowlevelExtent.X, 1.0f / lowlevelExtent.Y);
+        path = Lowlevel.transformPath(path, mat);
+        Shape.Extent = lowlevelExtent / window.WindowSize;
     }
 
     /// <summary>
@@ -144,17 +115,26 @@ public class Text {
         this.color = color;
     }
 
-    
     public void ScaleText(float scale) {
         Shape.Extent *= scale;
+    }
+
+    public void ScaleText(Vector2 scaling) {
+        Shape.Extent *= scaling;
     }
     
     public void RenderText() {
         if (window.WindowContext is null)
             return;
-        else if (Shape.Extent == Vector2.Zero)
-            SetText(text);
-        var newPath = Lowlevel.transformPath(path, windowMatrix);
+
+        var windowPosition = Vector2.Transform(Shape.Position, window.Matrix(Shape.Extent));
+
+        var transMatrix = new Matrix3x2(
+            Shape.Extent.X * window.Width, 0,
+            0, Shape.Extent.Y * window.Height,
+            windowPosition.X, windowPosition.Y
+        );
+        var newPath = Lowlevel.transformPath(path, transMatrix);
         Lowlevel.renderBrushPath(color, newPath, window.WindowContext.Value.Get());
     }
 }

@@ -14,8 +14,8 @@ public class GameTimerTest : ITestable {
         };
         var win = new Window(winArgs);
         var timer = new GameTimer();
-        var fps = new Text(win, "", new Vector2(0.25f, 0.5f));
-        var ups = new Text(win, "", new Vector2(0.0f, 0.0f));
+        var fps = new Text(win, "FPS:", new Vector2(0.25f, 0.50f));
+        var ups = new Text(win, "UPS:", new Vector2(0.25f, 0.25f));
         Action render = () => {
             fps.RenderText();
             ups.RenderText();
