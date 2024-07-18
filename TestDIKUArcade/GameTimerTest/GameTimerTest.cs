@@ -5,6 +5,7 @@ using DIKUArcade.GUI;
 using DIKUArcade.Graphics;
 using DIKUArcade.Timers;
 using System.Numerics;
+using DIKUArcade.Entities;
 
 public class GameTimerTest : ITestable {
     public void RunTest() {
@@ -14,11 +15,15 @@ public class GameTimerTest : ITestable {
         };
         var win = new Window(winArgs);
         var timer = new GameTimer();
-        var fps = new Text(win, "FPS:", new Vector2(0.25f, 0.50f));
-        var ups = new Text(win, "UPS:", new Vector2(0.25f, 0.25f));
-        Action render = () => {
-            fps.RenderText();
-            ups.RenderText();
+        var fps = new Text("FPS:");
+        var ups = new Text("UPS:");
+        var fpsShape = new StationaryShape(new Vector2(0.25f, 0.50f), Vector2.One);
+        var upsShape = new StationaryShape(new Vector2(0.25f, 0.25f), Vector2.One);
+        Action<WindowContext> render = ctx => {
+            fpsShape.Extent = fps.IdealExtent(winArgs.Width, winArgs.Height);
+            upsShape.Extent = ups.IdealExtent(winArgs.Width, winArgs.Height);
+            fps.Render(fpsShape, ctx);
+            ups.Render(upsShape, ctx);
         };
         foreach (var text in new []{fps, ups}) {
             text.SetColor(255, 255, 255);

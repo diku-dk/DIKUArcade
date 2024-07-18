@@ -6,6 +6,7 @@ using System.Dynamic;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using DIKUArcade.Entities;
+using DIKUArcade.Graphics;
 using DIKUArcade.Input;
 
 
@@ -13,12 +14,14 @@ using DIKUArcade.Input;
 /// This class represents a graphical window in the DIKUArcade game engine.
 /// </summary>
 public class Window : IDisposable {
+    private static Window? currentWindow;
     private readonly KeyTransformer transformer = new KeyTransformer();
     private readonly Lowlevel.Window window;
     private bool isRunning = true;
     private Action<KeyboardAction,KeyboardKey> keyHandler = (k, a) => { };
     public int Width { get => window.Width; }
     public int Height { get => window.Height; }
+    public Camera Camera { get; set; }
     public Vector2 WindowSize {
         get => new Vector2(Width, Height);
     }
@@ -26,14 +29,7 @@ public class Window : IDisposable {
 
     public Window(WindowArgs windowArgs) {
         window = new Lowlevel.Window(windowArgs.Title, windowArgs.Width, windowArgs.Height);
-    }
-
-    public Matrix3x2 Matrix(Vector2 extent) {
-        return new Matrix3x2(
-            Width, 0.0f,
-            0.0f, -Height,
-            0.0f, Height - (extent.Y * Height)
-        );
+        Camera = new Camera(Width, Height);
     }
 
     private void InternalKeyHandler(Lowlevel.InternalEvent ev) {
@@ -82,13 +78,23 @@ public class Window : IDisposable {
 
     public void Render(Action renderer) {
         window.Render(lowlevel => {
-            WindowContext = new WindowContext(lowlevel, window.Width, window.Height);
+            WindowContext = new WindowContext(lowlevel, Camera, this);
             renderer();
             WindowContext = null;
         });
     }
 
+    public void Render(Action<WindowContext> renderer) {
+        window.Render(lowlevel => {
+            var ctx = new WindowContext(lowlevel, Camera, this);
+            WindowContext = ctx;
+            renderer(ctx);
+            WindowContext = null;
+        });
+    }
+
     ~Window() {
+        ClearIfFocus();
         Cleanup();
     }
 
@@ -110,7 +116,31 @@ public class Window : IDisposable {
         window.Clear();
     }
 
-    internal Vector2 MeasureText(string text, Lowlevel.Font font) {
-        return window.MeasureText(text, font);
+    public void Focus() {
+        currentWindow = this;
+    }
+
+    private static readonly string msg =
+        "No window is in focus, you must call Window.Focus() before calling this method.";
+    public static Window CurrentFocus() {
+        if (currentWindow is null) {
+            throw new Exception(msg);
+        }
+
+        return currentWindow;
+    }
+
+    public static Window? CurrentFocusNullable() {
+        return currentWindow;
+    }
+
+    public static void ClearFocus() {
+        currentWindow = null;
+    }
+
+    public void ClearIfFocus() {
+        if (currentWindow is not null && ReferenceEquals(currentWindow, window)) {
+            ClearFocus();
+        }
     }
 }

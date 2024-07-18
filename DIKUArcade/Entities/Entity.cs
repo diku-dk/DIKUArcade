@@ -30,7 +30,6 @@ namespace DIKUArcade.Entities {
         }
 
         public void RenderEntity() {
-            Image.Render(Shape);
         }
     }
 }
