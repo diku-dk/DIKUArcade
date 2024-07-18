@@ -39,6 +39,7 @@ namespace DIKUArcade {
         /// This method will never return.
         /// </summary>
         public void Run() {
+            window.Focus();
             gameTimer = new GameTimer(30, 30);
 
             try

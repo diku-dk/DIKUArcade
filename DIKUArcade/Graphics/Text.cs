@@ -4,35 +4,35 @@ using System;
 using DIKUArcade.Entities;
 using System.Numerics;
 using DIKUArcade.GUI;
-using System.Threading;
-using System.Threading.Tasks;
 
-public class Text {
+public class Text : IBaseImage {
     private Lowlevel.PathCollection path;
     private int size = 50;
     private Lowlevel.FontFamily fontFamily;
     private Lowlevel.Font font;
     private string text;
     private Lowlevel.Color color = Lowlevel.Color.White;
-    private readonly Window window;
-    public StationaryShape Shape { get; set; } = new StationaryShape(0, 0, 0, 0);
+    private Vector2 originalExtent;
 
-    private Vector2 LowlevelExtent {
-        get => window.MeasureText(text, font);
-    }
-
-    public Text(Window window, string text, Vector2 position) {
+    public Text(string text) {
         if (Lowlevel.fontFamilies.Count == 0) {
             throw new Exception("There are no fonts available.");
         }
         
-        this.window = window;
         this.text = text;
         fontFamily = Lowlevel.fontFamilies[0];
         font = Lowlevel.makeFont(fontFamily, size);
         path = Lowlevel.createText(text, font);
-        Shape.Extent = LowlevelExtent / window.WindowSize;
-        Shape.Position = position;
+        originalExtent = Lowlevel.measureTextCSharp(font, text);
+    }
+    
+    
+    public Vector2 IdealExtent(int width, int height) {
+        return originalExtent / new Vector2(width, height);
+    }
+
+    public Vector2 IdealExtent() {
+        return originalExtent / Window.CurrentFocus().WindowSize;
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ public class Text {
     public void SetText(string text) {
         this.text = text;
         path = Lowlevel.createText(text, font);
-        Shape.Extent = LowlevelExtent / window.WindowSize;
+        originalExtent = Lowlevel.measureTextCSharp(font, text);
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public class Text {
         this.size = size;
         font = Lowlevel.makeFont(fontFamily, size);
         path = Lowlevel.createText(text, font);
-        Shape.Extent = LowlevelExtent / window.WindowSize;
+        originalExtent = Lowlevel.measureTextCSharp(font, text);
     }
 
     /// <summary>
@@ -72,7 +72,7 @@ public class Text {
         this.fontFamily = fontFamily;
         font = Lowlevel.makeFont(fontFamily, size);
         path = Lowlevel.createText(text, font);
-        Shape.Extent = LowlevelExtent / window.WindowSize;
+        originalExtent = Lowlevel.measureTextCSharp(font, text);
     }
 
     /// <summary>
@@ -103,38 +103,18 @@ public class Text {
         this.color = color;
     }
 
-    public void ScaleText(float scale) {
-        Shape.Extent *= scale;
+    public void Render(Shape shape, WindowContext context) {
+        var windowMatrix = context.Camera.WindowMatrix(shape, originalExtent);
+        var newPath = Lowlevel.transformPath(path, windowMatrix);
+        Lowlevel.renderBrushPath(color, newPath, context.LowlevelContext);
     }
 
-    public void ScaleText(Vector2 scaling) {
-        Shape.Extent *= scaling;
-    }
-
-    private Vector2 WindowPosition() {
-        return Vector2.Transform(Shape.Position, window.Matrix(Shape.Extent));
-    }
-
-    private Vector2 WindowExtent() {
-        return Shape.Extent * window.WindowSize / LowlevelExtent;
-    }
-
-    private Matrix3x2 WindowMatrix() {
-        var windowPosition = WindowPosition();
-        var windowExtent = WindowExtent();
-        return new Matrix3x2(
-            windowExtent.X, 0,
-            0, windowExtent.Y,
-            windowPosition.X, windowPosition.Y
-        );
-    }
-    
-    public void RenderText() {
-        if (window.WindowContext is null)
-            return;
-
-        var newPath = Lowlevel.transformPath(path, WindowMatrix());
-        Lowlevel.renderBrushPath(color, newPath, window.WindowContext.Value.Get());
+    public void Render(Shape shape) {
+        var window = Window.CurrentFocus();
+        if (window is null || window.WindowContext is null)
+            throw new Exception("The window context must not be null.");
+        
+        Render(shape, window.WindowContext.Value);
     }
 }
 

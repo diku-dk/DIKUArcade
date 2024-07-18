@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DIKUArcade.Timers;
 using DIKUArcade.Entities;
 using DIKUArcade.Utilities;
+using DIKUArcade.GUI;
 
 namespace DIKUArcade.Graphics {
     /// <summary>
@@ -36,7 +37,7 @@ namespace DIKUArcade.Graphics {
 
             int count = 0;
             foreach (Image img in images) {
-                textures.Add(img.GetTexture());
+                // textures.Add(img.GetTexture());
                 count++;
             }
             maxImageCount = count - 1;
@@ -133,7 +134,12 @@ namespace DIKUArcade.Graphics {
             }
 
             // render the current texture object
-            textures[currentImageCount].Render(shape);
+            // textures[currentImageCount].Render(shape);
+        }
+
+        public void Render(Shape shape, WindowContext ctx)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,19 +1,16 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Numerics;
+using DIKUArcade.Graphics;
 
 namespace DIKUArcade.GUI;
 
-public struct WindowContext {
-    private Lowlevel.DrawingContext ctx;
-    public readonly int Width;
-    public readonly int Height;
-    internal WindowContext(Lowlevel.DrawingContext ctx, int width, int height) {
-        this.ctx = ctx;
-        Width = width;
-        Height = height;
-    }
-
-    public Lowlevel.DrawingContext Get() {
-        return ctx;
+public readonly struct WindowContext {
+    internal readonly Lowlevel.DrawingContext LowlevelContext { get; }
+    public readonly Camera Camera { get; }
+    public readonly Window Window { get; }
+    internal WindowContext(Lowlevel.DrawingContext lowlevelContext, Camera camera, Window window) {
+        LowlevelContext = lowlevelContext;
+        Camera = camera;
+        Window = window;
     }
 }
