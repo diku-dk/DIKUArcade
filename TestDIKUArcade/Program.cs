@@ -9,13 +9,12 @@ internal class Program {
         args.Cancel = true; // Don't end process.
         Console.Clear();
         Environment.Exit(0);
-        var x = 2;
     }
 
     public static void Main(string[] args) {
 
         Console.CancelKeyPress += new ConsoleCancelEventHandler(SafeClose!);
-        
+
         // Find all object which implement ITestable and sorts them by name.
         var testType = typeof(ITestable);
         var types = System.Reflection.Assembly.GetExecutingAssembly().GetTypes();
