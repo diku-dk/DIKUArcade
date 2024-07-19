@@ -20,8 +20,7 @@ namespace DIKUArcadeUnitTests.Entities {
             }
 
             foreach (Entity ent in ents) {
-                ent.Shape.Position.X *= -1.0f;
-                ent.Shape.Position.Y *= -1.0f;
+                ent.Shape.Position *= -1.0f;
             }
 
             foreach (Entity ent in ents) {
@@ -46,8 +45,7 @@ namespace DIKUArcadeUnitTests.Entities {
             }
 
             ents.Iterate(entity => {
-                entity.Shape.Position.X *= -1.0f;
-                entity.Shape.Position.Y *= -1.0f;
+                entity.Shape.Position *= -1.0f;
             });
 
             foreach (Entity ent in ents) {
