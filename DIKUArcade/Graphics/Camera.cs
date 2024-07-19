@@ -30,6 +30,10 @@ public class Camera {
         );
     }
 
+    public Matrix3x2 PositionMatrix(Shape shape) {
+        return PositionMatrix(shape.Extent);
+    }
+
     public Vector2 WindowPosition(Shape shape) {
         return Vector2.Transform(
             shape.Position,
@@ -37,24 +41,20 @@ public class Camera {
         );
     }
 
-    public Matrix3x2 PositionMatrix(Shape shape) {
-        return PositionMatrix(shape.Extent);
-    }
-
-    public Vector2 WindowExtent(Vector2 extent, Vector2 originalExtent) {
+    public Vector2 WindowExtentScaling(Vector2 extent, Vector2 originalExtent) {
         return extent * WindowVector / originalExtent;
     }
 
-    public Vector2 WindowExtent(Shape shape, Vector2 originalExtent) {
-        return WindowExtent(shape.Extent, originalExtent);
+    public Vector2 WindowExtentScaling(Shape shape, Vector2 originalExtent) {
+        return WindowExtentScaling(shape.Extent, originalExtent);
     }
 
     public Matrix3x2 WindowMatrix(Shape shape, Vector2 originalExtent) {
         var windowPosition = WindowPosition(shape);
-        var windowExtent = WindowExtent(shape, originalExtent);
+        var windowExtentScaling = WindowExtentScaling(shape, originalExtent);
         return new Matrix3x2(
-            windowExtent.X, 0,
-            0, windowExtent.Y,
+            windowExtentScaling.X, 0,
+            0, windowExtentScaling.Y,
             windowPosition.X, windowPosition.Y
         );
     }

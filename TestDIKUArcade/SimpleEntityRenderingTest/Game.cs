@@ -38,8 +38,8 @@ public class Game : DIKUGame {
                 actor1.Shape.MoveX(-0.03f);
                 break;
             case KeyboardKey.Right:
-                actor0.Shape.MoveX(-0.03f);
-                actor1.Shape.MoveX(-0.03f);
+                actor0.Shape.MoveX(0.03f);
+                actor1.Shape.MoveX(0.03f);
                 break;
             case KeyboardKey.KeyPadSubtract:
                 actor0.Shape.Scale(1.1f);
