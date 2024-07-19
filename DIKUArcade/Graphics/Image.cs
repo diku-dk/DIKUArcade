@@ -7,14 +7,14 @@ using DIKUArcade.GUI;
 
 public class Image : IBaseImage {
 
-    private Texture texture;
+    public Texture Texture { get; private set; }
 
     public Image(string imageFile) {
-        texture = new Texture(imageFile);
+        Texture = new Texture(imageFile);
     }
 
     public Image(Texture texture) {
-        this.texture = texture;
+        Texture = texture;
     }
 
     public void Render(Shape shape) {
@@ -26,15 +26,15 @@ public class Image : IBaseImage {
     }
 
     public void Render(Shape shape, WindowContext context) {
-        var windowMatrix = context.Camera.WindowMatrix(shape, texture.originalExtent);
-        var transformedPosition = Vector2.Transform(shape.Position, windowMatrix);
-
-        texture.Render(
+        var position = context.Camera.WindowPosition(shape);
+        var originalExtent = Texture.originalExtent;
+        var extent = originalExtent * context.Camera.WindowExtentScaling(shape, originalExtent);
+        Texture.Render(
             context,
-            (int) transformedPosition.X,
-            (int) transformedPosition.Y,
-            (int) width,
-            (int) height
+            (int) position.X,
+            (int) position.Y,
+            (int) extent.X,
+            (int) extent.Y
         );
     }
 }
