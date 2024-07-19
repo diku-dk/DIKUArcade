@@ -13,7 +13,7 @@ public class Texture {
     private int? prevHeight;
     internal readonly int originalWidth;
     internal readonly int originalHeight;
-    internal Vector2 origianlExtent;
+    internal Vector2 originalExtent;
 
     public Texture(string filename) {
         originalImage = Lowlevel.createImage(File.ReadAllBytes(filename));
@@ -22,7 +22,7 @@ public class Texture {
         var (width, height) = Lowlevel.measureImage(originalImage);
         originalWidth = width;
         originalHeight = height;
-        origianlExtent = new Vector2(originalWidth, originalHeight);
+        originalExtent = new Vector2(originalWidth, originalHeight);
     }
 
     public Texture(ReadOnlySpan<byte> bytes) {
@@ -32,7 +32,7 @@ public class Texture {
         var (width, height) = Lowlevel.measureImage(originalImage);
         originalWidth = width;
         originalHeight = height;
-        origianlExtent = new Vector2(originalWidth, originalHeight);
+        originalExtent = new Vector2(originalWidth, originalHeight);
     }
 
     public Texture(string filename, int currentStride, int stridesInImage) {
@@ -48,7 +48,7 @@ public class Texture {
 
         originalWidth = width;
         originalHeight = height;
-        origianlExtent = new Vector2(originalWidth, originalHeight);
+        originalExtent = new Vector2(originalWidth, originalHeight);
     }
     
     public void Render(WindowContext context, int x, int y, int width, int height) {
