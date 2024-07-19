@@ -1,39 +1,40 @@
-﻿using System;
-using System.ComponentModel;
+﻿namespace DIKUArcade.Graphics;
+
+using System;
+using System.Numerics;
 using DIKUArcade.Entities;
 using DIKUArcade.GUI;
 
-namespace DIKUArcade.Graphics {
-    public class Image : IBaseImage {
+public class Image : IBaseImage {
 
-        private Texture texture;
-        private Window window;
+    private Texture texture;
 
-        public Image(Window window, string imageFile) {
-            this.window = window;
-            texture = new Texture(imageFile);
-        }
+    public Image(string imageFile) {
+        texture = new Texture(imageFile);
+    }
 
-        public Image(Window window, Texture texture) {
-            this.window = window;
-            this.texture = texture;
-        }
+    public Image(Texture texture) {
+        this.texture = texture;
+    }
 
-        public Image(string imageFile) {
-            window = Window.CurrentFocus();
-            texture = new Texture(imageFile);
-        }
+    public void Render(Shape shape) {
+        var window = Window.CurrentFocus();
+        if (window is null || window.WindowContext is null)
+            throw new Exception("The window context must not be null.");
+        
+        Render(shape, window.WindowContext.Value);
+    }
 
-        public Image(Texture texture) {
-            window = Window.CurrentFocus();
-            this.texture = texture;
-        }
+    public void Render(Shape shape, WindowContext context) {
+        var windowMatrix = context.Camera.WindowMatrix(shape, texture.originalExtent);
+        var transformedPosition = Vector2.Transform(shape.Position, windowMatrix);
 
-        public void Render(Shape shape) {
-        }
-
-        public void Render(Shape shape, WindowContext ctx) {
-            throw new NotImplementedException();
-        }
+        texture.Render(
+            context,
+            (int) transformedPosition.X,
+            (int) transformedPosition.Y,
+            (int) width,
+            (int) height
+        );
     }
 }
