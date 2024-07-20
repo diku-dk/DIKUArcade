@@ -6,7 +6,7 @@ using DIKUArcade.GUI;
 
 public class Camera {
     public Vector2 Offset { get; set; } = Vector2.Zero;
-    public Vector2 Scale { get; set; } = Vector2.One;
+    public Vector2 Scale { get; set; } = Vector2.Zero;
     public int Width { get; set; } = 0;
     public int Height { get; set; } = 0;
     public Vector2 WindowVector { get => new Vector2(Width, Height); }
@@ -27,7 +27,7 @@ public class Camera {
             Width, 0.0f,
             0.0f, -Height,
             0.0f, Height - (extent.Y * Height)
-        );
+        ) * Matrix3x2.CreateScale(Scale + Vector2.One);
     }
 
     public Matrix3x2 PositionMatrix(Shape shape) {
@@ -38,15 +38,22 @@ public class Camera {
         return Vector2.Transform(
             shape.Position,
             PositionMatrix(shape.Extent)
-        );
+        ) - (WindowVector * Scale / 2) + WindowVector * Offset;
     }
 
     public Vector2 WindowExtentScaling(Vector2 extent, Vector2 originalExtent) {
-        return extent * WindowVector / originalExtent;
+        return (Scale + Vector2.One) * extent * WindowVector / originalExtent;
     }
 
     public Vector2 WindowExtentScaling(Shape shape, Vector2 originalExtent) {
         return WindowExtentScaling(shape.Extent, originalExtent);
+    }
+    public Vector2 WindowExtent(Vector2 extent, Vector2 originalExtent) {
+        return originalExtent * WindowExtentScaling(extent, originalExtent);
+    }
+
+    public Vector2 WindowExtent(Shape shape, Vector2 originalExtent) {
+        return WindowExtent(shape.Extent, originalExtent);
     }
 
     public Matrix3x2 WindowMatrix(Shape shape, Vector2 originalExtent) {
