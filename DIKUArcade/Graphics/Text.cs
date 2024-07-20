@@ -4,6 +4,10 @@ using System;
 using DIKUArcade.Entities;
 using System.Numerics;
 using DIKUArcade.GUI;
+using System.Reflection;
+using System.IO;
+using System.Linq;
+using SixLabors.Fonts;
 
 public class Text : IBaseImage {
     private Lowlevel.PathCollection path;
@@ -13,17 +17,25 @@ public class Text : IBaseImage {
     private string text;
     private Lowlevel.Color color = Lowlevel.Color.White;
     private Vector2 originalExtent;
-
+    private readonly string[] fonts = {
+        "DIKUArcade.Fonts.Pixeldroid.Botic.PixeldroidBoticRegular.ttf",
+        "DIKUArcade.Fonts.Pixeldroid.Console.PixeldroidConsoleRegular.ttf",
+        "DIKUArcade.Fonts.Pixeldroid.Console.PixeldroidConsoleRegularMono.ttf",
+        "DIKUArcade.Fonts.Pixeldroid.Menu.PixeldroidMenuRegular.ttf"
+    };
+    private readonly Lowlevel.FontFamily[] fontFamilies;
     public Text(string text) {
-        if (Lowlevel.fontFamilies.Count == 0) {
-            throw new Exception("There are no fonts available.");
-        }
-        
+        var assembly = Assembly.GetExecutingAssembly();
+
+        fontFamilies = Lowlevel.createFontFamilies(
+            fonts.Select(font => assembly.GetManifestResourceStream(font)!)
+        ).ToArray();
+
         this.text = text;
-        fontFamily = Lowlevel.fontFamilies[0];
+        fontFamily = fontFamilies[2];
         font = Lowlevel.makeFont(fontFamily, size);
         path = Lowlevel.createText(text, font);
-        originalExtent = Lowlevel.measureTextCSharp(font, text);
+        originalExtent = LowlevelMeasure();
     }
     
     
@@ -35,6 +47,10 @@ public class Text : IBaseImage {
         return originalExtent / Window.CurrentFocus().WindowSize;
     }
 
+    private Vector2 LowlevelMeasure() {
+        return Lowlevel.measureTextCSharp(font, text) + Vector2.UnitY * 5;
+    }
+
     /// <summary>
     /// Set the text string for this Text object.
     /// </summary>
@@ -42,7 +58,7 @@ public class Text : IBaseImage {
     public void SetText(string text) {
         this.text = text;
         path = Lowlevel.createText(text, font);
-        originalExtent = Lowlevel.measureTextCSharp(font, text);
+        originalExtent = LowlevelMeasure();
     }
 
     /// <summary>
@@ -60,7 +76,7 @@ public class Text : IBaseImage {
         this.size = size;
         font = Lowlevel.makeFont(fontFamily, size);
         path = Lowlevel.createText(text, font);
-        originalExtent = Lowlevel.measureTextCSharp(font, text);
+        originalExtent = LowlevelMeasure();
     }
 
     /// <summary>
@@ -72,7 +88,7 @@ public class Text : IBaseImage {
         this.fontFamily = fontFamily;
         font = Lowlevel.makeFont(fontFamily, size);
         path = Lowlevel.createText(text, font);
-        originalExtent = Lowlevel.measureTextCSharp(font, text);
+        originalExtent = LowlevelMeasure();
     }
 
     /// <summary>

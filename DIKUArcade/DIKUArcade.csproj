@@ -10,4 +10,8 @@
     <ProjectReference Include="..\diku-canvas\canvas.fsproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Fonts\**\*.ttf"/>
+  </ItemGroup>
+
 </Project>
