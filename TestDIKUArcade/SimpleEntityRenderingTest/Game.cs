@@ -5,7 +5,7 @@ using DIKUArcade.GUI;
 using DIKUArcade.Graphics;
 using DIKUArcade.Entities;
 using DIKUArcade.Input;
-using DIKUArcade.Math;
+using System.Numerics;
 
 public class Game : DIKUGame {
 
@@ -20,8 +20,8 @@ public class Game : DIKUGame {
         var imgs0 = new ImageStride(250, img0, img1);
         var imgs1 = new ImageStride(250, img0, img1);
 
-        var shape0 = new DynamicShape(new Vec2F(0.0f, 0.0f), new Vec2F(0.5f, 0.5f));
-        var shape1 = new DynamicShape(new Vec2F(0.0f, 0.5f), shape0.Extent.Copy());
+        var shape0 = new DynamicShape(new Vector2(0.0f, 0.0f), new Vector2(0.5f, 0.5f));
+        var shape1 = new DynamicShape(new Vector2(0.0f, 0.5f), shape0.Extent);
 
         actor0 = new Entity(shape0, imgs0);
         actor1 = new Entity(shape1, imgs1);
@@ -34,12 +34,12 @@ public class Game : DIKUGame {
 
         switch (key) {
             case KeyboardKey.Left:
-                actor0.Shape.Position.X -= 0.03f;
-                actor1.Shape.Position.X -= 0.03f;
+                actor0.Shape.MoveX(-0.03f);
+                actor1.Shape.MoveX(-0.03f);
                 break;
             case KeyboardKey.Right:
-                actor0.Shape.Position.X += 0.03f;
-                actor1.Shape.Position.X += 0.03f;
+                actor0.Shape.MoveX(0.03f);
+                actor1.Shape.MoveX(0.03f);
                 break;
             case KeyboardKey.KeyPadSubtract:
                 actor0.Shape.Scale(1.1f);

@@ -4,7 +4,9 @@ using System;
 using DIKUArcade.GUI;
 using DIKUArcade.Graphics;
 using DIKUArcade.Timers;
-using DIKUArcade.Math;
+using System.Numerics;
+using System.Drawing;
+using DIKUArcade.Entities;
 
 public class GameTimerTest : ITestable {
     public void RunTest() {
@@ -14,28 +16,33 @@ public class GameTimerTest : ITestable {
         };
         var win = new Window(winArgs);
         var timer = new GameTimer();
-        var fps = new Text("", new Vec2F(0.25f, 0.5f), new Vec2F(0.5f, 0.25f));
-        var ups = new Text("", new Vec2F(0.25f, 0.25f), new Vec2F(0.5f, 0.25f));
+        var fps = new Text("FPS:");
+        var ups = new Text("UPS:");
+        var fpsShape = new StationaryShape(new Vector2(0.25f, 0.66f), Vector2.One);
+        var upsShape = new StationaryShape(new Vector2(0.25f, 0.33f), Vector2.One);
+        Action<WindowContext> render = ctx => {
+            fpsShape.Extent = fps.IdealExtent(winArgs.Width, winArgs.Height);
+            upsShape.Extent = ups.IdealExtent(winArgs.Width, winArgs.Height);
+            fps.Render(fpsShape, ctx);
+            ups.Render(upsShape, ctx);
+        };
         foreach (var text in new []{fps, ups}) {
-            text.SetColor(new Vec3I(255, 255, 255));
+            text.SetColor(255, 255, 255);
             text.SetFontSize(80);
-            text.GetShape().ScaleYFromCenter(1.2f);
+            // text.GetShape().ScaleYFromCenter(1.2f);
         }
         while (win.IsRunning()) {
             win.PollEvents();
             timer.MeasureTime();
             while (timer.ShouldUpdate()) { }
             if (timer.ShouldRender()) {
-                win.Clear();
                 // render game objects
-                fps.RenderText();
-                ups.RenderText();
-                win.SwapBuffers();
+                win.Render(render);
             }
             if (timer.ShouldReset()) {
                 fps.SetText($"FPS: {timer.CapturedFrames}");
                 ups.SetText($"UPS: {timer.CapturedUpdates}");
-                win.Title = "TestGameTimer | " + timer.CapturedFrames;
+                // win.Title = "TestGameTimer | " + timer.CapturedFrames;
             }
         }
     }

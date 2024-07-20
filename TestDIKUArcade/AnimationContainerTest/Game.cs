@@ -22,19 +22,19 @@ public class Game : DIKUGame {
             return;
         }
         switch (key) {
-            case KeyboardKey.Num_1:
+            case KeyboardKey.Num1:
                 container.AddAnimation(new StationaryShape(0.0f, 0.0f, 0.5f, 0.5f), 1000,
                     new ImageStride(80, strides));
                 break;
-            case KeyboardKey.Num_2:
+            case KeyboardKey.Num2:
                 container.AddAnimation(new StationaryShape(0.5f, 0.0f, 0.5f, 0.5f), 1000,
                     new ImageStride(80, strides));
                 break;
-            case KeyboardKey.Num_3:
+            case KeyboardKey.Num3:
                 container.AddAnimation(new StationaryShape(0.0f, 0.5f, 0.5f, 0.5f), 1000,
                     new ImageStride(80, strides));
                 break;
-            case KeyboardKey.Num_4:
+            case KeyboardKey.Num4:
                 container.AddAnimation(new StationaryShape(0.5f, 0.5f, 0.5f, 0.5f), 1000,
                     new ImageStride(80, strides));
                 break;

@@ -4,8 +4,10 @@ with pkgs;
 mkShell {
   nativeBuildInputs =
     with buildPackages; [
-      mono
-      dotnetCorePackages.sdk_8_0
+      (with dotnetCorePackages; combinePackages [
+        sdk_6_0
+        sdk_8_0
+      ])
       fsautocomplete
       SDL2
       SDL2_ttf   

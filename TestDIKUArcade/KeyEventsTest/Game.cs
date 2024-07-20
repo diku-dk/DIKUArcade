@@ -5,7 +5,7 @@ using DIKUArcade.GUI;
 using DIKUArcade.Input;
 using DIKUArcade.Graphics;
 using DIKUArcade.Entities;
-using DIKUArcade.Math;
+using System.Numerics;
 using System;
 using System.Collections.Generic;
 
@@ -20,15 +20,16 @@ public class Game : DIKUGame {
     }
 
     private void KeyHandler(KeyboardAction action, KeyboardKey key) {
+        Console.WriteLine($"Key: {key}");
         if (action != KeyboardAction.KeyPress) {
             return;
         }
 
         switch (key) {
-            case KeyboardKey.Num_1:
+            case KeyboardKey.Num1:
                 window.SetClearColor(128, 52, 43);
                 break;
-            case KeyboardKey.Num_2:
+            case KeyboardKey.Num2:
                 window.SetClearColor(28, 108, 218);
                 break;
             case KeyboardKey.I:
