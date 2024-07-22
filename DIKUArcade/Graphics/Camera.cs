@@ -23,13 +23,13 @@ public class Camera {
         Height = height;
     }
 
-    public Vector2 WindowPosition(Vector2 position, Vector2 extent, Vector2 windowExtent) {
+    public Vector2 WindowPosition(Vector2 position, Vector2 windowExtent) {
         var newPosition = WindowVector * (position * (Scale + Vector2.One) - Scale / 2 + Offset); 
         return new Vector2(newPosition.X, Height - (newPosition.Y + windowExtent.Y));
     }
 
     public Vector2 WindowPosition(Shape shape, Vector2 windowExtent) {
-        return WindowPosition(shape.Position, shape.Extent, windowExtent);
+        return WindowPosition(shape.Position, windowExtent);
     }
 
     public Vector2 WindowExtent(Vector2 extent) {
