@@ -135,15 +135,14 @@ public class ImageStride : IBaseImage {
         }
 
         // render the current texture object
-        var position = context.Camera.WindowPosition(shape);
-        var originalExtent = textures[currentImageCount].originalExtent;
-        var extent = originalExtent * context.Camera.WindowExtentScaling(shape, originalExtent);
+        var extent = context.Camera.WindowExtent(shape);
+        var position = context.Camera.WindowPosition(shape, extent);
         textures[currentImageCount].Render(
             context,
-            (int) position.X,
-            (int) position.Y,
-            (int) extent.X,
-            (int) extent.Y
+            (int) MathF.Round(position.X, MidpointRounding.AwayFromZero),
+            (int) MathF.Round(position.Y, MidpointRounding.AwayFromZero),
+            (int) MathF.Ceiling(extent.X) + 1,
+            (int) MathF.Ceiling(extent.Y) + 1
         );
     }
 
