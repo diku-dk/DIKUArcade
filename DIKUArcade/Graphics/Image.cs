@@ -26,14 +26,14 @@ public class Image : IBaseImage {
     }
 
     public void Render(Shape shape, WindowContext context) {
-        var position = context.Camera.WindowPosition(shape);
-        var extent = context.Camera.WindowExtent(shape, Texture.originalExtent);
+        var extent = context.Camera.WindowExtent(shape);
+        var position = context.Camera.WindowPosition(shape, extent);
         Texture.Render(
             context,
             (int) MathF.Round(position.X, MidpointRounding.AwayFromZero),
             (int) MathF.Round(position.Y, MidpointRounding.AwayFromZero),
-            (int) MathF.Ceiling(extent.X),
-            (int) MathF.Ceiling(extent.Y)
+            (int) MathF.Ceiling(extent.X) + 1,
+            (int) MathF.Ceiling(extent.Y) + 1
         );
     }
 }

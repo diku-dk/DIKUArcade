@@ -1,5 +1,6 @@
 namespace DIKUArcade.Graphics;
 
+using System;
 using System.Numerics;
 using DIKUArcade.Entities;
 using DIKUArcade.GUI;
@@ -22,43 +23,30 @@ public class Camera {
         Height = height;
     }
 
-    public Matrix3x2 PositionMatrix(Vector2 extent) {
-        return new Matrix3x2(
-            Width, 0.0f,
-            0.0f, -Height,
-            0.0f, Height - (extent.Y * Height)
-        ) * Matrix3x2.CreateScale(Scale + Vector2.One);
+    public Vector2 WindowPosition(Vector2 position, Vector2 extent, Vector2 windowExtent) {
+        var newPosition = WindowVector * (position * (Scale + Vector2.One) - Scale / 2 + Offset); 
+        return new Vector2(newPosition.X, Height - (newPosition.Y + windowExtent.Y));
     }
 
-    public Matrix3x2 PositionMatrix(Shape shape) {
-        return PositionMatrix(shape.Extent);
+    public Vector2 WindowPosition(Shape shape, Vector2 windowExtent) {
+        return WindowPosition(shape.Position, shape.Extent, windowExtent);
     }
 
-    public Vector2 WindowPosition(Shape shape) {
-        return Vector2.Transform(
-            shape.Position,
-            PositionMatrix(shape.Extent)
-        ) - (WindowVector * Scale / 2) + WindowVector * Offset;
+    public Vector2 WindowExtent(Vector2 extent) {
+        var v = WindowVector * extent * (Scale + Vector2.One);
+        var x = (int) v.X;
+        var y = (int) v.Y;
+        return new Vector2(x + x % 2, y + y % 2); 
     }
 
-    public Vector2 WindowExtentScaling(Vector2 extent, Vector2 originalExtent) {
-        return (Scale + Vector2.One) * extent * WindowVector / originalExtent;
-    }
-
-    public Vector2 WindowExtentScaling(Shape shape, Vector2 originalExtent) {
-        return WindowExtentScaling(shape.Extent, originalExtent);
-    }
-    public Vector2 WindowExtent(Vector2 extent, Vector2 originalExtent) {
-        return originalExtent * WindowExtentScaling(extent, originalExtent);
-    }
-
-    public Vector2 WindowExtent(Shape shape, Vector2 originalExtent) {
-        return WindowExtent(shape.Extent, originalExtent);
+    public Vector2 WindowExtent(Shape shape) {
+        return WindowExtent(shape.Extent);
     }
 
     public Matrix3x2 WindowMatrix(Shape shape, Vector2 originalExtent) {
-        var windowPosition = WindowPosition(shape);
-        var windowExtentScaling = WindowExtentScaling(shape, originalExtent);
+        var windowExtent = WindowExtent(shape);
+        var windowExtentScaling = windowExtent / originalExtent;
+        var windowPosition = WindowPosition(shape, windowExtent);
         return new Matrix3x2(
             windowExtentScaling.X, 0,
             0, windowExtentScaling.Y,
