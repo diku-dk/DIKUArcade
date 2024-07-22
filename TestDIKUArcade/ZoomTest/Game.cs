@@ -15,9 +15,9 @@ public class Game : DIKUGame {
     public Game(WindowArgs windowArgs) : base(windowArgs) {
         window.SetKeyEventHandler(KeyHandler);
 
-        player = new Entity(new DynamicShape(new Vector2(0.5f, 0.5f), new Vector2(0.1f, 0.1f)),
+        player = new Entity(new DynamicShape(new Vector2(0.4f, 0.45f), new Vector2(0.1f, 0.1f)),
             new Image(@"Assets/Taxi.png"));
-        wall = new Entity(new StationaryShape(new Vector2(0.6f, 0.5f), new Vector2(0.15f, 0.15f)),
+        wall = new Entity(new StationaryShape(new Vector2(0.5f, 0.45f), new Vector2(0.1f, 0.1f)),
             new Image(@"Assets/wall.jpeg"));
     }
 
@@ -34,6 +34,6 @@ public class Game : DIKUGame {
     public override void Update() {
         angle += 0.1f;
         window.Camera.Scale += new Vector2(0.001f, 0.001f);
-        window.Camera.Offset = 0.01f * new Vector2(MathF.Cos(angle), MathF.Sin(angle));
+        window.Camera.Offset = 0.05f * new Vector2(MathF.Cos(angle), MathF.Sin(angle));
     }
 }
