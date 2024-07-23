@@ -47,8 +47,8 @@ public class Game : DIKUGame {
         }
     }
 
-    public override void Render() {
-        entities.RenderEntities();
+    public override void Render(WindowContext context) {
+        entities.RenderEntities(context);
     }
 
     public override void Update() { }

@@ -1,11 +1,7 @@
 ﻿namespace DIKUArcade.GUI;
 
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Dynamic;
 using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
-using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
 using DIKUArcade.Input;
 
@@ -14,7 +10,6 @@ using DIKUArcade.Input;
 /// This class represents a graphical window in the DIKUArcade game engine.
 /// </summary>
 public class Window : IDisposable {
-    private static Window? currentWindow;
     private readonly KeyTransformer transformer = new KeyTransformer();
     private readonly Lowlevel.Window window;
     private bool isRunning = true;
@@ -25,7 +20,6 @@ public class Window : IDisposable {
     public Vector2 WindowSize {
         get => new Vector2(Width, Height);
     }
-    public WindowContext? WindowContext { get; private set; }
 
     public Window(WindowArgs windowArgs) {
         window = new Lowlevel.Window(windowArgs.Title, windowArgs.Width, windowArgs.Height);
@@ -76,25 +70,14 @@ public class Window : IDisposable {
         Cleanup();
     }
 
-    public void Render(Action renderer) {
-        window.Render(lowlevel => {
-            WindowContext = new WindowContext(lowlevel, Camera, this);
-            renderer();
-            WindowContext = null;
-        });
-    }
 
     public void Render(Action<WindowContext> renderer) {
         window.Render(lowlevel => {
-            var ctx = new WindowContext(lowlevel, Camera, this);
-            WindowContext = ctx;
-            renderer(ctx);
-            WindowContext = null;
+            renderer(new WindowContext(lowlevel, Camera, this));
         });
     }
 
     ~Window() {
-        ClearIfFocus();
         Cleanup();
     }
 
@@ -114,33 +97,5 @@ public class Window : IDisposable {
 
     public void Clear() {
         window.Clear();
-    }
-
-    public void Focus() {
-        currentWindow = this;
-    }
-
-    private static readonly string msg =
-        "No window is in focus, you must call Window.Focus() before calling this method.";
-    public static Window CurrentFocus() {
-        if (currentWindow is null) {
-            throw new Exception(msg);
-        }
-
-        return currentWindow;
-    }
-
-    public static Window? CurrentFocusNullable() {
-        return currentWindow;
-    }
-
-    public static void ClearFocus() {
-        currentWindow = null;
-    }
-
-    public void ClearIfFocus() {
-        if (currentWindow is not null && ReferenceEquals(currentWindow, window)) {
-            ClearFocus();
-        }
     }
 }

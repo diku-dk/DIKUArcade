@@ -1,13 +1,11 @@
-using System;
+namespace DIKUArcade.Graphics;
+
 using DIKUArcade.Entities;
 using DIKUArcade.GUI;
 
-namespace DIKUArcade.Graphics {
-    /// A stub for an image, to use with entities that are non-drawable
-    public class NoImage : IBaseImage {
-        public NoImage() {}           
-        public void Render(Shape shape) {}
+/// A stub for an image, to use with entities that are non-drawable
+public class NoImage : IBaseImage {
+    public NoImage() {}           
 
-        public void Render(Shape shape, WindowContext ctx) {}
-    }
+    public void Render(WindowContext context, Shape shape) {}
 }

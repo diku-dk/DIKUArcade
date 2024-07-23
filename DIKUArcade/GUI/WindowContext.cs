@@ -1,8 +1,6 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Numerics;
-using DIKUArcade.Graphics;
-
 namespace DIKUArcade.GUI;
+
+using DIKUArcade.Graphics;
 
 public readonly struct WindowContext {
     internal readonly Lowlevel.DrawingContext LowlevelContext { get; }

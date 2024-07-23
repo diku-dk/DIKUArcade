@@ -1,43 +1,53 @@
+namespace DIKUArcade.Events;
+
 using DIKUArcade.Timers;
 
-namespace DIKUArcade.Events {
+/// <summary>
+/// Represents a GameEvent that is used internally in the GameEventBus to handle when a time event
+/// should be executed.
+/// </summary>
+internal class TimedGameEvent {
+
     /// <summary>
-    /// Represents a GameEvent together with an expiration time.
-    /// When a TimedGameEvent has expired it is ready for processing by a GameEventBus.
+    /// The GameEvent which this object wraps around.
     /// </summary>
-    public struct TimedGameEvent
-    {
-        /// <summary>
-        /// The GameEvent which this object wraps around.
-        /// </summary>
-        public GameEvent GameEvent { get; private set; }
+    internal object GameEvent { get; private set; }
+    private readonly TimePeriod timeSpan;
+    private long timeOfCreation;
 
-        private readonly TimePeriod timeSpan;
-        private readonly long timeOfCreation;
+    internal TimedGameEvent(object arg, TimePeriod timeSpan) {
+        this.timeSpan = timeSpan;
+        GameEvent = arg;
+        timeOfCreation = StaticTimer.GetElapsedMilliseconds();
+    }
+    
+    /// <summary>
+    /// Check if the event is ready for processing from a given time.
+    /// </summary>
+    /// <param name="currentTimeMs">
+    /// Some time in milliseconds
+    /// </param>
+    /// <returns>
+    /// True if the event is ready to be processed else false.
+    /// </returns>
+    internal bool HasExpired(long currentTimeMs) {
+        return (currentTimeMs - timeOfCreation) > timeSpan.ToMilliseconds();
+    }
 
-        public TimedGameEvent(TimePeriod timeSpan, GameEvent gameEvent) {
-            this.timeSpan = timeSpan;
-            GameEvent = gameEvent;
+    /// <summary>
+    /// Check if the event is ready for processing from the current timestamp.
+    /// </summary>
+    /// <returns>
+    /// True if the event is ready to be processed else false.
+    /// </returns>
+    internal bool HasExpired() {
+        return HasExpired(StaticTimer.GetElapsedMilliseconds());
+    }
 
-            timeOfCreation = StaticTimer.GetElapsedMilliseconds();
-        }
-
-        /// <summary>
-        /// Measure time and check if the event is ready for processing.
-        /// </summary>
-        public bool HasExpired() {
-            var now = StaticTimer.GetElapsedMilliseconds();
-            return (now - timeOfCreation) > timeSpan.ToMilliseconds();
-        }
-
-        /// <summary>
-        /// Measure time and check if the event is ready for processing,
-        /// but where current timestamp is provided in milliseconds.
-        /// This is useful if checking multiple TimedEvents in sequence without
-        /// having to get current timestamp for each one.
-        /// </summary>
-        public bool HasExpired(long currentTimeMs) {
-            return (currentTimeMs - timeOfCreation) > timeSpan.ToMilliseconds();
-        }
+    /// <summary>
+    /// Reset the creation time of the object rather than having to make a new instance.
+    /// </summary>
+    internal void ResetTime() {
+        timeOfCreation = StaticTimer.GetElapsedMilliseconds();
     }
 }

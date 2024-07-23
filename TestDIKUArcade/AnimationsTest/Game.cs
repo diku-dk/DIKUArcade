@@ -37,9 +37,9 @@ public class Game : DIKUGame {
         }
     }
 
-    public override void Render() { 
+    public override void Render(WindowContext context) { 
         if (animation.IsActive()) {
-            animation.RenderAnimation();
+            animation.RenderAnimation(context);
         }
     }
 

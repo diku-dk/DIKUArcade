@@ -1,7 +1,6 @@
 ﻿namespace DIKUArcade.Graphics;
 
 using System;
-using System.Numerics;
 using DIKUArcade.Entities;
 using DIKUArcade.GUI;
 
@@ -17,15 +16,7 @@ public class Image : IBaseImage {
         Texture = texture;
     }
 
-    public void Render(Shape shape) {
-        var window = Window.CurrentFocus();
-        if (window is null || window.WindowContext is null)
-            throw new Exception("The window context must not be null.");
-        
-        Render(shape, window.WindowContext.Value);
-    }
-
-    public void Render(Shape shape, WindowContext context) {
+    public void Render(WindowContext context, Shape shape) {
         var extent = context.Camera.WindowExtent(shape);
         var position = context.Camera.WindowPosition(shape, extent);
         Texture.Render(

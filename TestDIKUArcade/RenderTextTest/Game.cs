@@ -18,11 +18,11 @@ public class Game : DIKUGame {
     }
 
 
-    public override void Render() {
+    public override void Render(WindowContext context) {
         shape.Position = new Vector2(0.25f, 0.5f);
         shape.Extent = text.IdealExtent(window.Width, window.Height);
         shape.ScaleYFromCenter(7f);
-        text.Render(shape);
+        text.Render(context, shape);
     }
 
     public override void Update() { }
