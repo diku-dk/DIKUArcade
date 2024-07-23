@@ -5,9 +5,7 @@ using DIKUArcade.Entities;
 using System.Numerics;
 using DIKUArcade.GUI;
 using System.Reflection;
-using System.IO;
 using System.Linq;
-using SixLabors.Fonts;
 
 public class Text : IBaseImage {
     private Lowlevel.PathCollection path;
@@ -41,10 +39,6 @@ public class Text : IBaseImage {
     
     public Vector2 IdealExtent(int width, int height) {
         return originalExtent / new Vector2(width, height);
-    }
-
-    public Vector2 IdealExtent() {
-        return originalExtent / Window.CurrentFocus().WindowSize;
     }
 
     private Vector2 LowlevelMeasure() {
@@ -119,18 +113,10 @@ public class Text : IBaseImage {
         this.color = color;
     }
 
-    public void Render(Shape shape, WindowContext context) {
+    public void Render(WindowContext context, Shape shape) {
         var windowMatrix = context.Camera.WindowMatrix(shape, originalExtent);
         var newPath = Lowlevel.transformPath(path, windowMatrix);
         Lowlevel.renderBrushPath(color, newPath, context.LowlevelContext);
-    }
-
-    public void Render(Shape shape) {
-        var window = Window.CurrentFocus();
-        if (window is null || window.WindowContext is null)
-            throw new Exception("The window context must not be null.");
-        
-        Render(shape, window.WindowContext.Value);
     }
 }
 

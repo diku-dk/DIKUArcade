@@ -1,10 +1,8 @@
-﻿using DIKUArcade.Entities;
+﻿namespace DIKUArcade.Graphics;
+
+using DIKUArcade.Entities;
 using DIKUArcade.GUI;
 
-namespace DIKUArcade.Graphics {
-    public interface IBaseImage {
-        void Render(Shape shape);
-
-        void Render(Shape shape, WindowContext ctx);
-    }
+public interface IBaseImage {
+    void Render(WindowContext ctx, Shape shape);
 }

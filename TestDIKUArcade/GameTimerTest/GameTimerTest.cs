@@ -11,8 +11,7 @@ using DIKUArcade.Entities;
 public class GameTimerTest : ITestable {
     public void RunTest() {
         var winArgs = new WindowArgs() {
-            Title="GameTimerTest",
-            AspectRatio=WindowAspectRatio.Aspect_4X3
+            Title="GameTimerTest"
         };
         var win = new Window(winArgs);
         var timer = new GameTimer();
@@ -23,8 +22,8 @@ public class GameTimerTest : ITestable {
         Action<WindowContext> render = ctx => {
             fpsShape.Extent = fps.IdealExtent(winArgs.Width, winArgs.Height);
             upsShape.Extent = ups.IdealExtent(winArgs.Width, winArgs.Height);
-            fps.Render(fpsShape, ctx);
-            ups.Render(upsShape, ctx);
+            fps.Render(ctx, fpsShape);
+            ups.Render(ctx, upsShape);
         };
         foreach (var text in new []{fps, ups}) {
             text.SetColor(255, 255, 255);

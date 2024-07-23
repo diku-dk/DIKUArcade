@@ -32,14 +32,13 @@ namespace DIKUArcade {
         /// <summary>
         /// Override this method to render game entities.
         /// </summary>
-        public abstract void Render();
+        public abstract void Render(WindowContext context);
 
         /// <summary>
         /// Enter the game loop and run the game.
         /// This method will never return.
         /// </summary>
         public void Run() {
-            window.Focus();
             gameTimer = new GameTimer(30, 30);
 
             try

@@ -1,291 +1,258 @@
+namespace DIKUArcade.Events;
+
+using DIKUArcade.Timers;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using DIKUArcade.Timers;
+using DIKUArcade.GUI;
+using DIKUArcade.Input;
+using System.Linq;
 
-namespace DIKUArcade.Events
-{
+/// <summary>
+/// Alternative GameEventBus which uses Action delegates instead of using some thing like 
+/// IGameEventProcessor subscribers.
+/// </summary>
+/// <remarks>
+/// Currently it does not allow for parallel event processing.
+/// </remark>
+public class GameEventBus {
+    private IdGenerator idGenerator = new IdGenerator();
+    private Dictionary<Type, object> subscribers = new Dictionary<Type, object>();
+    private Queue<object> gameEventQueue = new Queue<object>();
+    private SortedList<ulong, TimedGameEvent>[] timedEvents =
+        new SortedList<ulong, TimedGameEvent>[2] {
+            new SortedList<ulong, TimedGameEvent>(),
+            new SortedList<ulong, TimedGameEvent>()
+        };
+    private int activeTimedEvent = 0;
+    private int inactiveTimedEvent = 1;
+
+    public GameEventBus() { }
+
+    public GameEventBus(Window window) {
+        window.SetKeyEventHandler((action, key) => {
+            (KeyboardAction Action, KeyboardKey Key) input = (action, key);
+            RegisterEvent(input);
+        });
+    }
+
     /// <summary>
-    /// Default implementation of GameEventBus (see below) which uses GameEventType
-    /// instead of a generic enum event type.
-    /// GameEventBus is the core module for processing events in the DIKUArcade game engine. Modules can register events and
-    /// add them to the queues. Events are distinguished by event types to improve processing performance. Event processor
-    /// can register/subscribe themself to receive events of a certain event type. For a single event, all processors are
-    /// called with this event (broadcast semantic).
+    /// Method for subscribing delegates such they can listen for events. Any action of the same 
+    /// type will will be notified.
     /// </summary>
-    public class GameEventBus : IGameEventBus, ITimedGameEventBus, IGameEventBusController
-    {
-        private bool _initialized = false;
+    /// <param name="action">
+    /// Some Action which takes a single argument that will listen for events.
+    /// </param>
+    /// <exception cref="System.ArgumentNullException">
+    /// Thrown when action is null.
+    /// </exception>
+    public void Subscribe<Arg>(Action<Arg> action) {
+        if (action is null) {
+            throw new ArgumentNullException("action");
+        } else if (subscribers.ContainsKey(typeof(Arg))) {
+            var temp = (Action<Arg>) subscribers[typeof(Arg)] + action;
+            subscribers[typeof(Arg)] = temp;
+            return;
+        }
+        
+        subscribers.Add(typeof(Arg), action);
+    }
 
-        /// <summary>
-        /// Dictionary of registered event processors for a given game event type.
-        /// </summary>
-        private Dictionary<GameEventType, ICollection<IGameEventProcessor>> _eventProcessors =
-            new Dictionary<GameEventType, ICollection<IGameEventProcessor>>();
-        /// <summary>
-        /// Dictionary of game event queues for different game event types.
-        /// </summary>
-        private Dictionary<GameEventType, GameEventQueue<GameEvent>> _eventQueues =
-            new Dictionary<GameEventType, GameEventQueue<GameEvent>>();
-        /// <summary>
-        /// Stops processing the pipeline, e.g. needed due real-time constraints.
-        /// </summary>
-        private bool _breakExecution = false;
-
-        /// <summary>
-        /// List of events which must be processed after a specified time interval has passed.
-        /// We use a double-buffered system.
-        /// </summary>
-        private int _activeTimedEventList = 0;
-        private int _inactiveTimedEventList = 1;
-        private List<TimedGameEvent>[] _timedEventLists =
-            new List<TimedGameEvent>[2] {
-                new List<TimedGameEvent>(),
-                new List<TimedGameEvent>()
-            };
-
-        private void SwapTimedEventLists() {
-            _activeTimedEventList = (_activeTimedEventList + 1) % 2;
-            _inactiveTimedEventList = (_inactiveTimedEventList + 1) % 2;
+    /// <summary>
+    /// Method for unsubscribing delegates such they stop listening for events.
+    /// </summary>
+    /// <param name="action">
+    /// Some Action which takes a single argument that will listen for events.
+    /// </param>
+    /// <exception cref="System.ArgumentNullException">
+    /// Thrown when action is null.
+    /// </exception>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown when action have never been subscribed before.
+    /// </exception>
+    public void Unsubscribe<Arg>(Action<Arg> action) {
+        if (action is null) {
+            throw new ArgumentNullException("action cannot be null.");
+        } else if (!subscribers.ContainsKey(typeof(Arg))) {
+            throw new ArgumentException($"{action} was never subscribed.");
         }
 
+        var subscriber = (Action<Arg>) subscribers[typeof(Arg)];
+        var newSubscriber = subscriber - action;
 
-        /// <summary>
-        /// Initialized the event bus to handle the specified event types.
-        /// An exception is thrown if called on an already initialized GameEventBus.
-        /// </summary>
-        /// <exception cref="InvalidOperationException"></exception>
-        public void InitializeEventBus(ICollection<GameEventType> eventTypeList)
-        {
-            if (_initialized) {
-                throw new InvalidOperationException("GameEventBus is already initialized!");
-            }
-
-            _eventProcessors = new Dictionary<GameEventType, ICollection<IGameEventProcessor>>();
-            _eventQueues = new Dictionary<GameEventType, GameEventQueue<GameEvent>>();
-
-            if (eventTypeList != null) {
-                foreach (var eventType in eventTypeList)
-                {
-                    _eventProcessors.Add(eventType, new List<IGameEventProcessor>());
-                    _eventQueues.Add(eventType, new GameEventQueue<GameEvent>());
-                }
-            }
-
-            _timedEventLists = new List<TimedGameEvent>[2] {
-                new List<TimedGameEvent>(),
-                new List<TimedGameEvent>()
-            };
-
-            _initialized = true;
+        if (newSubscriber is null) {
+            subscribers.Remove(typeof(Arg));
+            return;
+        } else if (subscriber == newSubscriber) {
+            throw new ArgumentException($"{action} was never subscribed.");
         }
 
-        public void Subscribe(GameEventType eventType, IGameEventProcessor gameEventProcessor)
-        {
-            if (gameEventProcessor == default(IGameEventProcessor))
-                throw new ArgumentNullException("Parameter gameEventProcessor must not be null.");
+        subscribers[typeof(Arg)] = newSubscriber;
+    }
 
-            try
-            {
-                _eventProcessors?[eventType].Add(gameEventProcessor);
+    /// <summary>
+    /// Method for appending an event to the event queue.
+    /// </summary>
+    /// <param name="arg">
+    /// The argument that will be passed to the subscribers. It will notify the subscribers 
+    /// that takes the same parameter type.
+    /// </param>
+    public void RegisterEvent<Arg>(Arg arg) {
+        gameEventQueue.Enqueue(arg!);
+    }
+
+    /// <summary>
+    /// Method that will notify subscribers with timed events and events from the event queue. It 
+    /// will only notify subscribers with timed events when they expire.
+    /// </summary>
+    public void ProcessEvents() {
+        ProcessTimedEvents();
+
+        while (gameEventQueue.Count != 0) {
+            var gameEvent = gameEventQueue.Dequeue();
+
+            if (subscribers?[gameEvent.GetType()] is null) {
+                continue;
             }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not subscribe event processor. Check eventType! {e}");
+
+            var action = subscribers[gameEvent.GetType()].GetType().GetMethod("Invoke");
+            action?.Invoke(subscribers[gameEvent.GetType()], new object[] {gameEvent});
+        }
+    }
+
+    /// <summary>
+    /// Method for removing events in the queue.
+    /// </summary>
+    public void Flush() {
+        gameEventQueue.Clear();
+    }
+    
+    /// <summary>
+    /// Method for Swapping timed event buffers.
+    /// </summary>
+    private void SwapTimedEvents() {
+        activeTimedEvent = (activeTimedEvent + 1) % 2;
+        inactiveTimedEvent = (inactiveTimedEvent + 1) % 2;
+    }
+
+    /// <summary>
+    /// Method that will check if the timed events have expired and adds them to the event queue.
+    /// </summary>
+    private void ProcessTimedEvents() {
+        timedEvents[inactiveTimedEvent].Clear();
+
+        var currentTime = StaticTimer.GetElapsedMilliseconds();
+
+        foreach (var timedEvent in timedEvents[activeTimedEvent]) {
+            if (timedEvent.Value.HasExpired(currentTime)) {
+                RegisterEvent(timedEvent.Value.GameEvent);
+                idGenerator.Remove(timedEvent.Key);
+            } else {
+                timedEvents[inactiveTimedEvent].Add(timedEvent.Key, timedEvent.Value);
             }
         }
+        
+        SwapTimedEvents();
+    }
 
-        public void Unsubscribe(GameEventType eventType, IGameEventProcessor gameEventProcessor)
-        {
-            if (gameEventProcessor == default(IGameEventProcessor))
-                throw new ArgumentNullException("Parameter gameEventProcessor must not be null.");
+    /// <summary>
+    /// Method for appending an timed event to the timed event list.
+    /// </summary>
+    /// <param name="arg">
+    /// The argument that will be passed to the Actions subscribing. It will notify the subscribers 
+    /// which takes the same parameter.
+    /// </param>
+    /// <param name="period">
+    /// The time it takes before the event expires.
+    /// </param>
+    /// <return>
+    /// The ID of the event.
+    /// </return>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the action have never been subscribed before.
+    /// </exception>
+    public ulong RegisterTimedEvent<Arg>(Arg arg, TimePeriod timePeriod) {
+        var id = idGenerator.Get();
 
-            try
-            {
-                _eventProcessors?[eventType].Remove(gameEventProcessor);
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not unsubsribe event processor. Check eventType or processor is unregistered! {e}");
-            }
+        var timedEvent = new TimedGameEvent(arg!, timePeriod);
+        timedEvents[activeTimedEvent].Add(id, timedEvent);
+        return id;
+    }
+
+    /// <summary>
+    /// Method for appending or resetting an timed event. It will reset the event based on the ID so
+    /// if there is a duplicate ID it will reset to the given period and arg.
+    /// </summary>
+    /// <param name="arg">
+    /// The argument that will be passed to the Actions subscribing. It will notify the subscribers 
+    /// which takes the same parameter.
+    /// </param>
+    /// <param name="id">
+    /// The unique id of that timed event.
+    /// </param>
+    /// <param name="period">
+    /// The time it takes before the event expires.
+    /// </param>
+    public void AddOrResetTimedEvent<Arg>(Arg arg, ulong id, TimePeriod timePeriod) {
+        var timedEvent = new TimedGameEvent(arg!, timePeriod);
+
+        if (!timedEvents[activeTimedEvent].TryAdd(id, timedEvent)) {
+            timedEvents[activeTimedEvent][id] = timedEvent;
         }
+    }
 
-
-        #region TIMED_EVENTS
-
-        public void RegisterTimedEvent(GameEvent gameEvent, TimePeriod timePeriod)
-        {
-            // do not insert already registered events:
-            if (gameEvent.Id != default(uint)) {
-                if (_timedEventLists[_activeTimedEventList].Exists(e => e.GameEvent.Id == gameEvent.Id)) {
-                    return;
-                }
-            }
-            _timedEventLists[_activeTimedEventList].Add(new TimedGameEvent(timePeriod, gameEvent));
-        }
-
-        public void AddOrResetTimedEvent(GameEvent gameEvent, TimePeriod timePeriod) {
-            if (gameEvent.Id != default(uint)) {
-                // search for an item which matches the Id of the specified event
-                var search = _timedEventLists[_activeTimedEventList].FindIndex(e => e.GameEvent.Id == gameEvent.Id);
-
-                if (search >= 0) {
-                    // event with Id already exists, so we reset its time period
-                    _timedEventLists[_activeTimedEventList][search] =
-                        new TimedGameEvent(timePeriod, _timedEventLists[_activeTimedEventList][search].GameEvent);
-                    return;
-                }
-            }
-            // input event does not have an Id, or it has an Id but does not exist in list.
-            // In either case, we add it.
-            _timedEventLists[_activeTimedEventList].Add(new TimedGameEvent(timePeriod, gameEvent));
-        }
-
-        public bool CancelTimedEvent(uint eventId) {
-            bool cancelled = false;
-            _timedEventLists[_inactiveTimedEventList].Clear();
-            foreach (var e in _timedEventLists[_activeTimedEventList]) {
-                if (e.GameEvent.Id != eventId) {
-                    _timedEventLists[_inactiveTimedEventList].Add(e);
-                } else {
-                    cancelled = true;
-                }
-            }
-
-            // swap the timed-event lists
-            SwapTimedEventLists();
-            return cancelled;
-        }
-
-        public bool ResetTimedEvent(uint eventId, TimePeriod timePeriod) {
-            var search = _timedEventLists[_activeTimedEventList].FindIndex(e => e.GameEvent.Id == eventId);
-            if (search >= 0) {
-                _timedEventLists[_activeTimedEventList][search] =
-                    new TimedGameEvent(timePeriod, _timedEventLists[_activeTimedEventList][search].GameEvent);
-                return true;
-            }
+    /// <summary>
+    /// Method for removing timed events based by their ID.
+    /// </summary>
+    /// <param name="id">
+    /// The ID of the timed event that will be cancelled.
+    /// </param>
+    /// <return>
+    /// True if the timed event got cancelled else the timed event did not exist and therefore 
+    /// could not be cancelled.
+    /// </return>
+    public bool CancelTimedEvent(ulong id) {
+        if (!HasTimedEvent(id)) {
             return false;
         }
 
-        public bool HasTimedEvent(uint eventId) {
-            return _timedEventLists[_activeTimedEventList].FindIndex(e => e.GameEvent.Id == eventId) >= 0;
+        timedEvents[activeTimedEvent].Remove(id);
+        idGenerator.Remove(id);
+        return true;
+    }
+
+    /// <summary>
+    /// Method for checking if an ID exists in event bus.
+    /// </summary>
+    /// <param name="id">
+    /// The ID of the timed event that is searched for.
+    /// </param>
+    /// <return>
+    /// True if it exist else false.
+    /// </return>
+    public bool HasTimedEvent(ulong id) {
+        return idGenerator.Contains(id);
+    }
+
+    /// <summary>
+    /// Method for changing the time of a timed event.
+    /// </summary>
+    /// <param name="id">
+    /// The ID of the timed event to be reset.
+    /// </param>
+    /// <param name="period">
+    /// The time it takes before the event expires.
+    /// </param>
+    /// <return>
+    /// True if it could be changed else false if the ID did not exist.
+    /// </return>
+    public bool ResetTimedEvent(ulong id, TimePeriod period) {
+        if (!HasTimedEvent(id)) {
+            return false;
         }
 
-        #endregion // TIMED_EVENTS
+        var reset = new TimedGameEvent(timedEvents[activeTimedEvent][id].GameEvent, period);
+        timedEvents[activeTimedEvent][id] = reset;
 
-
-        public void RegisterEvent(GameEvent gameEvent)
-        {
-            try
-            {
-                _eventQueues?[gameEvent.EventType].Enqueue(gameEvent);
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not register event. Did you Initialize the EventBus with {e.Message}");
-            }
-        }
-
-        private void ProcessTimedEvents() {
-            _timedEventLists[_inactiveTimedEventList].Clear();
-
-            var currentTime = Timers.StaticTimer.GetElapsedMilliseconds();
-            foreach (var e in _timedEventLists[_activeTimedEventList]) {
-                if (e.HasExpired(currentTime)) {
-                    RegisterEvent(e.GameEvent);
-                } else {
-                    _timedEventLists[_inactiveTimedEventList].Add(e);
-                }
-            }
-            SwapTimedEventLists();
-        }
-
-        public void ProcessEvents(IEnumerable<GameEventType> processOrder) {
-            if(processOrder==default(IEnumerable<GameEventType>)) {
-                throw new ArgumentNullException();
-            }
-
-            ProcessTimedEvents();
-
-            Parallel.ForEach<GameEventType>(processOrder, new Action<GameEventType, ParallelLoopState>(
-                (eventType, loopState) => {
-                    if (_eventQueues != null) {
-                        while (!_eventQueues[eventType].IsEmpty()) {
-                            var currentEvent = _eventQueues[eventType].Dequeue();
-                            if (currentEvent.To != default(IGameEventProcessor))
-                            {
-                                currentEvent.To.ProcessEvent(currentEvent);
-                            }
-                            else if (_eventProcessors != null)
-                            {
-                                foreach (var eventProcessor in _eventProcessors[eventType]) {
-                                    eventProcessor.ProcessEvent(currentEvent);
-                                    
-                                    if (_breakExecution) loopState.Break();
-                                }
-                            }
-                        }
-                    }
-            }));
-
-            // semantic of Parallel.ForEach is it blocks until all parallel threads are finished
-        }
-
-        public void ProcessEventsSequentially(IEnumerable<GameEventType> processOrder) {
-            if(processOrder==default(IEnumerable<GameEventType>)) {
-                throw new ArgumentNullException();
-            }
-
-            ProcessTimedEvents();
-
-            foreach(GameEventType eventType in processOrder) {
-                if (_eventQueues != null) {
-                    while (!_eventQueues[eventType].IsEmpty()) {
-                        var currentEvent = _eventQueues[eventType].Dequeue();
-                        if (currentEvent.To != default(IGameEventProcessor))
-                        {
-                            currentEvent.To.ProcessEvent(currentEvent);
-                        }
-                        else if (_eventProcessors != null) {
-                            foreach (var eventProcessor in _eventProcessors[eventType]) {
-                                eventProcessor.ProcessEvent(currentEvent);
-                                if (_breakExecution) return;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        public void ProcessEvents()
-        {
-            if (_eventQueues != null) ProcessEvents(_eventQueues.Keys);
-        }
-
-        public void ProcessEventsSequentially()
-        {
-            if (_eventQueues != null) ProcessEventsSequentially(_eventQueues.Keys);
-        }
-
-        public void BreakProcessing()
-        {
-            _breakExecution = true;
-        }
-
-        public void ResetBreakProcessing()
-        {
-            _breakExecution = false;
-        }
-
-        public void Flush()
-        {
-            BreakProcessing();
-
-            if (_eventQueues == null) return;
-            foreach (var eventType in _eventQueues.Keys)
-            {
-                _eventQueues[eventType].Flush();
-            }
-        }
+        return true;
     }
 }

@@ -1,9 +1,7 @@
 namespace DIKUArcade.Graphics;
 
-using System;
 using System.Numerics;
 using DIKUArcade.Entities;
-using DIKUArcade.GUI;
 
 public class Camera {
     public Vector2 Offset { get; set; } = Vector2.Zero;

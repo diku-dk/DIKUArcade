@@ -1,4 +1,4 @@
-namespace DIKUArcadeUnitTests.GameEventBusTests.Action;
+namespace DIKUArcadeUnitTests.GameEventBusTests;
 
 public struct SomeGameEvent {
     public int Value { get; set; }

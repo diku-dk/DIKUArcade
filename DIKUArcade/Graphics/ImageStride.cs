@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using DIKUArcade.Timers;
 using DIKUArcade.Entities;
-using DIKUArcade.Utilities;
 using DIKUArcade.GUI;
 
 /// <summary>
@@ -12,6 +11,8 @@ using DIKUArcade.GUI;
 /// and an animation frequency.
 /// </summary>
 public class ImageStride : IBaseImage {
+
+    private static Random generator = new Random();
     private int animFrequency;
 
     private double lastTime;
@@ -48,8 +49,8 @@ public class ImageStride : IBaseImage {
             throw new ArgumentNullException("at least one image file must be specified");
         }
 
-        currentImageCount = RandomGenerator.Generator.Next(count);
-        timerOffset = RandomGenerator.Generator.Next(100);
+        currentImageCount = generator.Next(count);
+        timerOffset = generator.Next(100);
     }
 
     public ImageStride(int milliseconds, List<Image> images) {
@@ -122,7 +123,7 @@ public class ImageStride : IBaseImage {
     /// Render this ImageStride object onto the currently active drawing window
     /// </summary>
     /// <param name="shape">The Shape object for the rendered image</param>
-    public void Render(Shape shape, WindowContext context) {
+    public void Render(WindowContext context, Shape shape) {
         // measure elapsed time
         double elapsed = StaticTimer.GetElapsedMilliseconds() + timerOffset;
 
@@ -144,13 +145,5 @@ public class ImageStride : IBaseImage {
             (int) MathF.Ceiling(extent.X) + 1,
             (int) MathF.Ceiling(extent.Y) + 1
         );
-    }
-
-    public void Render(Shape shape) {
-        var window = Window.CurrentFocus();
-        if (window is null || window.WindowContext is null)
-            throw new Exception("The window context must not be null.");
-        
-        Render(shape, window.WindowContext.Value);
     }
 }

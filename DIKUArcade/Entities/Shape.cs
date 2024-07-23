@@ -2,8 +2,6 @@
 
 using System;
 using System.Numerics;
-using System.Threading;
-using DIKUArcade.GUI;
 
 public class Shape {
     /// <summary>

@@ -1,312 +1,239 @@
-﻿using System;
+﻿namespace DIKUArcadeUnitTests.GameEventBusTests;
+
+using System;
 using System.Collections.Generic;
 using DIKUArcade.Events;
 using NUnit.Framework;
 
-namespace DIKUArcadeUnitTests.GameEventBusTests
-{
-    /// <summary>
-    /// SimpleGameProcessor is a mock-up processor for testing purposes.
-    /// </summary>
-    public class SimpleEventProcessor : IGameEventProcessor
-    {
-        /// <summary>
-        /// Counter for number of processes control events.
-        /// </summary>
-        public int EventCounterControl;
-        /// <summary>
-        /// Counter for number of processes sound events.
-        /// </summary>
-        public int EventCounterSound;
 
-        public void ProcessEvent(GameEvent gameEvent)
-        {
-            var eventType = gameEvent.EventType;
-            // Count events using integer fields
-            if (eventType == GameEventType.ControlEvent)
-                EventCounterControl++;
-            if (eventType == GameEventType.SoundEvent)
-                EventCounterSound++;
+[TestFixture]
+public class TestsEventBus {
+
+    private GameEventBus eventBus;
+    private SomeGameEvent SomeGameEvent;
+    private OtherGameEvent OtherGameEvent;
+    private int SomeGameEventCount;
+    private int OtherGameEventCount;
+
+    private void SomeEventListener(SomeGameEvent gameEvent) {
+        SomeGameEvent = gameEvent;
+        SomeGameEventCount++;
+    }
+
+    private void OtherEventListener(OtherGameEvent gameEvent) {
+        OtherGameEvent = gameEvent;
+        OtherGameEventCount++;
+    }
+
+    /// <summary>
+    /// Reset event bus and event action before calling each test method.
+    /// </summary>
+    [SetUp]
+    public void Setup() {
+        eventBus = new GameEventBus();
+
+        SomeGameEvent = new SomeGameEvent(1729);
+        OtherGameEvent = new OtherGameEvent(5040);
+
+        SomeGameEventCount = 0;
+        OtherGameEventCount = 0;
+    }
+
+    /// <summary>
+    /// Generate five events and process them in parallel. Afterwards check the counts of events.
+    /// </summary>
+    public void TestEventBusSimpleCount5Test() {
+        eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
+        eventBus.Subscribe<OtherGameEvent>(OtherEventListener);
+
+        eventBus.RegisterEvent(SomeGameEvent);
+        eventBus.RegisterEvent(OtherGameEvent);
+        eventBus.RegisterEvent(SomeGameEvent);
+        eventBus.RegisterEvent(SomeGameEvent);
+        eventBus.RegisterEvent(OtherGameEvent);
+
+        eventBus.ProcessEvents();
+
+        Assert.That(SomeGameEventCount == 3);
+        Assert.That(OtherGameEventCount == 2);
+    }
+
+    /// <summary>
+    /// Generate three events and process them in parallel. Afterwards check the counts of events.
+    /// </summary>
+    public void TestEventBusSimpleCount3Test() {
+        eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
+        eventBus.Subscribe<OtherGameEvent>(OtherEventListener);
+
+        eventBus.RegisterEvent(SomeGameEvent);
+        eventBus.RegisterEvent(OtherGameEvent);
+        eventBus.RegisterEvent(SomeGameEvent);
+        
+        eventBus.ProcessEvents();
+
+        Assert.That(SomeGameEventCount == 2);
+        Assert.That(OtherGameEventCount == 1);
+    }
+
+    /// <summary>
+    /// Generate numEventGroups groups of three events and process them in parallel. Afterwards 
+    /// check the counts of events.
+    /// </summary>
+    /// <param name="numEventGroups">Number of event groups used for the test case.</param>
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(3)]
+    [TestCase(8)]
+    [TestCase(16)]
+    [TestCase(32)]
+    [TestCase(47)]
+    [TestCase(64)]
+    [TestCase(128)]
+    [TestCase(199)]
+    [TestCase(1024)]
+    [TestCase(2048)]
+    public void TestEventBusSimpleCountParametricTest(int numEventGroups) {
+        eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
+        eventBus.Subscribe<OtherGameEvent>(OtherEventListener);
+
+        for (int iter = 0; iter < numEventGroups; iter++) {
+            eventBus.RegisterEvent(SomeGameEvent);
+            eventBus.RegisterEvent(OtherGameEvent);
+            eventBus.RegisterEvent(SomeGameEvent);
+        }
+
+        eventBus.ProcessEvents();
+
+        Assert.That(SomeGameEventCount == 2*numEventGroups);
+        Assert.That(OtherGameEventCount == 1*numEventGroups);
+    }
+
+    /// <summary>
+    /// Generate a fixed number of listeners subscribing to a game event bus and process three 
+    /// events sequentially. Check afterwards that all event have been processed.
+    /// </summary>
+    /// <param name="numListeners">Number of listeners.</param>
+    [TestCase(2)]
+    [TestCase(3)]
+    [TestCase(4)]
+    [TestCase(6)]
+    [TestCase(8)]
+    [TestCase(10)]
+    [TestCase(20)]
+    [TestCase(256)]
+    public void TestConcurrentListenersSequentially(int numListeners) {
+
+        eventBus.RegisterEvent(SomeGameEvent);
+        eventBus.RegisterEvent(OtherGameEvent);
+        eventBus.RegisterEvent(SomeGameEvent);
+
+        eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
+        eventBus.Subscribe<OtherGameEvent>(OtherEventListener);
+
+        var listeners = new List<Listener>();
+        for (int iter = 0; iter < numListeners; iter++) {
+            var listener = new Listener();
+            listeners.Add(listener);
+            eventBus.Subscribe<SomeGameEvent>(listener.SomeListener);
+            eventBus.Subscribe<OtherGameEvent>(listener.OtherListener);
+        }
+
+        eventBus.ProcessEvents();
+
+        Assert.That(SomeGameEventCount == 2);
+        Assert.That(OtherGameEventCount == 1);
+
+        foreach (var listener in listeners) {
+            Assert.That(listener.SomeCount == 2);
+            Assert.That(listener.OtherCount == 1);
         }
     }
 
+    /// <summary>
+    /// Checks that exceptions are raised if the action reference is null. Absence of undesired 
+    /// behavior.
+    /// </summary>
+    [Test]
+    public void TestSubscribeActionArgumentNotNullException() {
+        Assert.Throws<ArgumentNullException>(() => {
+            eventBus.Subscribe(default(Action<int>));
+        });
+    }
 
-    [TestFixture]
-    public class TestsEventBus
-    {
-        private readonly List<GameEventType> _registeredEvents= new List<GameEventType>() {
-            GameEventType.ControlEvent, GameEventType.SoundEvent, GameEventType.StatusEvent
-        };
+    /// <summary>
+    /// Checks that exceptions are raised if the action reference is null. Absence of undesired 
+    /// behavior.
+    /// </summary>
+    [Test]
+    public void TestUnsubscribeActionArgumentNotNullException() {
+        Assert.Throws<ArgumentNullException>(() => {
+            eventBus.Unsubscribe(default(Action<int>));
+        });
+    }
 
-        private GameEventBus _eb;
-        private SimpleEventProcessor _simpleEventProcessor;
-        private GameEvent _eventControl;
-        private GameEvent _eventSound;
+    /// <summary>
+    /// Checks that exceptions are raised if the action is not subscribed.
+    /// </summary>
+    [Test]
+    public void TestUnsubscribeNonExistentAction() {
 
-        /// <summary>
-        /// Setup event processor mock-up and events.
-        /// </summary>
-        public TestsEventBus()
-        {
-            
-        }
+        Action<SomeGameEvent> dummyListener = _ => { };
 
-        /// <summary>
-        /// Reset event bus and event processor before calling each test method.
-        /// </summary>
-        [SetUp]
-        public void SetupEventBusForTests()
-        {
-            _eb = new GameEventBus();
-            _eb.InitializeEventBus(_registeredEvents);
+        eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
 
-            _simpleEventProcessor = new SimpleEventProcessor();
-            _eb.Subscribe(GameEventType.ControlEvent, _simpleEventProcessor);
-            _eb.Subscribe(GameEventType.SoundEvent, _simpleEventProcessor);
+        Assert.Throws<ArgumentException>(() => {
+            eventBus.Unsubscribe<SomeGameEvent>(dummyListener);
+        });
+        
+        eventBus.RegisterEvent(SomeGameEvent);
 
-            _eventControl = new GameEvent {
-                EventType = GameEventType.ControlEvent,
-                From = this,
-                Message = "Test2",
-                StringArg1 = "test",
-                StringArg2 = "test"
-            };
-            _eventSound = new GameEvent {
-                EventType = GameEventType.SoundEvent,
-                From = this,
-                Message = "Test2",
-                StringArg1 = "test",
-                StringArg2 = "test"
-            };
-        }
+        eventBus.ProcessEvents();
 
-        /// <summary>
-        /// Generate five events and process them in parallel. Afterwards check the counts of events.
-        /// </summary>
-        [Test]
-        public void TestEventBusSimpleCount5Test()
-        {
-            _eb.RegisterEvent(_eventControl);
-            _eb.RegisterEvent(_eventSound);
-            _eb.RegisterEvent(_eventControl);
-            _eb.RegisterEvent(_eventControl);
-            _eb.RegisterEvent(_eventSound);
+        Assert.AreEqual(1, SomeGameEventCount);
+    }
 
-            _eb.ProcessEvents();
+    /// <summary>
+    /// Checks that exceptions are raised if the key does not exist.
+    /// </summary>
+    [Test]
+    public void TestUnsubscribeNonExistentKey() {
 
-            Assert.That(_simpleEventProcessor.EventCounterControl == 3);
-            Assert.That(_simpleEventProcessor.EventCounterSound == 2);
-        }
+        Assert.Throws<ArgumentException>(() => {
+            eventBus.Unsubscribe<SomeGameEvent>(SomeEventListener);
+        });
+    }
 
-        /// <summary>
-        /// Generate three events and process them in parallel. Afterwards check the counts of events.
-        /// </summary>
-        [Test]
-        public void TestEventBusSimpleCount3Test()
-        {
-            _eb.RegisterEvent(_eventControl);
-            _eb.RegisterEvent(_eventSound);
-            _eb.RegisterEvent(_eventControl);
+    /// <summary>
+    /// Checks that unsubscribg does not effect existing subscribers.
+    /// </summary>
+    [Test]
+    public void TestUnsubscribe() {
 
-            _eb.ProcessEvents();
+        var dummyCount = 0;
 
-            Assert.That(_simpleEventProcessor.EventCounterControl == 2);
-            Assert.That(_simpleEventProcessor.EventCounterSound == 1);
-        }
+        Action<SomeGameEvent> dummyListener = _ => dummyCount++;
 
-        /// <summary>
-        /// Generate five events and process them sequentially. Afterwards check the counts of events.
-        /// </summary>
-        [Test]
-        public void TestEventBusSimpleCount5TestSeq()
-        {
-            _eb.RegisterEvent(_eventControl);
-            _eb.RegisterEvent(_eventSound);
-            _eb.RegisterEvent(_eventControl);
-            _eb.RegisterEvent(_eventControl);
-            _eb.RegisterEvent(_eventSound);
+        eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
+        eventBus.Subscribe<SomeGameEvent>(dummyListener);
+        eventBus.Unsubscribe<SomeGameEvent>(dummyListener);
+        
+        eventBus.RegisterEvent(SomeGameEvent);
 
-            _eb.ProcessEventsSequentially();
+        eventBus.ProcessEvents();
 
-            Assert.That(_simpleEventProcessor.EventCounterControl == 3);
-            Assert.That(_simpleEventProcessor.EventCounterSound == 2);
-        }
+        Assert.AreEqual(1, SomeGameEventCount);
+        Assert.AreEqual(0, dummyCount);
+    }
 
-        /// <summary>
-        /// Generate three events and process them sequentially. Afterwards check the counts of events.
-        /// </summary>
-        [Test]
-        public void TestEventBusSimpleCount3TestSeq()
-        {
-            _eb.RegisterEvent(_eventControl);
-            _eb.RegisterEvent(_eventSound);
-            _eb.RegisterEvent(_eventControl);
-
-            _eb.ProcessEventsSequentially();
-
-            Assert.That(_simpleEventProcessor.EventCounterControl == 2);
-            Assert.That(_simpleEventProcessor.EventCounterSound == 1);
-        }
-
-        /// <summary>
-        /// Generate numEventGroups groups of three events and process them in parallel. Afterwards check the counts of events.
-        /// </summary>
-        /// <param name="numEventGroups">Number of event groups used for the test case.</param>
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(3)]
-        [TestCase(8)]
-        [TestCase(16)]
-        [TestCase(32)]
-        [TestCase(47)]
-        [TestCase(64)]
-        [TestCase(128)]
-        [TestCase(199)]
-        [TestCase(1024)]
-        [TestCase(2048)]
-        public void TestEventBusSimpleCountParametricTest(int numEventGroups)
-        {
-            for (int iter=0; iter < numEventGroups; iter++)
-            {
-                _eb.RegisterEvent(_eventControl);
-                _eb.RegisterEvent(_eventSound);
-                _eb.RegisterEvent(_eventControl);
-            }
-
-            _eb.ProcessEvents();
-
-            Assert.That(_simpleEventProcessor.EventCounterControl == 2*numEventGroups);
-            Assert.That(_simpleEventProcessor.EventCounterSound == 1*numEventGroups);
-        }
-
-        /// <summary>
-        /// Generate numEventGroups groups of three events and process them sequentially. Afterwards check the counts of events.
-        /// </summary>
-        /// <param name="numEventGroups">Number of event groups used for the test case.</param>
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(3)]
-        [TestCase(8)]
-        [TestCase(16)]
-        [TestCase(32)]
-        [TestCase(47)]
-        [TestCase(64)]
-        [TestCase(128)]
-        [TestCase(199)]
-        [TestCase(1024)]
-        [TestCase(2048)]
-        public void TestEventBusSimpleCountParametricTestSequentially(int numEventGroups)
-        {
-            for (int iter=0; iter < numEventGroups; iter++)
-            {
-                _eb.RegisterEvent(_eventControl);
-                _eb.RegisterEvent(_eventSound);
-                _eb.RegisterEvent(_eventControl);
-            }
-
-            _eb.ProcessEventsSequentially();
-
-            Assert.That(_simpleEventProcessor.EventCounterControl == 2*numEventGroups);
-            Assert.That(_simpleEventProcessor.EventCounterSound == 1*numEventGroups);
-        }
-
-        /// <summary>
-        /// Generate a fixed number of listeners subscribing to a game event bus and process three events in parallel. Check afterwards that all event have been processed.
-        /// </summary>
-        /// <param name="numListeners">Number of listeners.</param>
-        [TestCase(2)]
-        [TestCase(3)]
-        [TestCase(4)]
-        [TestCase(6)]
-        [TestCase(8)]
-        [TestCase(10)]
-        [TestCase(20)]
-        [TestCase(256)]
-        public void TestConcurrentListeners(int numListeners)
-        {
-            _eb.RegisterEvent(_eventControl);
-            _eb.RegisterEvent(_eventSound);
-            _eb.RegisterEvent(_eventControl);
-
-            List<SimpleEventProcessor> listOfProcessors= new List<SimpleEventProcessor>();
-            for (int iter = 0; iter < numListeners; iter++)
-            {
-                var processor= new SimpleEventProcessor();
-                listOfProcessors.Add(processor);
-                _eb.Subscribe(GameEventType.ControlEvent, processor);
-                _eb.Subscribe(GameEventType.SoundEvent, processor);
-            }
-
-            _eb.ProcessEvents();
-
-            Assert.That(_simpleEventProcessor.EventCounterControl == 2);
-            Assert.That(_simpleEventProcessor.EventCounterSound == 1);
-            foreach (var processor in listOfProcessors)
-            {
-                Assert.That(processor.EventCounterControl == 2);
-                Assert.That(processor.EventCounterSound == 1);
-            }
-        }
-
-        /// <summary>
-        /// Generate a fixed number of listeners subscribing to a game event bus and process three events sequentially. Check afterwards that all event have been processed.
-        /// </summary>
-        /// <param name="numListeners">Number of listeners.</param>
-        [TestCase(2)]
-        [TestCase(3)]
-        [TestCase(4)]
-        [TestCase(6)]
-        [TestCase(8)]
-        [TestCase(10)]
-        [TestCase(20)]
-        [TestCase(256)]
-        public void TestConcurrentListenersSequentially(int numListeners)
-        {
-            _eb.RegisterEvent(_eventControl);
-            _eb.RegisterEvent(_eventSound);
-            _eb.RegisterEvent(_eventControl);
-
-            List<SimpleEventProcessor> listOfProcessors= new List<SimpleEventProcessor>();
-            for (int iter = 0; iter < numListeners; iter++)
-            {
-                var processor= new SimpleEventProcessor();
-                listOfProcessors.Add(processor);
-                _eb.Subscribe(GameEventType.ControlEvent, processor);
-                _eb.Subscribe(GameEventType.SoundEvent, processor);
-            }
-
-            _eb.ProcessEventsSequentially();
-
-            Assert.That(_simpleEventProcessor.EventCounterControl == 2);
-            Assert.That(_simpleEventProcessor.EventCounterSound == 1);
-            foreach (var processor in listOfProcessors)
-            {
-                Assert.That(processor.EventCounterControl == 2);
-                Assert.That(processor.EventCounterSound == 1);
-            }
-        }
-
-        /// <summary>
-        /// Checks that exceptions are raised if the processor reference is null. Absence of undesired behavior.
-        /// </summary>
-        [Test]
-        public void TestSubscribeGameEventProcessorArgumentNotNullException()
-        {
-            Assert.Throws<ArgumentNullException>(delegate {
-                _eb.Subscribe(GameEventType.ControlEvent, default(IGameEventProcessor));
-            });
-        }
-
-        /// <summary>
-        /// Checks that exceptions are raised if the processor reference is null. Absence of undesired behavior.
-        /// </summary>
-        [Test]
-        public void TestUnsubscribeGameEventProcessorArgumentNotNullException()
-        {
-            Assert.Throws<ArgumentNullException>(delegate
-            {
-                _eb.Subscribe(GameEventType.ControlEvent, default(IGameEventProcessor));
-            });
-        }
+    /// <summary>
+    /// Checks if the EventBus can be flused.
+    /// </summary>
+    [Test]
+    public void TestFlush() {
+        eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
+        eventBus.RegisterEvent(SomeGameEvent);
+        eventBus.Flush();
+        eventBus.ProcessEvents();
+        Assert.AreEqual(0, SomeGameEventCount);
     }
 }
