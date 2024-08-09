@@ -4,11 +4,23 @@ using System;
 using DIKUArcade.Entities;
 using System.Numerics;
 
-
-// https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-detection
-// Potentially allow for AABB with circles.
-// Or use SAT.
+/// <summary>
+/// Provides methods for detecting collisions between various shapes.
+/// This class includes methods for detecting collisions between axis-aligned
+/// bounding boxes (AABBs) and between an AABB and a circle. It utilizes various
+/// algorithms to determine if and how two shapes intersect and provides information
+/// about the collision, including the direction and impact factor.
+/// </summary>
 public class CollisionDetection {
+    /// <summary>
+    /// Detects collision between an axis-aligned bounding box (AABB) and a circle.
+    /// This method is currently not implemented and will throw a 
+    /// <see cref="NotImplementedException"/> if called.
+    /// </summary>
+    /// <param name="actor">The dynamic shape representing the moving object.</param>
+    /// <param name="shape">The static shape representing the stationary object.</param>
+    /// <returns>A <see cref="CollisionData"/> object containing collision information.</returns>
+    /// <exception cref="NotImplementedException">Thrown if this method is not implemented.</exception>
     public static CollisionData Aabb_C(DynamicShape actor, Shape shape) {
         throw new NotImplementedException("CollisionDetection.Aabb_C is not finished!");
 
@@ -32,9 +44,20 @@ public class CollisionDetection {
         // Clamp D to width/2 height/2 and add it to staCenter
 
         return data;
+        https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-detection
+        Potentially allow for AABB with circles.
+        Or use SAT.
         */
     }
 
+    /// <summary>
+    /// Detects collision between two axis-aligned bounding boxes (AABBs).
+    /// This method calculates if and how two AABBs intersect and determines
+    /// the collision details such as direction and impact factor.
+    /// </summary>
+    /// <param name="actor">The dynamic shape representing the moving object.</param>
+    /// <param name="shape">The static shape representing the stationary object.</param>
+    /// <returns>A <see cref="CollisionData"/> object containing collision information.</returns>
     public static CollisionData Aabb(DynamicShape actor, Shape shape) {
         var data = new CollisionData {
             Collision = false,

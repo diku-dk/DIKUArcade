@@ -1,10 +1,21 @@
-using System;
-
 namespace DIKUArcade.Input;
 
-public class KeyTransformer : IKeyTransformer<Lowlevel.KeyboardKey, Lowlevel.KeyAction> {
-    public KeyboardKey TransformKey(Lowlevel.KeyboardKey key) {
-        switch (key) {
+using System;
+
+/// <summary>
+/// Transforms low-level keyboard keys and actions into high-level keyboard keys and actions.
+/// </summary>
+public class KeyTransformer : IKeyTransformer<Lowlevel.KeyboardKey, Lowlevel.KeyAction>
+{
+    /// <summary>
+    /// Transforms a low-level keyboard key into a high-level keyboard key.
+    /// </summary>
+    /// <param name="key">The low-level keyboard key to transform.</param>
+    /// <returns>The corresponding high-level keyboard key.</returns>
+    public KeyboardKey TransformKey(Lowlevel.KeyboardKey key)
+    {
+        switch (key)
+        {
             case Lowlevel.KeyboardKey.Unknown: return KeyboardKey.Unknown;
             case Lowlevel.KeyboardKey.Space: return KeyboardKey.Space;
             case Lowlevel.KeyboardKey.Apostrophe: return KeyboardKey.Apostrophe;
@@ -125,10 +136,19 @@ public class KeyTransformer : IKeyTransformer<Lowlevel.KeyboardKey, Lowlevel.Key
 
         return KeyboardKey.Unknown;
     }
-    public KeyboardAction TransformAction(Lowlevel.KeyAction action) {
-        switch (action) {
+
+    /// <summary>
+    /// Transforms a low-level key action into a high-level keyboard action.
+    /// </summary>
+    /// <param name="action">The low-level key action to transform.</param>
+    /// <returns>The corresponding high-level keyboard action.</returns>
+    /// <exception cref="ArgumentException">Thrown when the provided action is not recognized.</exception>
+    public KeyboardAction TransformAction(Lowlevel.KeyAction action)
+    {
+        switch (action)
+        {
             case Lowlevel.KeyAction.KeyPress: return KeyboardAction.KeyPress;
-            case Lowlevel.KeyAction.KeyRelease: return KeyboardAction.KeyPress;
+            case Lowlevel.KeyAction.KeyRelease: return KeyboardAction.KeyRelease; // Fixed to map to KeyRelease
             default: break;
         }
 

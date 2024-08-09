@@ -21,7 +21,7 @@ public class Game : DIKUGame {
         ulong id = 0;
         var e = new GameEvent("This is a timed event!");
         eventBus.AddOrResetTimedEvent(e, id, TimePeriod.NewSeconds(1.0));
-        Console.WriteLine($"AddTimedEvent({id})");
+        Console.WriteLine($"AddOrResetTimedEvent({id})");
     }
 
     private void AddTimedEvent() {

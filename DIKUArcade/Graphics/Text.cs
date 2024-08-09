@@ -1,12 +1,17 @@
 ﻿namespace DIKUArcade.Graphics;
 
 using System;
-using DIKUArcade.Entities;
+using System.IO;
 using System.Numerics;
 using DIKUArcade.GUI;
+using DIKUArcade.Entities;
 using System.Reflection;
 using System.Linq;
 
+/// <summary>
+/// Represents a text object that can be rendered on the screen. 
+/// Supports customization of font size, font family, and text color.
+/// </summary>
 public class Text : IBaseImage {
     private Lowlevel.PathCollection path;
     private int size = 50;
@@ -22,6 +27,14 @@ public class Text : IBaseImage {
         "DIKUArcade.Fonts.Pixeldroid.Menu.PixeldroidMenuRegular.ttf"
     };
     private readonly Lowlevel.FontFamily[] fontFamilies;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Text"/> class with the specified text.
+    /// The default font size is set to 50, and the default font family is set to a predefined family.
+    /// </summary>
+    /// <param name="text">
+    /// The text string to be rendered.
+    /// </param>
     public Text(string text) {
         var assembly = Assembly.GetExecutingAssembly();
 
@@ -35,8 +48,19 @@ public class Text : IBaseImage {
         path = Lowlevel.createText(text, font);
         originalExtent = LowlevelMeasure();
     }
-    
-    
+
+    /// <summary>
+    /// Calculates the ideal extent of the text object relative to the specified width and height.
+    /// </summary>
+    /// <param name="width">
+    /// The width to be used for scaling.
+    /// </param>
+    /// <param name="height">
+    /// The height to be used for scaling.
+    /// </param>
+    /// <returns>
+    /// The ideal extent of the text object as a <see cref="Vector2"/>.
+    /// </returns>
     public Vector2 IdealExtent(int width, int height) {
         return originalExtent / new Vector2(width, height);
     }
@@ -46,9 +70,11 @@ public class Text : IBaseImage {
     }
 
     /// <summary>
-    /// Set the text string for this Text object.
+    /// Sets the text string for this <see cref="Text"/> object.
     /// </summary>
-    /// <param name="newText">The new text string</param>
+    /// <param name="newText">
+    /// The new text string to be displayed.
+    /// </param>
     public void SetText(string text) {
         this.text = text;
         path = Lowlevel.createText(text, font);
@@ -56,15 +82,17 @@ public class Text : IBaseImage {
     }
 
     /// <summary>
-    /// Set the font size for this Text object.
+    /// Sets the font size for this <see cref="Text"/> object.
     /// </summary>
-    /// <param name="newSize">The new font size</param>
-    /// <exception cref="ArgumentOutOfRangeException">Font size must be a
-    /// positive integer.</exception>
+    /// <param name="newSize">
+    /// The new font size.
+    /// </param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown if the specified font size is less than zero.
+    /// </exception>
     public void SetFontSize(int size) {
         if (size < 0) {
-            // ReSharper disable once NotResolvedInText
-            throw  new ArgumentOutOfRangeException("Font size must be a positive integer.");
+            throw new ArgumentOutOfRangeException("Font size must be a positive integer.");
         }
 
         this.size = size;
@@ -73,11 +101,6 @@ public class Text : IBaseImage {
         originalExtent = LowlevelMeasure();
     }
 
-    /// <summary>
-    /// Set the font for this Text object, if the font is installed.
-    /// If the font is not installed defaults to Arial.
-    /// </summary>
-    /// <param name="fontfamily">The name of the font family</param>
     public void SetFont(Lowlevel.FontFamily fontFamily) {
         this.fontFamily = fontFamily;
         font = Lowlevel.makeFont(fontFamily, size);
@@ -86,37 +109,68 @@ public class Text : IBaseImage {
     }
 
     /// <summary>
-    /// Change text color
+    /// Changes the text color using RGB values.
     /// </summary>
-    /// <param name="vec">Vector3 containing the RGB color values.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Normalized color values must be
-    /// between 0 and 1.</exception>
-    public void SetColor(int r, int g, int b) {
+    /// <param name="r">
+    /// The red component of the color.
+    /// </param>
+    /// <param name="g">
+    /// The green component of the color.
+    /// </param>
+    /// <param name="b">
+    /// The blue component of the color.
+    /// </param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown if any of the color values are not within the range of 0 to 255.
+    /// </exception>
+    public void SetColor(byte r, byte g, byte b) {
         color = Lowlevel.fromRgb(r, g, b);
     }
 
     /// <summary>
-    /// Change text color
+    /// Changes the text color using RGBA values.
     /// </summary>
-    /// <param name="vec">Vec4I containing the RGBA color values.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Color values must be
-    /// between 0 and 255.</exception>
-    public void SetColor(int r, int g, int b, int a) {
+    /// <param name="r">
+    /// The red component of the color.
+    /// </param>
+    /// <param name="g">
+    /// The green component of the color.
+    /// </param>
+    /// <param name="b">
+    /// The blue component of the color.
+    /// </param>
+    /// <param name="a">
+    /// The alpha (opacity) component of the color.
+    /// </param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown if any of the color values are not within the range of 0 to 255.
+    /// </exception>
+    public void SetColor(byte r, byte g, byte b, byte a) {
         color = Lowlevel.fromRgba(r, g, b, a);
     }
 
     /// <summary>
-    /// Change text color
+    /// Changes the text color using a <see cref="Lowlevel.Color"/> object.
     /// </summary>
-    /// <param name="newColor">System.Drawing.Color containing new color channel values.</param>
+    /// <param name="newColor">
+    /// The new color to be used.
+    /// </param>
     public void SetColor(Lowlevel.Color color) {
         this.color = color;
     }
 
+    /// <summary>
+    /// Renders the text onto the currently active drawing window using the provided <see cref="WindowContext"/>.
+    /// </summary>
+    /// <param name="context">
+    /// The <see cref="WindowContext"/> in which the text will be rendered.
+    /// </param>
+    /// <param name="shape">
+    /// The <see cref="Shape"/> that specifies the position and extent of the rendered text.
+    /// </param>
     public void Render(WindowContext context, Shape shape) {
         var windowMatrix = context.Camera.WindowMatrix(shape, originalExtent);
         var newPath = Lowlevel.transformPath(path, windowMatrix);
         Lowlevel.renderBrushPath(color, newPath, context.LowlevelContext);
     }
 }
-
