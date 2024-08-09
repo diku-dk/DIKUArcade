@@ -15,20 +15,14 @@ public class GameTimerTest : ITestable {
         };
         var win = new Window(winArgs);
         var timer = new GameTimer();
-        var fps = new Text("FPS:");
-        var ups = new Text("UPS:");
-        var fpsShape = new StationaryShape(new Vector2(0.25f, 0.66f), Vector2.One);
-        var upsShape = new StationaryShape(new Vector2(0.25f, 0.33f), Vector2.One);
+        var fps = new Text("FPS:", new Vector2(0.25f, 0.66f));
+        var ups = new Text("UPS:", new Vector2(0.25f, 0.33f));
         Action<WindowContext> render = ctx => {
-            fpsShape.Extent = fps.IdealExtent(winArgs.Width, winArgs.Height);
-            upsShape.Extent = ups.IdealExtent(winArgs.Width, winArgs.Height);
-            fps.Render(ctx, fpsShape);
-            ups.Render(ctx, upsShape);
+            fps.Render(ctx);
+            ups.Render(ctx);
         };
         foreach (var text in new []{fps, ups}) {
             text.SetColor(255, 255, 255);
-            text.SetFontSize(80);
-            // text.GetShape().ScaleYFromCenter(1.2f);
         }
         while (win.IsRunning()) {
             win.PollEvents();
