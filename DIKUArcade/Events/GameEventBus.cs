@@ -8,12 +8,11 @@ using DIKUArcade.Input;
 using System.Linq;
 
 /// <summary>
-/// Alternative GameEventBus which uses Action delegates instead of using some thing like 
-/// IGameEventProcessor subscribers.
+/// A GameEventBus that uses Action delegates for handling events. This implementation
+/// allows for the registration of events, subscribing and unsubscribing of actions,
+/// and processing of both immediate and timed events.
 /// </summary>
-/// <remarks>
-/// Currently it does not allow for parallel event processing.
-/// </remark>
+/// <remarks>Parallel event processing is not supported.</remarks>
 public class GameEventBus {
     private IdGenerator idGenerator = new IdGenerator();
     private Dictionary<Type, object> subscribers = new Dictionary<Type, object>();
@@ -26,8 +25,16 @@ public class GameEventBus {
     private int activeTimedEvent = 0;
     private int inactiveTimedEvent = 1;
 
+    /// <summary>
+    /// Initializes a new instance of the GameEventBus class.
+    /// </summary>
     public GameEventBus() { }
 
+    /// <summary>
+    /// Initializes a new instance of the GameEventBus class with a specified window. 
+    /// Registers a key event handler for the window.
+    /// </summary>
+    /// <param name="window">The window to which the key event handler will be attached.</param>
     public GameEventBus(Window window) {
         window.SetKeyEventHandler((action, key) => {
             (KeyboardAction Action, KeyboardKey Key) input = (action, key);
@@ -36,18 +43,15 @@ public class GameEventBus {
     }
 
     /// <summary>
-    /// Method for subscribing delegates such they can listen for events. Any action of the same 
-    /// type will will be notified.
+    /// Subscribes an Action delegate to the event bus, allowing it to listen for events 
+    /// of a specified type.
     /// </summary>
-    /// <param name="action">
-    /// Some Action which takes a single argument that will listen for events.
-    /// </param>
-    /// <exception cref="System.ArgumentNullException">
-    /// Thrown when action is null.
-    /// </exception>
+    /// <typeparam name="Arg">The type of event argument the Action will handle.</typeparam>
+    /// <param name="action">The Action delegate to subscribe.</param>
+    /// <exception cref="ArgumentNullException">Thrown if the action is null.</exception>
     public void Subscribe<Arg>(Action<Arg> action) {
         if (action is null) {
-            throw new ArgumentNullException("action");
+            throw new ArgumentNullException(nameof(action));
         } else if (subscribers.ContainsKey(typeof(Arg))) {
             var temp = (Action<Arg>) subscribers[typeof(Arg)] + action;
             subscribers[typeof(Arg)] = temp;
@@ -58,20 +62,15 @@ public class GameEventBus {
     }
 
     /// <summary>
-    /// Method for unsubscribing delegates such they stop listening for events.
+    /// Unsubscribes an Action delegate from the event bus, stopping it from receiving events.
     /// </summary>
-    /// <param name="action">
-    /// Some Action which takes a single argument that will listen for events.
-    /// </param>
-    /// <exception cref="System.ArgumentNullException">
-    /// Thrown when action is null.
-    /// </exception>
-    /// <exception cref="System.ArgumentException">
-    /// Thrown when action have never been subscribed before.
-    /// </exception>
+    /// <typeparam name="Arg">The type of event argument the Action was handling.</typeparam>
+    /// <param name="action">The Action delegate to unsubscribe.</param>
+    /// <exception cref="ArgumentNullException">Thrown if the action is null.</exception>
+    /// <exception cref="ArgumentException">Thrown if the action was never subscribed.</exception>
     public void Unsubscribe<Arg>(Action<Arg> action) {
         if (action is null) {
-            throw new ArgumentNullException("action cannot be null.");
+            throw new ArgumentNullException(nameof(action));
         } else if (!subscribers.ContainsKey(typeof(Arg))) {
             throw new ArgumentException($"{action} was never subscribed.");
         }
@@ -90,19 +89,16 @@ public class GameEventBus {
     }
 
     /// <summary>
-    /// Method for appending an event to the event queue.
+    /// Registers an event to the event queue.
     /// </summary>
-    /// <param name="arg">
-    /// The argument that will be passed to the subscribers. It will notify the subscribers 
-    /// that takes the same parameter type.
-    /// </param>
+    /// <typeparam name="Arg">The type of the event argument.</typeparam>
+    /// <param name="arg">The event argument to be queued.</param>
     public void RegisterEvent<Arg>(Arg arg) {
         gameEventQueue.Enqueue(arg!);
     }
 
     /// <summary>
-    /// Method that will notify subscribers with timed events and events from the event queue. It 
-    /// will only notify subscribers with timed events when they expire.
+    /// Processes all queued events and timed events, notifying the appropriate subscribers.
     /// </summary>
     public void ProcessEvents() {
         ProcessTimedEvents();
@@ -120,22 +116,85 @@ public class GameEventBus {
     }
 
     /// <summary>
-    /// Method for removing events in the queue.
+    /// Clears the event queue, removing all pending events.
     /// </summary>
     public void Flush() {
         gameEventQueue.Clear();
     }
-    
+
     /// <summary>
-    /// Method for Swapping timed event buffers.
+    /// Registers a timed event to be processed after a specified time period.
     /// </summary>
-    private void SwapTimedEvents() {
-        activeTimedEvent = (activeTimedEvent + 1) % 2;
-        inactiveTimedEvent = (inactiveTimedEvent + 1) % 2;
+    /// <typeparam name="Arg">The type of the event argument.</typeparam>
+    /// <param name="arg">The event argument to be queued as a timed event.</param>
+    /// <param name="timePeriod">The time period after which the event will be processed.</param>
+    /// <returns>The unique ID of the registered timed event.</returns>
+    public ulong RegisterTimedEvent<Arg>(Arg arg, TimePeriod timePeriod) {
+        var id = idGenerator.Get();
+
+        var timedEvent = new TimedGameEvent(arg!, timePeriod);
+        timedEvents[activeTimedEvent].Add(id, timedEvent);
+        return id;
     }
 
     /// <summary>
-    /// Method that will check if the timed events have expired and adds them to the event queue.
+    /// Adds or resets a timed event in the event bus.
+    /// </summary>
+    /// <typeparam name="Arg">The type of the event argument.</typeparam>
+    /// <param name="arg">The event argument to be added or reset.</param>
+    /// <param name="id">The unique ID of the timed event to be reset.</param>
+    /// <param name="timePeriod">The time period after which the event will be processed.</param>
+    public void AddOrResetTimedEvent<Arg>(Arg arg, ulong id, TimePeriod timePeriod) {
+        var timedEvent = new TimedGameEvent(arg!, timePeriod);
+
+        if (!timedEvents[activeTimedEvent].TryAdd(id, timedEvent)) {
+            timedEvents[activeTimedEvent][id] = timedEvent;
+        }
+    }
+
+    /// <summary>
+    /// Cancels a timed event by its ID.
+    /// </summary>
+    /// <param name="id">The unique ID of the timed event to be canceled.</param>
+    /// <returns>True if the event was canceled; otherwise, false.</returns>
+    public bool CancelTimedEvent(ulong id) {
+        if (!HasTimedEvent(id)) {
+            return false;
+        }
+
+        timedEvents[activeTimedEvent].Remove(id);
+        idGenerator.Remove(id);
+        return true;
+    }
+
+    /// <summary>
+    /// Checks if a timed event exists in the event bus by its ID.
+    /// </summary>
+    /// <param name="id">The unique ID of the timed event.</param>
+    /// <returns>True if the event exists; otherwise, false.</returns>
+    public bool HasTimedEvent(ulong id) {
+        return idGenerator.Contains(id);
+    }
+
+    /// <summary>
+    /// Resets the time period of a timed event by its ID.
+    /// </summary>
+    /// <param name="id">The unique ID of the timed event to be reset.</param>
+    /// <param name="period">The new time period for the event.</param>
+    /// <returns>True if the event was successfully reset; otherwise, false.</returns>
+    public bool ResetTimedEvent(ulong id, TimePeriod period) {
+        if (!HasTimedEvent(id)) {
+            return false;
+        }
+
+        var reset = new TimedGameEvent(timedEvents[activeTimedEvent][id].GameEvent, period);
+        timedEvents[activeTimedEvent][id] = reset;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Processes all timed events, adding expired events to the event queue.
     /// </summary>
     private void ProcessTimedEvents() {
         timedEvents[inactiveTimedEvent].Clear();
@@ -150,109 +209,15 @@ public class GameEventBus {
                 timedEvents[inactiveTimedEvent].Add(timedEvent.Key, timedEvent.Value);
             }
         }
-        
+
         SwapTimedEvents();
     }
 
     /// <summary>
-    /// Method for appending an timed event to the timed event list.
+    /// Swaps the active and inactive timed event buffers.
     /// </summary>
-    /// <param name="arg">
-    /// The argument that will be passed to the Actions subscribing. It will notify the subscribers 
-    /// which takes the same parameter.
-    /// </param>
-    /// <param name="period">
-    /// The time it takes before the event expires.
-    /// </param>
-    /// <return>
-    /// The ID of the event.
-    /// </return>
-    /// <exception cref="ArgumentException">
-    /// Thrown when the action have never been subscribed before.
-    /// </exception>
-    public ulong RegisterTimedEvent<Arg>(Arg arg, TimePeriod timePeriod) {
-        var id = idGenerator.Get();
-
-        var timedEvent = new TimedGameEvent(arg!, timePeriod);
-        timedEvents[activeTimedEvent].Add(id, timedEvent);
-        return id;
-    }
-
-    /// <summary>
-    /// Method for appending or resetting an timed event. It will reset the event based on the ID so
-    /// if there is a duplicate ID it will reset to the given period and arg.
-    /// </summary>
-    /// <param name="arg">
-    /// The argument that will be passed to the Actions subscribing. It will notify the subscribers 
-    /// which takes the same parameter.
-    /// </param>
-    /// <param name="id">
-    /// The unique id of that timed event.
-    /// </param>
-    /// <param name="period">
-    /// The time it takes before the event expires.
-    /// </param>
-    public void AddOrResetTimedEvent<Arg>(Arg arg, ulong id, TimePeriod timePeriod) {
-        var timedEvent = new TimedGameEvent(arg!, timePeriod);
-
-        if (!timedEvents[activeTimedEvent].TryAdd(id, timedEvent)) {
-            timedEvents[activeTimedEvent][id] = timedEvent;
-        }
-    }
-
-    /// <summary>
-    /// Method for removing timed events based by their ID.
-    /// </summary>
-    /// <param name="id">
-    /// The ID of the timed event that will be cancelled.
-    /// </param>
-    /// <return>
-    /// True if the timed event got cancelled else the timed event did not exist and therefore 
-    /// could not be cancelled.
-    /// </return>
-    public bool CancelTimedEvent(ulong id) {
-        if (!HasTimedEvent(id)) {
-            return false;
-        }
-
-        timedEvents[activeTimedEvent].Remove(id);
-        idGenerator.Remove(id);
-        return true;
-    }
-
-    /// <summary>
-    /// Method for checking if an ID exists in event bus.
-    /// </summary>
-    /// <param name="id">
-    /// The ID of the timed event that is searched for.
-    /// </param>
-    /// <return>
-    /// True if it exist else false.
-    /// </return>
-    public bool HasTimedEvent(ulong id) {
-        return idGenerator.Contains(id);
-    }
-
-    /// <summary>
-    /// Method for changing the time of a timed event.
-    /// </summary>
-    /// <param name="id">
-    /// The ID of the timed event to be reset.
-    /// </param>
-    /// <param name="period">
-    /// The time it takes before the event expires.
-    /// </param>
-    /// <return>
-    /// True if it could be changed else false if the ID did not exist.
-    /// </return>
-    public bool ResetTimedEvent(ulong id, TimePeriod period) {
-        if (!HasTimedEvent(id)) {
-            return false;
-        }
-
-        var reset = new TimedGameEvent(timedEvents[activeTimedEvent][id].GameEvent, period);
-        timedEvents[activeTimedEvent][id] = reset;
-
-        return true;
+    private void SwapTimedEvents() {
+        activeTimedEvent = (activeTimedEvent + 1) % 2;
+        inactiveTimedEvent = (inactiveTimedEvent + 1) % 2;
     }
 }
