@@ -10,19 +10,15 @@ using DIKUArcade.Entities;
 public class Game : DIKUGame {
 
     private Text text;
-    private StationaryShape shape;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        text = new Text("MY TEXT");
-        shape = new StationaryShape(new Vector2(0.25f, 0.5f), Vector2.One);
+        text = new Text("MY TEXT", new Vector2(0.25f, 0.5f));
         text.SetColor(0, 255, 0, 255);
+        text.Scale *= new Vector2(1, 2.5f);
     }
 
 
     public override void Render(WindowContext context) {
-        shape.Position = new Vector2(0.25f, 0.5f);
-        shape.Extent = text.IdealExtent(window.Width, window.Height);
-        shape.ScaleYFromCenter(7f);
-        text.Render(context, shape);
+        text.Render(context);
     }
 
     public override void Update() { }

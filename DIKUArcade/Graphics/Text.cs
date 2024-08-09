@@ -1,176 +1,113 @@
-﻿namespace DIKUArcade.Graphics;
+namespace DIKUArcade.Graphics;
 
-using System;
-using System.IO;
 using System.Numerics;
 using DIKUArcade.GUI;
 using DIKUArcade.Entities;
-using System.Reflection;
-using System.Linq;
+using DIKUArcade.Font;
 
 /// <summary>
-/// Represents a text object that can be rendered on the screen. 
-/// Supports customization of font size, font family, and text color.
+/// Represents a text object that can be rendered on the screen, with support for positioning,
+/// scaling, and custom font settings. This class wraps the <see cref="ImageText"/> class 
+/// to handle the rendering of text with a specified font and color.
 /// </summary>
-public class Text : IBaseImage {
-    private Lowlevel.PathCollection path;
-    private int size = 50;
-    private Lowlevel.FontFamily fontFamily;
-    private Lowlevel.Font font;
-    private string text;
-    private Lowlevel.Color color = Lowlevel.Color.White;
-    private Vector2 originalExtent;
-    private readonly string[] fonts = {
-        "DIKUArcade.Fonts.Pixeldroid.Botic.PixeldroidBoticRegular.ttf",
-        "DIKUArcade.Fonts.Pixeldroid.Console.PixeldroidConsoleRegular.ttf",
-        "DIKUArcade.Fonts.Pixeldroid.Console.PixeldroidConsoleRegularMono.ttf",
-        "DIKUArcade.Fonts.Pixeldroid.Menu.PixeldroidMenuRegular.ttf"
-    };
-    private readonly Lowlevel.FontFamily[] fontFamilies;
+public class Text {
+    private readonly ImageText imageText;
+    private readonly StationaryShape shape = new StationaryShape(Vector2.Zero, Vector2.One);
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Text"/> class with the specified text.
-    /// The default font size is set to 50, and the default font family is set to a predefined family.
+    /// Gets or sets the scale of the text. This affects the size of the rendered text.
     /// </summary>
-    /// <param name="text">
-    /// The text string to be rendered.
-    /// </param>
-    public Text(string text) {
-        var assembly = Assembly.GetExecutingAssembly();
+    public Vector2 Scale { get; set; } = Vector2.One;
 
-        fontFamilies = Lowlevel.createFontFamilies(
-            fonts.Select(font => assembly.GetManifestResourceStream(font)!)
-        ).ToArray();
-
-        this.text = text;
-        fontFamily = fontFamilies[2];
-        font = Lowlevel.makeFont(fontFamily, size);
-        path = Lowlevel.createText(text, font);
-        originalExtent = LowlevelMeasure();
+    /// <summary>
+    /// Gets or sets the position of the text on the screen.
+    /// </summary>
+    public Vector2 Position { get; set; } = Vector2.Zero;
+    
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Text"/> class with the specified text, position, scale, and font family.
+    /// </summary>
+    /// <param name="text">The text string to be rendered.</param>
+    /// <param name="position">The position of the text on the screen.</param>
+    /// <param name="scale">The scale factor for the text size.</param>
+    /// <param name="fontFamily">The font family to be used for rendering the text.</param>
+    public Text(string text, Vector2 position, float scale, FontFamily fontFamily) {
+        imageText = new ImageText(text, 100, fontFamily);
+        Position = position;
+        Scale = new Vector2(scale, scale);
     }
 
     /// <summary>
-    /// Calculates the ideal extent of the text object relative to the specified width and height.
+    /// Initializes a new instance of the <see cref="Text"/> class with the specified text, position, and scale.
+    /// Uses a default font family.
     /// </summary>
-    /// <param name="width">
-    /// The width to be used for scaling.
-    /// </param>
-    /// <param name="height">
-    /// The height to be used for scaling.
-    /// </param>
-    /// <returns>
-    /// The ideal extent of the text object as a <see cref="Vector2"/>.
-    /// </returns>
-    public Vector2 IdealExtent(int width, int height) {
-        return originalExtent / new Vector2(width, height);
+    /// <param name="text">The text string to be rendered.</param>
+    /// <param name="position">The position of the text on the screen.</param>
+    /// <param name="scale">The scale factor for the text size.</param>
+    public Text(string text, Vector2 position, float scale) {
+        imageText = new ImageText(text, 100);
+        Position = position;
+        Scale = new Vector2(scale, scale);
     }
-
-    private Vector2 LowlevelMeasure() {
-        return Lowlevel.measureTextCSharp(font, text) + Vector2.UnitY * 5;
+    
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Text"/> class with the specified text and position.
+    /// Uses a default font family and scale.
+    /// </summary>
+    /// <param name="text">The text string to be rendered.</param>
+    /// <param name="position">The position of the text on the screen.</param>
+    public Text(string text, Vector2 position) {
+        imageText = new ImageText(text, 100);
+        Position = position;
     }
 
     /// <summary>
     /// Sets the text string for this <see cref="Text"/> object.
     /// </summary>
-    /// <param name="newText">
-    /// The new text string to be displayed.
-    /// </param>
+    /// <param name="text">The new text string to be displayed.</param>
     public void SetText(string text) {
-        this.text = text;
-        path = Lowlevel.createText(text, font);
-        originalExtent = LowlevelMeasure();
+        imageText.SetText(text);
     }
 
     /// <summary>
-    /// Sets the font size for this <see cref="Text"/> object.
+    /// Sets the font family for this <see cref="Text"/> object.
     /// </summary>
-    /// <param name="newSize">
-    /// The new font size.
-    /// </param>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown if the specified font size is less than zero.
-    /// </exception>
-    public void SetFontSize(int size) {
-        if (size < 0) {
-            throw new ArgumentOutOfRangeException("Font size must be a positive integer.");
-        }
-
-        this.size = size;
-        font = Lowlevel.makeFont(fontFamily, size);
-        path = Lowlevel.createText(text, font);
-        originalExtent = LowlevelMeasure();
-    }
-
-    public void SetFont(Lowlevel.FontFamily fontFamily) {
-        this.fontFamily = fontFamily;
-        font = Lowlevel.makeFont(fontFamily, size);
-        path = Lowlevel.createText(text, font);
-        originalExtent = LowlevelMeasure();
+    /// <param name="fontFamily">The new font family to be used.</param>
+    public void SetFont(FontFamily fontFamily) {
+        imageText.SetFont(fontFamily);
     }
 
     /// <summary>
     /// Changes the text color using RGB values.
     /// </summary>
-    /// <param name="r">
-    /// The red component of the color.
-    /// </param>
-    /// <param name="g">
-    /// The green component of the color.
-    /// </param>
-    /// <param name="b">
-    /// The blue component of the color.
-    /// </param>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown if any of the color values are not within the range of 0 to 255.
-    /// </exception>
+    /// <param name="r">The red component of the color (0-255).</param>
+    /// <param name="g">The green component of the color (0-255).</param>
+    /// <param name="b">The blue component of the color (0-255).</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if any of the color values are not within the range of 0 to 255.</exception>
     public void SetColor(byte r, byte g, byte b) {
-        color = Lowlevel.fromRgb(r, g, b);
+        imageText.SetColor(r, g, b);
     }
 
     /// <summary>
     /// Changes the text color using RGBA values.
     /// </summary>
-    /// <param name="r">
-    /// The red component of the color.
-    /// </param>
-    /// <param name="g">
-    /// The green component of the color.
-    /// </param>
-    /// <param name="b">
-    /// The blue component of the color.
-    /// </param>
-    /// <param name="a">
-    /// The alpha (opacity) component of the color.
-    /// </param>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown if any of the color values are not within the range of 0 to 255.
-    /// </exception>
+    /// <param name="r">The red component of the color (0-255).</param>
+    /// <param name="g">The green component of the color (0-255).</param>
+    /// <param name="b">The blue component of the color (0-255).</param>
+    /// <param name="a">The alpha (opacity) component of the color (0-255).</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if any of the color values are not within the range of 0 to 255.</exception>
     public void SetColor(byte r, byte g, byte b, byte a) {
-        color = Lowlevel.fromRgba(r, g, b, a);
-    }
-
-    /// <summary>
-    /// Changes the text color using a <see cref="Lowlevel.Color"/> object.
-    /// </summary>
-    /// <param name="newColor">
-    /// The new color to be used.
-    /// </param>
-    public void SetColor(Lowlevel.Color color) {
-        this.color = color;
+        imageText.SetColor(r, g, b, a);
     }
 
     /// <summary>
     /// Renders the text onto the currently active drawing window using the provided <see cref="WindowContext"/>.
+    /// The position and scale of the text are taken into account when rendering.
     /// </summary>
-    /// <param name="context">
-    /// The <see cref="WindowContext"/> in which the text will be rendered.
-    /// </param>
-    /// <param name="shape">
-    /// The <see cref="Shape"/> that specifies the position and extent of the rendered text.
-    /// </param>
-    public void Render(WindowContext context, Shape shape) {
-        var windowMatrix = context.Camera.WindowMatrix(shape, originalExtent);
-        var newPath = Lowlevel.transformPath(path, windowMatrix);
-        Lowlevel.renderBrushPath(color, newPath, context.LowlevelContext);
+    /// <param name="context">The <see cref="WindowContext"/> in which the text will be rendered.</param>
+    public void Render(WindowContext context) {
+        shape.Position = Position;
+        shape.Extent = Scale * imageText.IdealExtent(context.Window.Width, context.Window.Height);
+        imageText.Render(context, shape);
     }
 }
