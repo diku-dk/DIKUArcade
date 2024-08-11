@@ -1,4 +1,4 @@
-namespace DIKUArcade.Graphics;
+﻿namespace DIKUArcade.Graphics;
 
 using System.Numerics;
 using DIKUArcade.GUI;
@@ -23,6 +23,9 @@ public class Text {
     /// Gets or sets the position of the text on the screen.
     /// </summary>
     public Vector2 Position { get; set; } = Vector2.Zero;
+
+    public Vector2 Extent { get => Scale * idealExtent; }
+
     
     /// <summary>
     /// Initializes a new instance of the <see cref="Text"/> class with the specified text, position, scale, and font family.
@@ -100,14 +103,22 @@ public class Text {
         imageText.SetColor(r, g, b, a);
     }
 
+    private int prevWidth = 0;
+    private int prevHeight = 0;
+    private Vector2 idealExtent = Vector2.Zero;
+
     /// <summary>
     /// Renders the text onto the currently active drawing window using the provided <see cref="WindowContext"/>.
     /// The position and scale of the text are taken into account when rendering.
     /// </summary>
     /// <param name="context">The <see cref="WindowContext"/> in which the text will be rendered.</param>
     public void Render(WindowContext context) {
+        if (context.Window.Width != prevWidth || context.Window.Height != prevHeight) {
+            idealExtent = imageText.IdealExtent(context.Window.Width, context.Window.Height);
+        }
+
         shape.Position = Position;
-        shape.Extent = Scale * imageText.IdealExtent(context.Window.Width, context.Window.Height);
+        shape.Extent = Scale * idealExtent;
         imageText.Render(context, shape);
     }
 }

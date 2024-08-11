@@ -1,6 +1,7 @@
 ﻿namespace DIKUArcade.Graphics;
 
 using System;
+using System.Text;
 using System.Numerics;
 using DIKUArcade.GUI;
 using DIKUArcade.Entities;
@@ -16,8 +17,8 @@ public class ImageText : IBaseImage {
     private Lowlevel.FontFamily fontFamily = FontFamily.DefaultFontFamilies[2].fontFamily;
     private Lowlevel.Font font;
     private string text;
+    internal Vector2 LowlevelMeasurements { get; private set; }
     private Lowlevel.Color color = Lowlevel.Color.White;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="Text"/> class with the specified text, font size, and font family.
     /// </summary>
@@ -35,6 +36,7 @@ public class ImageText : IBaseImage {
         this.fontFamily = fontFamily.fontFamily;
         font = Lowlevel.makeFont(this.fontFamily, size);
         path = Lowlevel.createText(text, font);
+        LowlevelMeasurements = LowlevelMeasure();
     }
 
     /// <summary>
@@ -53,6 +55,7 @@ public class ImageText : IBaseImage {
         this.size = size;
         font = Lowlevel.makeFont(fontFamily, size);
         path = Lowlevel.createText(text, font);
+        LowlevelMeasurements = LowlevelMeasure();
     }
 
     /// <summary>
@@ -64,6 +67,7 @@ public class ImageText : IBaseImage {
         this.text = text;
         font = Lowlevel.makeFont(fontFamily, size);
         path = Lowlevel.createText(text, font);
+        LowlevelMeasurements = LowlevelMeasure();
     }
 
     /// <summary>
@@ -73,7 +77,26 @@ public class ImageText : IBaseImage {
     /// <param name="height">The height to be used for scaling.</param>
     /// <returns>The ideal extent of the text object as a <see cref="Vector2"/>.</returns>
     public Vector2 IdealExtent(int width, int height) {
-        return LowlevelMeasure() / new Vector2(width, height);
+        return LowlevelMeasurements / new Vector2(width, height);
+    }
+    
+    // Very hacky but it works for most cases, for some reason spaces ruins the text measurements.
+    private string Replacer(string input) {
+        StringBuilder result = new StringBuilder();
+
+        foreach (char c in input) {
+            if (c == ' ') {
+                result.Append('_');
+            }
+            else if (c == '\t') {
+                result.Append("__");
+            }
+            else {
+                result.Append(c);
+            }
+        }
+
+        return result.ToString();
     }
 
     /// <summary>
@@ -81,7 +104,7 @@ public class ImageText : IBaseImage {
     /// </summary>
     /// <returns>A <see cref="Vector2"/> representing the width and height of the text.</returns>
     private Vector2 LowlevelMeasure() {
-        return Lowlevel.measureTextCSharp(font, text) + Vector2.UnitY * 5;
+        return Lowlevel.measureTextCSharp(font, Replacer(text));
     }
 
     /// <summary>
@@ -91,6 +114,7 @@ public class ImageText : IBaseImage {
     public void SetText(string text) {
         this.text = text;
         path = Lowlevel.createText(this.text, font);
+        LowlevelMeasurements = LowlevelMeasure();
     }
 
     /// <summary>
@@ -106,6 +130,7 @@ public class ImageText : IBaseImage {
         this.size = size;
         font = Lowlevel.makeFont(fontFamily, size);
         path = Lowlevel.createText(text, font);
+        LowlevelMeasurements = LowlevelMeasure();
     }
 
     /// <summary>
@@ -116,6 +141,7 @@ public class ImageText : IBaseImage {
         this.fontFamily = fontFamily.fontFamily;
         font = Lowlevel.makeFont(this.fontFamily, size);
         path = Lowlevel.createText(text, font);
+        LowlevelMeasurements = LowlevelMeasure();
     }
 
     /// <summary>
@@ -155,7 +181,7 @@ public class ImageText : IBaseImage {
     /// <param name="context">The <see cref="WindowContext"/> in which the text will be rendered.</param>
     /// <param name="shape">The <see cref="Shape"/> that specifies the position and extent of the rendered text.</param>
     public void Render(WindowContext context, Shape shape) {
-        var windowMatrix = context.Camera.WindowMatrix(shape, LowlevelMeasure());
+        var windowMatrix = context.Camera.WindowMatrix(shape.Position + new Vector2(0, shape.Extent.Y), shape.Extent, LowlevelMeasurements);
         var newPath = Lowlevel.transformPath(path, windowMatrix);
         Lowlevel.renderBrushPath(color, newPath, context.LowlevelContext);
     }

@@ -19,7 +19,7 @@ public class Game : DIKUGame {
 
         player = new Entity(new DynamicShape(new Vector2(0.5f, 0.5f), new Vector2(0.1f, 0.1f)),
             new Image(@"Assets/Taxi.png"));
-        wall = new Entity(new StationaryShape(new Vector2(0.25f, 0.5f), new Vector2(0.15f, 0.15f)),
+        wall = new Entity(new StationaryShape(new Vector2(0.25f, 0.0f), new Vector2(0.15f, 0.15f)),
             new Image(@"Assets/wall.jpeg"));
     }
 
