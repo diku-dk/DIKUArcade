@@ -165,4 +165,15 @@ public class Camera {
         );
     }
 
+    public Matrix3x2 WindowMatrix(Vector2 position, Vector2 extent, Vector2 originalExtent) {
+        var windowExtent = WindowExtent(extent);
+        var windowExtentScaling = windowExtent / originalExtent;
+        var windowPosition = WindowPosition(position, windowExtent);
+        return new Matrix3x2(
+            windowExtentScaling.X, 0,
+            0, windowExtentScaling.Y,
+            windowPosition.X, windowPosition.Y
+        );
+    }
+
 }
