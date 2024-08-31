@@ -16,12 +16,10 @@ public class Game : DIKUGame {
 
     private float playerVelocity = 0.07f;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        var taxiStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.Taxi.png")!;
-        var wallStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.wall.jpeg")!;
         player = new Entity(new DynamicShape(new Vector2(0.5f, 0.5f), new Vector2(0.1f, 0.1f)),
-            new Image(taxiStream));
+            new Image("TestDIKUArcade.Assets.Taxi.png"));
         wall = new Entity(new StationaryShape(new Vector2(0.25f, 0.0f), new Vector2(0.15f, 0.15f)),
-            new Image(wallStream));
+            new Image("TestDIKUArcade.Assets.wall.jpeg"));
     }
 
     public void MovePlayer(Vector2 dir) {

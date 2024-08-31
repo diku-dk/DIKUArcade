@@ -12,8 +12,7 @@ using System.Numerics;
 public class Game : DIKUGame {
     private Entity entity;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.Taxi.png")!;
-        var image = new Image(stream);
+        var image = new Image("TestDIKUArcade.Assets.Taxi.png");
         entity = new Entity(new DynamicShape(new Vector2(0.25f,0.25f), new Vector2(0.5f,0.5f)), image);
     }
 

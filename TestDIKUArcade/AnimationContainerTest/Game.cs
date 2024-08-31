@@ -13,8 +13,7 @@ public class Game : DIKUGame {
     private List<Image> strides;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
         container = new AnimationContainer(4);
-        var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.PuffOfSmoke.png")!;
-        strides = ImageStride.CreateStrides(4, stream);
+        strides = ImageStride.CreateStrides(4, "TestDIKUArcade.Assets.PuffOfSmoke.png");
     }
 
     public override void KeyHandler(KeyboardAction action, KeyboardKey key) {

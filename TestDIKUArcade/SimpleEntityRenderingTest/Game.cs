@@ -13,10 +13,8 @@ public class Game : DIKUGame {
     private Entity actor0;
     private Entity actor1;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        var taxiStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.Taxi.png")!;
-        var taxi2Stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.Taxi2.png")!;
-        var img0 = new Image(taxiStream);
-        var img1 = new Image(taxi2Stream);
+        var img0 = new Image("TestDIKUArcade.Assets.Taxi.png");
+        var img1 = new Image("TestDIKUArcade.Assets.Taxi2.png");
 
         var imgs0 = new ImageStride(250, img0, img1);
         var imgs1 = new ImageStride(250, img0, img1);

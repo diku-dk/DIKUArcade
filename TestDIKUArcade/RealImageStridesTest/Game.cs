@@ -12,8 +12,7 @@ public class Game : DIKUGame {
 
     private EntityContainer entities;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.BlueMonster.png")!;
-        var images = ImageStride.CreateStrides(4, stream);
+        var images = ImageStride.CreateStrides(4, "TestDIKUArcade.Assets.BlueMonster.png");
 
         entities = new EntityContainer(10);
         for (int i = 0; i < 10; i++) {
