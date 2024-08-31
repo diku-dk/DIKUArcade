@@ -1,6 +1,7 @@
 ﻿namespace DIKUArcade.Graphics;
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 using DIKUArcade.Timers;
 using DIKUArcade.Entities;
@@ -97,18 +98,45 @@ public class ImageStride : IBaseImage {
     /// <param name="numStrides">
     /// The total number of strides (frames) in the image.
     /// </param>
-    /// <param name="imagePath">
-    /// The relative path to the image file containing the strides.
+    /// <param name="stream">
+    /// The stream that makes up the image of the strides.
     /// </param>
     /// <returns>
     /// A list of <see cref="Image"/> objects, each corresponding to a stride of the image.
     /// </returns>
-    public static List<Image> CreateStrides(int numStrides, string imagePath) {
+    public static List<Image> CreateStrides(int numStrides, Stream stream) {
+        var res = new List<Image>();
+        using (stream) {
+            byte[] buffer = new byte[stream.Length];
+            int bytesRead = stream.Read(buffer, 0, buffer.Length);
+            ReadOnlySpan<byte> readOnlySpan = new ReadOnlySpan<byte>(buffer, 0, bytesRead);
+
+            for (int i = 0; i < numStrides; i++) {
+                res.Add(new Image(new Texture(readOnlySpan, i, numStrides)));
+            }
+        }
+        return res;
+    }
+
+    /// <summary>
+    /// Creates a list of images representing different strides of an animated image from a single image file.
+    /// </summary>
+    /// <param name="numStrides">
+    /// The total number of strides (frames) in the image.
+    /// </param>
+    /// <param name="bytes">
+    /// The bytes that make up the image of the strides.
+    /// </param>
+    /// <returns>
+    /// A list of <see cref="Image"/> objects, each corresponding to a stride of the image.
+    /// </returns>
+    public static List<Image> CreateStrides(int numStrides, ReadOnlySpan<byte> bytes) {
         var res = new List<Image>();
 
         for (int i = 0; i < numStrides; i++) {
-            res.Add(new Image(new Texture(imagePath, i, numStrides)));
+            res.Add(new Image(new Texture(bytes, i, numStrides)));
         }
+
         return res;
     }
 

@@ -9,4 +9,8 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\**\*.png"/>
+    <EmbeddedResource Include="Assets\**\*.jpeg"/>
+  </ItemGroup>
 </Project>

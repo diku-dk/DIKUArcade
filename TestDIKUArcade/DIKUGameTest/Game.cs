@@ -8,10 +8,9 @@ using DIKUArcade.Input;
 public class Game : DIKUGame {
     private bool f1Pressed = false;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        window.SetKeyEventHandler(KeyHandler);
     }
 
-    private void KeyHandler(KeyboardAction action, KeyboardKey key) {
+    public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
         if (action != KeyboardAction.KeyPress) {
             return;
         }

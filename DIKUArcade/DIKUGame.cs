@@ -3,6 +3,7 @@ namespace DIKUArcade;
 using System;
 using DIKUArcade.GUI;
 using DIKUArcade.Timers;
+using DIKUArcade.Input;
 
 /// <summary>
 /// Abstract base class for any DIKUArcade game.
@@ -29,6 +30,7 @@ public abstract class DIKUGame {
     /// <param name="windowArgs">The arguments specifying the window's configuration.</param>
     public DIKUGame(WindowArgs windowArgs) {
         window = new Window(windowArgs);
+        window.SetKeyEventHandler(KeyHandler);
     }
 
     /// <summary>
@@ -51,6 +53,13 @@ public abstract class DIKUGame {
     /// </summary>
     /// <param name="context">The context of the window used for rendering.</param>
     public abstract void Render(WindowContext context);
+
+    /// <summary>
+    /// Override this method to implement keyboard events.
+    /// </summary>
+    /// <param name="action">The keyboard action being performed, i.e. press or release.</param>
+    /// <param name="key">The keyboard key being performed.</param>
+    public abstract void KeyHandler(KeyboardAction action, KeyboardKey key);
 
     /// <summary>
     /// Starts the game loop and runs the game.

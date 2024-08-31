@@ -20,22 +20,6 @@ public class Texture {
     internal Vector2 originalExtent;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Texture"/> class from an image file.
-    /// </summary>
-    /// <param name="filename">
-    /// The path to the image file to be used as the texture.
-    /// </param>
-    public Texture(string filename) {
-        originalImage = Lowlevel.createImage(File.ReadAllBytes(filename));
-        image = originalImage;
-
-        var (width, height) = Lowlevel.measureImage(originalImage);
-        originalWidth = width;
-        originalHeight = height;
-        originalExtent = new Vector2(originalWidth, originalHeight);
-    }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="Texture"/> class from a byte array containing image data.
     /// </summary>
     /// <param name="bytes">
@@ -55,8 +39,8 @@ public class Texture {
     /// Initializes a new instance of the <see cref="Texture"/> class from an image file and
     /// extracts a specific stride from a sprite sheet.
     /// </summary>
-    /// <param name="filename">
-    /// The path to the image file containing the sprite sheet.
+    /// <param name="bytes">
+    /// The bytes that makes up the image.
     /// </param>
     /// <param name="currentStride">
     /// The index of the stride (frame) to extract from the sprite sheet.
@@ -67,12 +51,12 @@ public class Texture {
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when the current stride index is out of range or when the total number of strides is invalid.
     /// </exception>
-    public Texture(string filename, int currentStride, int stridesInImage) {
+    public Texture(ReadOnlySpan<byte> bytes, int currentStride, int stridesInImage) {
         if (currentStride < 0 || currentStride >= stridesInImage || stridesInImage < 0) {
             throw new ArgumentOutOfRangeException(
                 $"Invalid stride numbers: ({currentStride}/{stridesInImage})");
         }
-        originalImage = Lowlevel.createImage(File.ReadAllBytes(filename));
+        originalImage = Lowlevel.createImage(bytes);
         var (w, height) = Lowlevel.measureImage(originalImage);
         var width = w / stridesInImage;
         originalImage = Lowlevel.cropImage(originalImage, width * currentStride, 0, width, height);

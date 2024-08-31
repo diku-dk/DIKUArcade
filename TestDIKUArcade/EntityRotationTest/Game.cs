@@ -1,6 +1,7 @@
 namespace TestDIKUArcade.EntityRotationTest;
 
 using System;
+using System.Reflection;
 using DIKUArcade;
 using DIKUArcade.GUI;
 using DIKUArcade.Input;
@@ -11,12 +12,12 @@ using System.Numerics;
 public class Game : DIKUGame {
     private Entity entity;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        window.SetKeyEventHandler(KeyHandler);
-        var image = new Image(@"Assets/Taxi.png");
+        var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.Taxi.png")!;
+        var image = new Image(stream);
         entity = new Entity(new DynamicShape(new Vector2(0.25f,0.25f), new Vector2(0.5f,0.5f)), image);
     }
 
-    private void KeyHandler(KeyboardAction action, KeyboardKey key) {
+    public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
         if (action != KeyboardAction.KeyPress) {
             return;
         }
