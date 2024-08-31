@@ -16,8 +16,7 @@ public class Game : DIKUGame {
 
     public Game(WindowArgs windowArgs) : base(windowArgs) {
         shape = new StationaryShape(0.5f, 0.5f, 0.5f, 0.5f);
-        var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.PuffOfSmoke.png")!;
-        strides = ImageStride.CreateStrides(4, stream);
+        strides = ImageStride.CreateStrides(4, "TestDIKUArcade.Assets.PuffOfSmoke.png");
         animation = new Animation() {Duration = 0};
     }
 

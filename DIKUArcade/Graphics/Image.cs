@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using DIKUArcade.Entities;
 using DIKUArcade.GUI;
 
@@ -28,18 +29,24 @@ public class Image : IBaseImage {
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Image"/> using a Stream/>.
+    /// Initializes a new instance of the <see cref="Image"/>/>.
     /// </summary>
-    /// <param name="stream">
-    /// The stream to be used as a texture.
+    /// <param name="manifestResourceName">
+    /// The name of the embedded resource to be used as a texture.
     /// </param>
-    public Image(Stream stream) {
-        using (stream) {
-            byte[] buffer = new byte[stream.Length];
-            int bytesRead = stream.Read(buffer, 0, buffer.Length);
-            ReadOnlySpan<byte> readOnlySpan = new ReadOnlySpan<byte>(buffer, 0, bytesRead);
-            Texture = new Texture(readOnlySpan);
+    public Image(string manifestResourceName) {
+        var stream = Assembly.GetCallingAssembly().GetManifestResourceStream(manifestResourceName);
+        
+        if (stream is null) {
+            throw new Exception($"Resouce with name {manifestResourceName} does not exists. Make" +
+             "sure the name is correct or you have remebered to embed the file using the .csproj" +
+             "file.");
         }
+
+        byte[] buffer = new byte[stream.Length];
+        int bytesRead = stream.Read(buffer, 0, buffer.Length);
+        ReadOnlySpan<byte> readOnlySpan = new ReadOnlySpan<byte>(buffer, 0, bytesRead);
+        Texture = new Texture(readOnlySpan);
     }
 
     /// <summary>

@@ -11,10 +11,8 @@ using System.Reflection;
 public class Game : DIKUGame {
     private EntityContainer entities;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        var taxiStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.Taxi.png")!;
-        var taxi2Stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.Taxi2.png")!;
-        var img1 = new Image(taxiStream);
-        var img2 = new Image(taxi2Stream);
+        var img1 = new Image("TestDIKUArcade.Assets.Taxi.png");
+        var img2 = new Image("TestDIKUArcade.Assets.Taxi2.png");
 
         var maxEntities = 10;
 

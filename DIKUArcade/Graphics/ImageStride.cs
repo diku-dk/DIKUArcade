@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Collections.Generic;
 using DIKUArcade.Timers;
 using DIKUArcade.Entities;
@@ -98,22 +99,28 @@ public class ImageStride : IBaseImage {
     /// <param name="numStrides">
     /// The total number of strides (frames) in the image.
     /// </param>
-    /// <param name="stream">
-    /// The stream that makes up the image of the strides.
+    /// <param name="manifestResourceName">
+    /// he name of the embedded resource that makes up the image of the strides.
     /// </param>
     /// <returns>
     /// A list of <see cref="Image"/> objects, each corresponding to a stride of the image.
     /// </returns>
-    public static List<Image> CreateStrides(int numStrides, Stream stream) {
+    public static List<Image> CreateStrides(int numStrides, string manifestResourceName) {
         var res = new List<Image>();
-        using (stream) {
-            byte[] buffer = new byte[stream.Length];
-            int bytesRead = stream.Read(buffer, 0, buffer.Length);
-            ReadOnlySpan<byte> readOnlySpan = new ReadOnlySpan<byte>(buffer, 0, bytesRead);
+        var stream = Assembly.GetCallingAssembly().GetManifestResourceStream(manifestResourceName);
+        
+        if (stream is null) {
+            throw new Exception($"Resouce with name {manifestResourceName} does not exists. " +
+             "Make sure the name is correct or you have remebered to embed the file using the " +
+             ".csproj file.");
+        }
 
-            for (int i = 0; i < numStrides; i++) {
-                res.Add(new Image(new Texture(readOnlySpan, i, numStrides)));
-            }
+        byte[] buffer = new byte[stream.Length];
+        int bytesRead = stream.Read(buffer, 0, buffer.Length);
+        ReadOnlySpan<byte> readOnlySpan = new ReadOnlySpan<byte>(buffer, 0, bytesRead);
+
+        for (int i = 0; i < numStrides; i++) {
+            res.Add(new Image(new Texture(readOnlySpan, i, numStrides)));
         }
         return res;
     }
