@@ -86,10 +86,10 @@ public class ImageText : IBaseImage {
 
         foreach (char c in input) {
             if (c == ' ') {
-                result.Append('_');
+                result.Append('M');
             }
             else if (c == '\t') {
-                result.Append("__");
+                result.Append("MM");
             }
             else {
                 result.Append(c);
