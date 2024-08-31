@@ -6,18 +6,18 @@ using DIKUArcade.Entities;
 using DIKUArcade.GUI;
 using DIKUArcade.Input;
 using DIKUArcade.Graphics;
+using System.Reflection;
 
 public class Game : DIKUGame {
     private AnimationContainer container;
     private List<Image> strides;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        window.SetKeyEventHandler(KeyHandler);
-
         container = new AnimationContainer(4);
-        strides = ImageStride.CreateStrides(4, @"Assets/PuffOfSmoke.png");
+        var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.PuffOfSmoke.png")!;
+        strides = ImageStride.CreateStrides(4, stream);
     }
 
-    private void KeyHandler(KeyboardAction action, KeyboardKey key) {
+    public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
         if (action != KeyboardAction.KeyPress) {
             return;
         }

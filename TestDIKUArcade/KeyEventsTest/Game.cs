@@ -14,12 +14,11 @@ public class Game : DIKUGame {
     private SortedDictionary<int, string> test;
     private Random ran;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        window.SetKeyEventHandler(KeyHandler);
         test = new SortedDictionary<int, string>();
         ran = new Random();
     }
 
-    private void KeyHandler(KeyboardAction action, KeyboardKey key) {
+    public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
         Console.WriteLine($"Key: {key}");
         if (action != KeyboardAction.KeyPress) {
             return;

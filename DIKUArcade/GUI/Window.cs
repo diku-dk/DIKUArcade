@@ -72,7 +72,7 @@ public class Window : IDisposable {
     /// <param name="keyHandler">
     /// The method to handle key events.
     /// </param>
-    public void SetKeyEventHandler(Action<KeyboardAction, KeyboardKey> keyHandler) {
+    internal void SetKeyEventHandler(Action<KeyboardAction, KeyboardKey> keyHandler) {
         this.keyHandler = keyHandler;
     }
 

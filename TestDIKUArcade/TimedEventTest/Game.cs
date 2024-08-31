@@ -13,7 +13,6 @@ public class Game : DIKUGame {
     private readonly Random random = new Random();
     private readonly GameEventBus eventBus = new GameEventBus();
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        window.SetKeyEventHandler(KeyHandler);
         eventBus.Subscribe<GameEvent>(ProcessEvent);
     }
 
@@ -30,7 +29,7 @@ public class Game : DIKUGame {
         Console.WriteLine($"AddTimedEvent({id})");
     }
 
-    private void KeyHandler(KeyboardAction action, KeyboardKey key) {
+    public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
         if (action != KeyboardAction.KeyPress) {
             return;
         }

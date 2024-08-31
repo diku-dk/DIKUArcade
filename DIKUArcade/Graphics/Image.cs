@@ -1,6 +1,7 @@
 ﻿namespace DIKUArcade.Graphics;
 
 using System;
+using System.IO;
 using DIKUArcade.Entities;
 using DIKUArcade.GUI;
 
@@ -17,16 +18,6 @@ public class Image : IBaseImage {
     public Texture Texture { get; private set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Image"/> class using a file path to the image.
-    /// </summary>
-    /// <param name="imageFile">
-    /// The path to the image file to be used as a texture.
-    /// </param>
-    public Image(string imageFile) {
-        Texture = new Texture(imageFile);
-    }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="Image"/> class using an existing <see cref="Texture"/>.
     /// </summary>
     /// <param name="texture">
@@ -34,6 +25,31 @@ public class Image : IBaseImage {
     /// </param>
     public Image(Texture texture) {
         Texture = texture;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Image"/> using a Stream/>.
+    /// </summary>
+    /// <param name="stream">
+    /// The stream to be used as a texture.
+    /// </param>
+    public Image(Stream stream) {
+        using (stream) {
+            byte[] buffer = new byte[stream.Length];
+            int bytesRead = stream.Read(buffer, 0, buffer.Length);
+            ReadOnlySpan<byte> readOnlySpan = new ReadOnlySpan<byte>(buffer, 0, bytesRead);
+            Texture = new Texture(readOnlySpan);
+        }
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Image"/> using a ReadOnlySpan<byte>/>.
+    /// </summary>
+    /// <param name="bytes">
+    /// The bytes to be used as a texture.
+    /// </param>
+    public Image(ReadOnlySpan<byte> readOnlySpan) {
+        Texture = new Texture(readOnlySpan);
     }
 
     /// <summary>

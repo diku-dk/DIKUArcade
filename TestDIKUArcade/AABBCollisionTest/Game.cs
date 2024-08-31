@@ -8,6 +8,7 @@ using System.Numerics;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
 using DIKUArcade.Physics;
+using System.Reflection;
 
 public class Game : DIKUGame {
     private Entity player;
@@ -15,12 +16,12 @@ public class Game : DIKUGame {
 
     private float playerVelocity = 0.07f;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        window.SetKeyEventHandler(KeyHandler);
-
+        var taxiStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.Taxi.png")!;
+        var wallStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.wall.jpeg")!;
         player = new Entity(new DynamicShape(new Vector2(0.5f, 0.5f), new Vector2(0.1f, 0.1f)),
-            new Image(@"Assets/Taxi.png"));
+            new Image(taxiStream));
         wall = new Entity(new StationaryShape(new Vector2(0.25f, 0.0f), new Vector2(0.15f, 0.15f)),
-            new Image(@"Assets/wall.jpeg"));
+            new Image(wallStream));
     }
 
     public void MovePlayer(Vector2 dir) {
@@ -33,7 +34,7 @@ public class Game : DIKUGame {
         player.Shape.Position += dir;
     }
 
-    private void KeyHandler(KeyboardAction action, KeyboardKey key) {
+    public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
         if (action != KeyboardAction.KeyPress) {
             return;
         }

@@ -6,14 +6,15 @@ using DIKUArcade.Input;
 using DIKUArcade.Graphics;
 using DIKUArcade.Entities;
 using System.Numerics;
+using System.Reflection;
 
 public class Game : DIKUGame {
     private EntityContainer entities;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        window.SetKeyEventHandler(KeyHandler);
-        
-        var img1 = new Image(@"Assets/Taxi.png");
-        var img2 = new Image(@"Assets/Taxi2.png");
+        var taxiStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.Taxi.png")!;
+        var taxi2Stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.Taxi2.png")!;
+        var img1 = new Image(taxiStream);
+        var img2 = new Image(taxi2Stream);
 
         var maxEntities = 10;
 
@@ -25,7 +26,7 @@ public class Game : DIKUGame {
         }
     }
 
-    private void KeyHandler(KeyboardAction action, KeyboardKey key) {
+    public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
         if (action != KeyboardAction.KeyPress) {
             return;
         }

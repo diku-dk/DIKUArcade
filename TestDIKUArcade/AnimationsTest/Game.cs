@@ -1,6 +1,7 @@
 namespace TestDIKUArcade.AnimationsTest;
 
 using System.Collections.Generic;
+using System.Reflection;
 using DIKUArcade;
 using DIKUArcade.Entities;
 using DIKUArcade.GUI;
@@ -14,13 +15,13 @@ public class Game : DIKUGame {
     private List<Image> strides;
 
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        window.SetKeyEventHandler(KeyHandler);
         shape = new StationaryShape(0.5f, 0.5f, 0.5f, 0.5f);
-        strides = ImageStride.CreateStrides(4, @"Assets/PuffOfSmoke.png");
+        var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.PuffOfSmoke.png")!;
+        strides = ImageStride.CreateStrides(4, stream);
         animation = new Animation() {Duration = 0};
     }
 
-    private void KeyHandler(KeyboardAction action, KeyboardKey key) {
+    public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
         if (action != KeyboardAction.KeyPress) {
             return;
         }

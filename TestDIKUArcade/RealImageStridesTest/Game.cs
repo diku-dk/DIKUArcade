@@ -6,14 +6,14 @@ using DIKUArcade.Input;
 using DIKUArcade.Graphics;
 using DIKUArcade.Entities;
 using System.Numerics;
+using System.Reflection;
 
 public class Game : DIKUGame {
 
     private EntityContainer entities;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        window.SetKeyEventHandler(KeyHandler);
-
-        var images = ImageStride.CreateStrides(4, @"Assets/BlueMonster.png");
+        var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TestDIKUArcade.Assets.BlueMonster.png")!;
+        var images = ImageStride.CreateStrides(4, stream);
 
         entities = new EntityContainer(10);
         for (int i = 0; i < 10; i++) {
@@ -23,7 +23,7 @@ public class Game : DIKUGame {
         }
     }
 
-    private void KeyHandler(KeyboardAction action, KeyboardKey key) {
+    public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
         if (action != KeyboardAction.KeyPress) {
             return;
         }
