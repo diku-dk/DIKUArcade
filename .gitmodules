@@ -1,0 +1,4 @@
+[submodule "diku-canvas"]
+	path = diku-canvas
+	url = git@github.com:WilliamDue/diku-canvas.git
+	branch = lowlevel-exposed

@@ -1,73 +1,101 @@
+namespace DIKUArcade;
+
 using System;
 using DIKUArcade.GUI;
 using DIKUArcade.Timers;
+using DIKUArcade.Input;
 
-namespace DIKUArcade {
+/// <summary>
+/// Abstract base class for any DIKUArcade game.
+/// Provides the basic structure and game loop for running a game.
+/// </summary>
+public abstract class DIKUGame {
     /// <summary>
-    /// Abstract base class for any DIKUArcade game.
+    /// The game window used for rendering the game.
     /// </summary>
-    public abstract class DIKUGame {
-        protected Window window;
-        private GameTimer gameTimer;
+    protected Window window;
 
-        /// <summary>
-        /// The exact amount of captured updates in the last second.
-        /// Can be used for framerate independent calculations.
-        /// </summary>
-        public static int Timestep { get; private set; }
+    private GameTimer? gameTimer;
 
-        public DIKUGame(WindowArgs windowArgs) {
-            window = new Window(windowArgs);
-        }
+    /// <summary>
+    /// The exact amount of captured updates in the last second.
+    /// This can be used for frame-rate independent calculations.
+    /// </summary>
+    public static int Timestep { get; private set; }
 
-        /// <summary>
-        /// Override this method to update game logic.
-        /// </summary>
-        public abstract void Update();
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DIKUGame"/> class.
+    /// Sets up the game window using the provided window arguments.
+    /// </summary>
+    /// <param name="windowArgs">The arguments specifying the window's configuration.</param>
+    public DIKUGame(WindowArgs windowArgs) {
+        window = new Window(windowArgs);
+        window.SetKeyEventHandler(KeyHandler);
+    }
 
-        /// <summary>
-        /// Override this method to render game entities.
-        /// </summary>
-        public abstract void Render();
+    /// <summary>
+    /// Finalizes an instance of the <see cref="DIKUGame"/> class.
+    /// Disposes of the game window when the game instance is destroyed.
+    /// </summary>
+    ~DIKUGame() {
+        window.Dispose();
+    }
 
-        /// <summary>
-        /// Enter the game loop and run the game.
-        /// This method will never return.
-        /// </summary>
-        public void Run() {
-            System.Console.WriteLine("Game.Run()");
-            gameTimer = new GameTimer(30, 30);
+    /// <summary>
+    /// Override this method to implement the logic that updates the game state.
+    /// This method is called at a regular interval defined by the game timer.
+    /// </summary>
+    public abstract void Update();
 
-            try
-            {
-                while (window.IsRunning()) {
-                    gameTimer.MeasureTime();
-                    window.PollEvents();
+    /// <summary>
+    /// Override this method to implement the rendering of game entities.
+    /// This method is called to draw the game state onto the screen.
+    /// </summary>
+    /// <param name="context">The context of the window used for rendering.</param>
+    public abstract void Render(WindowContext context);
 
-                    while (gameTimer.ShouldUpdate()) {
-                        Update();
-                    }
+    /// <summary>
+    /// Override this method to implement keyboard events.
+    /// </summary>
+    /// <param name="action">The keyboard action being performed, i.e. press or release.</param>
+    /// <param name="key">The keyboard key being performed.</param>
+    public abstract void KeyHandler(KeyboardAction action, KeyboardKey key);
 
-                    if (gameTimer.ShouldRender()) {
-                        window.Clear();
-                        Render();
-                        window.SwapBuffers();
-                    }
+    /// <summary>
+    /// Starts the game loop and runs the game.
+    /// This method will enter an infinite loop, continuously updating and rendering the game.
+    /// The method will not return until the game is closed.
+    /// </summary>
+    public void Run() {
+        gameTimer = new GameTimer(30, 30);
 
-                    if (gameTimer.ShouldReset()) {
-                        Timestep = gameTimer.CapturedUpdates;
-                    }
+        try {
+            while (window.IsRunning()) {
+                gameTimer.MeasureTime();
+                window.PollEvents();
+
+                while (gameTimer.ShouldUpdate()) {
+                    Update();
                 }
 
-                window.DestroyWindow();
-            }
-            catch(Exception ex) {
-                Console.WriteLine("DIKUArcade.DIKUGame caught an exception. See message below:" + Environment.NewLine);
-                Console.WriteLine(ex);
+                if (gameTimer.ShouldRender()) {
+                    window.Render(Render);
+                }
 
-                Console.WriteLine(Environment.NewLine + "Terminating program...");
-                Environment.Exit(1);
+                if (gameTimer.ShouldReset()) {
+                    Timestep = gameTimer.CapturedUpdates;
+                }
             }
+            window.CloseWindow();
         }
+        catch(Exception ex) {
+            Console.WriteLine("DIKUArcade.DIKUGame caught an exception. See message below:" + Environment.NewLine);
+            Console.WriteLine(ex);
+
+            Console.WriteLine(Environment.NewLine + "Terminating program...");
+            Environment.Exit(1);
+        }
+
+        gameTimer = null;
     }
 }

@@ -1,31 +1,31 @@
 namespace TestDIKUArcade.EntityRotationTest;
 
 using System;
+using System.Reflection;
 using DIKUArcade;
 using DIKUArcade.GUI;
 using DIKUArcade.Input;
 using DIKUArcade.Graphics;
 using DIKUArcade.Entities;
-using DIKUArcade.Math;
+using System.Numerics;
 
 public class Game : DIKUGame {
     private Entity entity;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        window.SetKeyEventHandler(KeyHandler);
-        var image = new Image(@"Assets/Taxi.png");
-        entity = new Entity(new DynamicShape(new Vec2F(0.25f,0.25f), new Vec2F(0.5f,0.5f)), image);
+        var image = new Image("TestDIKUArcade.Assets.Taxi.png");
+        entity = new Entity(new DynamicShape(new Vector2(0.25f,0.25f), new Vector2(0.5f,0.5f)), image);
     }
 
-    private void KeyHandler(KeyboardAction action, KeyboardKey key) {
+    public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
         if (action != KeyboardAction.KeyPress) {
             return;
         }
 
         switch (key) {
-            case KeyboardKey.Num_1:
+            case KeyboardKey.Num1:
                 entity.Shape.Rotate((float)System.Math.PI / 16.0f);
                 break;
-            case KeyboardKey.Num_2:
+            case KeyboardKey.Num2:
                 entity.Shape.Rotate((float)System.Math.PI / -16.0f);
                 break;
             case KeyboardKey.Escape:
@@ -34,8 +34,8 @@ public class Game : DIKUGame {
         }
     }
 
-    public override void Render() { 
-        entity.RenderEntity();
+    public override void Render(WindowContext context) { 
+        entity.RenderEntity(context);
     }
 
     public override void Update() { }

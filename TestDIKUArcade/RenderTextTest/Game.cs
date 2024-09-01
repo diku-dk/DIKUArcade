@@ -3,21 +3,25 @@ namespace TestDIKUArcade.RenderTextTest;
 using DIKUArcade;
 using DIKUArcade.GUI;
 using DIKUArcade.Graphics;
-using DIKUArcade.Math;
+using DIKUArcade.Input;
+using DIKUArcade.Entities;
+using System.Numerics;
+using System;
 
 public class Game : DIKUGame {
 
     private Text text;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        text = new Text("MIN TEXT", new Vec2F(0.25f, 0.25f), new Vec2F(0.25f, 0.25f));
-        text.SetColor(255, 255, 0, 0);
-        text.GetShape().Rotation = (float)System.Math.PI / -3.0f;
-        text.GetShape().ScaleXFromCenter(3.2f);
+        text = new Text("MY TEXT", new Vector2(0.25f, 0.5f));
+        text.SetColor(0, 255, 0, 255);
+        text.Scale *= new Vector2(1, 2.5f);
+    }
+    
+    public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
     }
 
-
-    public override void Render() {
-        text.RenderText();
+    public override void Render(WindowContext context) {
+        text.Render(context);
     }
 
     public override void Update() { }
