@@ -8,42 +8,38 @@ using DIKUArcade.Timers;
 using System;
 using System.Collections.Generic;
 
-public class Game : DIKUGame, IGameEventProcessor {
+public class Game : DIKUGame {
 
-    private Random random;
-    private GameEventBus eventBus;
+    private readonly Random random = new Random();
+    private readonly GameEventBus eventBus = new GameEventBus();
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        window.SetKeyEventHandler(KeyHandler);
-
-        random = new Random();
-
-        eventBus = new GameEventBus();
-        eventBus.InitializeEventBus(new List<GameEventType> { GameEventType.TimedEvent });
-
-        eventBus.Subscribe(GameEventType.TimedEvent, this);
+        eventBus.Subscribe<GameEvent>(ProcessEvent);
     }
 
-    private void AddTimedEvent(uint id = 1) {
+    private void AddTimedEventZero() {
+        ulong id = 0;
+        var e = new GameEvent("This is a timed event!");
+        eventBus.AddOrResetTimedEvent(e, id, TimePeriod.NewSeconds(1.0));
+        Console.WriteLine($"AddOrResetTimedEvent({id})");
+    }
+
+    private void AddTimedEvent() {
+        var e = new GameEvent("This is a timed event!");
+        var id = eventBus.RegisterTimedEvent(e, TimePeriod.NewSeconds(1.0));
         Console.WriteLine($"AddTimedEvent({id})");
-        var e = new GameEvent {
-            Message = "This is a timed event!",
-            Id = id,
-            EventType = GameEventType.TimedEvent
-        };
-        eventBus.RegisterTimedEvent(e, TimePeriod.NewSeconds(1.0));
     }
 
-    private void KeyHandler(KeyboardAction action, KeyboardKey key) {
+    public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
         if (action != KeyboardAction.KeyPress) {
             return;
         }
 
         switch (key) {
             case KeyboardKey.T:
-                AddTimedEvent();
+                AddTimedEventZero();
                 break;
             case KeyboardKey.Y:
-                AddTimedEvent((uint) random.Next());
+                AddTimedEvent();
                 break;
             case KeyboardKey.Escape:
                 window.CloseWindow();
@@ -51,17 +47,13 @@ public class Game : DIKUGame, IGameEventProcessor {
         }
     }
 
-    public override void Render() { }
+    public override void Render(WindowContext context) { }
 
     public override void Update() {
         eventBus.ProcessEvents();
     }
 
     public void ProcessEvent(GameEvent gameEvent) {
-        var eventType = gameEvent.EventType;
-        if (eventType != GameEventType.TimedEvent) {
-            Console.WriteLine($"Incorrect type of event ({eventType})");
-        }
         Console.WriteLine(gameEvent.Message);
     }
 }

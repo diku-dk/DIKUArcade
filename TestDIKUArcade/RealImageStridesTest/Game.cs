@@ -5,25 +5,24 @@ using DIKUArcade.GUI;
 using DIKUArcade.Input;
 using DIKUArcade.Graphics;
 using DIKUArcade.Entities;
-using DIKUArcade.Math;
+using System.Numerics;
+using System.Reflection;
 
 public class Game : DIKUGame {
 
     private EntityContainer entities;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        window.SetKeyEventHandler(KeyHandler);
-
-        var images = ImageStride.CreateStrides(4, @"Assets/BlueMonster.png");
+        var images = ImageStride.CreateStrides(4, "TestDIKUArcade.Assets.BlueMonster.png");
 
         entities = new EntityContainer(10);
         for (int i = 0; i < 10; i++) {
-            var shape = new DynamicShape(new Vec2F(i * 0.1f, 0.9f), new Vec2F(0.1f, 0.1f));
+            var shape = new DynamicShape(new Vector2(i * 0.1f, 0.9f), new Vector2(0.1f, 0.1f));
             var stride = new ImageStride(80, images[0], images[1], images[2], images[3]);
             entities.AddDynamicEntity(shape, stride);
         }
     }
 
-    private void KeyHandler(KeyboardAction action, KeyboardKey key) {
+    public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
         if (action != KeyboardAction.KeyPress) {
             return;
         }
@@ -47,8 +46,8 @@ public class Game : DIKUGame {
         }
     }
 
-    public override void Render() {
-        entities.RenderEntities();
+    public override void Render(WindowContext context) {
+        entities.RenderEntities(context);
     }
 
     public override void Update() { }

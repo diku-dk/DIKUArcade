@@ -1,59 +1,58 @@
-﻿using System.Diagnostics;
+﻿namespace DIKUArcade.Timers;
 
-namespace DIKUArcade.Timers {
+using System.Diagnostics;
+
+/// <summary>
+/// Static timer initialized on engine startup. Can be used for
+/// animations based on static, discrete time intervals.
+/// </summary>
+public class StaticTimer {
+    private static Stopwatch timer;
+    private static bool paused;
+
+    static StaticTimer() {
+        timer = new Stopwatch();
+        timer.Start();
+        paused = false;
+    }
 
     /// <summary>
-    /// Static timer initialized on engine startup. Can be used for
-    /// animations based on static, discrete time intervals.
+    /// Get the number of elapsed milliseconds since application start
     /// </summary>
-    public class StaticTimer {
-        private static Stopwatch timer;
-        private static bool paused;
+    public static long GetElapsedMilliseconds() {
+        return timer.ElapsedMilliseconds;
+    }
 
-        static StaticTimer() {
-            StaticTimer.timer = new Stopwatch();
-            StaticTimer.timer.Start();
-            StaticTimer.paused = false;
+    /// <summary>
+    /// Get the number of elapsed seconds since application start
+    /// </summary>
+    public static double GetElapsedSeconds() {
+        return timer.ElapsedMilliseconds / 1000.0;
+    }
+
+    /// <summary>
+    /// Get the number of elapsed minutes since application start
+    /// </summary>
+    /// <returns></returns>
+    public static double GetElapsedMinutes() {
+        return timer.ElapsedMilliseconds / 60000.0;
+    }
+
+    public static void RestartTimer() {
+        timer.Restart();
+    }
+
+    public static void PauseTimer() {
+        if (!paused) {
+            timer.Stop();
+            paused = true;
         }
+    }
 
-        /// <summary>
-        /// Get the number of elapsed milliseconds since application start
-        /// </summary>
-        public static long GetElapsedMilliseconds() {
-            return StaticTimer.timer.ElapsedMilliseconds;
-        }
-
-        /// <summary>
-        /// Get the number of elapsed seconds since application start
-        /// </summary>
-        public static double GetElapsedSeconds() {
-            return StaticTimer.timer.ElapsedMilliseconds / 1000.0;
-        }
-
-        /// <summary>
-        /// Get the number of elapsed minutes since application start
-        /// </summary>
-        /// <returns></returns>
-        public static double GetElapsedMinutes() {
-            return StaticTimer.timer.ElapsedMilliseconds / 60000.0;
-        }
-
-        public static void RestartTimer() {
-            StaticTimer.timer.Restart();
-        }
-
-        public static void PauseTimer() {
-            if (!StaticTimer.paused) {
-                StaticTimer.timer.Stop();
-                StaticTimer.paused = true;
-            }
-        }
-
-        public static void ResumeTimer() {
-            if (StaticTimer.paused) {
-                StaticTimer.timer.Start();
-                StaticTimer.paused = false;
-            }
+    public static void ResumeTimer() {
+        if (paused) {
+            timer.Start();
+            paused = false;
         }
     }
 }

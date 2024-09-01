@@ -4,10 +4,11 @@ using System;
 using DIKUArcade;
 using DIKUArcade.GUI;
 using DIKUArcade.Input;
-using DIKUArcade.Math;
+using System.Numerics;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
 using DIKUArcade.Physics;
+using System.Reflection;
 
 public class Game : DIKUGame {
     private Entity player;
@@ -15,41 +16,39 @@ public class Game : DIKUGame {
 
     private float playerVelocity = 0.07f;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        window.SetKeyEventHandler(KeyHandler);
-
-        player = new Entity(new DynamicShape(new Vec2F(0.5f, 0.5f), new Vec2F(0.1f, 0.1f)),
-            new Image(@"Assets/Taxi.png"));
-        wall = new Entity(new StationaryShape(new Vec2F(0.25f, 0.5f), new Vec2F(0.15f, 0.15f)),
-            new Image(@"Assets/wall.jpeg"));
+        player = new Entity(new DynamicShape(new Vector2(0.5f, 0.5f), new Vector2(0.1f, 0.1f)),
+            new Image("TestDIKUArcade.Assets.Taxi.png"));
+        wall = new Entity(new StationaryShape(new Vector2(0.25f, 0.0f), new Vector2(0.15f, 0.15f)),
+            new Image("TestDIKUArcade.Assets.wall.jpeg"));
     }
 
-    public void MovePlayer(Vec2F dir) {
-        ((DynamicShape) player.Shape).Direction = dir;
+    public void MovePlayer(Vector2 dir) {
+        ((DynamicShape) player.Shape).Velocity = dir;
         var collide = CollisionDetection.Aabb((DynamicShape) player.Shape, wall.Shape);
         if (collide.Collision) {
             Console.WriteLine($"CollisionDetection occured in direction {collide.CollisionDir}");
-            dir *= collide.DirectionFactor;
+            dir *= collide.VelocityFactor;
         }
         player.Shape.Position += dir;
     }
 
-    private void KeyHandler(KeyboardAction action, KeyboardKey key) {
+    public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
         if (action != KeyboardAction.KeyPress) {
             return;
         }
 
         switch (key) {
             case KeyboardKey.Left:
-                MovePlayer(new Vec2F(-playerVelocity, 0.0f));
+                MovePlayer(new Vector2(-playerVelocity, 0.0f));
                 break;
             case KeyboardKey.Right:
-                MovePlayer(new Vec2F(playerVelocity, 0.0f));
+                MovePlayer(new Vector2(playerVelocity, 0.0f));
                 break;
             case KeyboardKey.Up:
-                MovePlayer(new Vec2F(0.0f, playerVelocity));
+                MovePlayer(new Vector2(0.0f, playerVelocity));
                 break;
             case KeyboardKey.Down:
-                MovePlayer(new Vec2F(0.0f, -playerVelocity));
+                MovePlayer(new Vector2(0.0f, -playerVelocity));
                 break;
             case KeyboardKey.Escape:
                 window.CloseWindow();
@@ -57,9 +56,9 @@ public class Game : DIKUGame {
         }
     }
 
-    public override void Render() { 
-        player.RenderEntity();
-        wall.RenderEntity();
+    public override void Render(WindowContext context) { 
+        player.RenderEntity(context);
+        wall.RenderEntity(context);
     }
 
     public override void Update() {
