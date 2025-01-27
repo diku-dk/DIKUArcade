@@ -1,191 +1,228 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace DIKUArcade.Graphics;
+
+using System;
 using System.IO;
+using System.Reflection;
+using System.Collections.Generic;
 using DIKUArcade.Timers;
 using DIKUArcade.Entities;
-using DIKUArcade.Math;
-using DIKUArcade.Utilities;
+using DIKUArcade.GUI;
 
-namespace DIKUArcade.Graphics {
+/// <summary>
+/// Represents an animated image based on a sequence of textures, displaying a different texture
+/// at specified intervals to create animation effects. The animation is controlled by a frequency 
+/// in milliseconds and can be started, stopped, or adjusted dynamically.
+/// </summary>
+public class ImageStride : IBaseImage {
+
+    private static Random generator = new Random();
+    private int animFrequency;
+    private double lastTime;
+    private bool animate;
+    private List<Texture> textures = new List<Texture>();
+    private int maxImageCount;
+    private int currentImageCount;
+
     /// <summary>
-    /// Image stride to show animations based on a list of textures
-    /// and an animation frequency.
+    /// This value is used for adding a random offset to the animation timer to ensure that
+    /// multiple objects with the same animation frequency do not change textures at the same time.
     /// </summary>
-    public class ImageStride : IBaseImage {
-        private int animFrequency;
+    private double timerOffset;
 
-        private double lastTime;
-        private bool animate;
+    private void Init(int milliseconds, IEnumerable<Image> images) {
+        if (milliseconds < 0) {
+            throw new ArgumentException("milliseconds must be a positive integer");
+        }
+        animFrequency = milliseconds;
+        animate = true;
 
-        private List<Texture> textures;
-        private readonly int maxImageCount;
-        private int currentImageCount;
+        int count = 0;
+        foreach (Image img in images) {
+            textures.Add(img.Texture);
+            count++;
+        }
+        maxImageCount = count - 1;
 
-        /// <summary>
-        /// This value is only added for random animation offset,
-        /// e.g. 100 objects created at the same time with the same
-        /// animation frequency will not change texture at the exact
-        /// same time.
-        /// </summary>
-        private double timerOffset;
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="milliseconds">Time between consecutive frames</param>
-        /// <param name="imageFiles">List of image files to include in strides</param>
-        public ImageStride(int milliseconds, params string[] imageFiles) {
-            if (milliseconds < 0) {
-                throw new ArgumentException("milliseconds must be a positive integer");
-            }
-            animFrequency = milliseconds;
-            animate = true;
-
-            int imgs = imageFiles.Length;
-            if (imgs == 0) {
-                // ReSharper disable once NotResolvedInText
-                throw new ArgumentNullException("At least one image file must be specified");
-            }
-            maxImageCount = imgs - 1;
-            currentImageCount = RandomGenerator.Generator.Next(imgs);
-            timerOffset = RandomGenerator.Generator.Next(100);
-
-            textures = new List<Texture>(imgs);
-            foreach (string imgFile in imageFiles)
-            {
-                textures.Add(new Texture(imgFile));
-            }
+        if (count == 0) {
+            throw new ArgumentNullException("at least one image file must be specified");
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="milliseconds">Time between consecutive frames</param>
-        /// <param name="images">List of images to include in strides</param>
-        public ImageStride(int milliseconds, params Image[] images) {
-            if (milliseconds < 0) {
-                throw new ArgumentException("milliseconds must be a positive integer");
-            }
-            animFrequency = milliseconds;
-            animate = true;
+        currentImageCount = generator.Next(count);
+        timerOffset = generator.Next(100);
+    }
 
-            int imgs = images.Length;
-            if (imgs == 0) {
-                // ReSharper disable once NotResolvedInText
-                throw new ArgumentNullException("at least one image file must be specified");
-            }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ImageStride"/> class with a specific animation frequency
+    /// and a list of <see cref="Image"/> objects to use for the animation frames.
+    /// </summary>
+    /// <param name="milliseconds">
+    /// The frequency of animation changes in milliseconds.
+    /// </param>
+    /// <param name="images">
+    /// A list of <see cref="Image"/> objects representing the frames of the animation.
+    /// </param>
+    public ImageStride(int milliseconds, List<Image> images) {
+        Init(milliseconds, images);
+    }
 
-            maxImageCount = imgs - 1;
-            currentImageCount = RandomGenerator.Generator.Next(imgs);
-            timerOffset = RandomGenerator.Generator.Next(100);
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ImageStride"/> class with a specific animation frequency
+    /// and an enumerable collection of <see cref="Image"/> objects to use for the animation frames.
+    /// </summary>
+    /// <param name="milliseconds">
+    /// The frequency of animation changes in milliseconds.
+    /// </param>
+    /// <param name="images">
+    /// An enumerable collection of <see cref="Image"/> objects representing the frames of the animation.
+    /// </param>
+    public ImageStride(int milliseconds, IEnumerable<Image> images) {
+        Init(milliseconds, images);
+    }
 
-            textures = new List<Texture>(imgs);
-            foreach (Image img in images)
-            {
-                textures.Add(img.GetTexture());
-            }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ImageStride"/> class with a specific animation frequency
+    /// and a variable number of <see cref="Image"/> objects to use for the animation frames.
+    /// </summary>
+    /// <param name="milliseconds">
+    /// The frequency of animation changes in milliseconds.
+    /// </param>
+    /// <param name="images">
+    /// An array of <see cref="Image"/> objects representing the frames of the animation.
+    /// </param>
+    public ImageStride(int milliseconds, params Image[] images) {
+        Init(milliseconds, new List<Image>(images));
+    }
+
+    /// <summary>
+    /// Creates a list of images representing different strides of an animated image from a single image file.
+    /// </summary>
+    /// <param name="numStrides">
+    /// The total number of strides (frames) in the image.
+    /// </param>
+    /// <param name="manifestResourceName">
+    /// he name of the embedded resource that makes up the image of the strides.
+    /// </param>
+    /// <returns>
+    /// A list of <see cref="Image"/> objects, each corresponding to a stride of the image.
+    /// </returns>
+    public static List<Image> CreateStrides(int numStrides, string manifestResourceName) {
+        var res = new List<Image>();
+        var stream = Assembly.GetCallingAssembly().GetManifestResourceStream(manifestResourceName);
+        
+        if (stream is null) {
+            throw new Exception($"Resouce with name {manifestResourceName} does not exists. " +
+             "Make sure the name is correct or you have remebered to embed the file using the " +
+             ".csproj file.");
         }
 
-        public ImageStride(int milliseconds, List<Image> images) {
-            if (milliseconds < 0) {
-                throw new ArgumentException("milliseconds must be a positive integer");
-            }
-            animFrequency = milliseconds;
-            animate = true;
+        byte[] buffer = new byte[stream.Length];
+        int bytesRead = stream.Read(buffer, 0, buffer.Length);
+        ReadOnlySpan<byte> readOnlySpan = new ReadOnlySpan<byte>(buffer, 0, bytesRead);
 
-            int imgs = images.Count;
-            if (imgs == 0) {
-                // ReSharper disable once NotResolvedInText
-                throw new ArgumentNullException("at least one image file must be specified");
-            }
+        for (int i = 0; i < numStrides; i++) {
+            res.Add(new Image(new Texture(readOnlySpan, i, numStrides)));
+        }
+        return res;
+    }
 
-            maxImageCount = imgs - 1;
-            currentImageCount = RandomGenerator.Generator.Next(imgs);
-            timerOffset = RandomGenerator.Generator.Next(100);
+    /// <summary>
+    /// Creates a list of images representing different strides of an animated image from a single image file.
+    /// </summary>
+    /// <param name="numStrides">
+    /// The total number of strides (frames) in the image.
+    /// </param>
+    /// <param name="bytes">
+    /// The bytes that make up the image of the strides.
+    /// </param>
+    /// <returns>
+    /// A list of <see cref="Image"/> objects, each corresponding to a stride of the image.
+    /// </returns>
+    public static List<Image> CreateStrides(int numStrides, ReadOnlySpan<byte> bytes) {
+        var res = new List<Image>();
 
-            textures = new List<Texture>(imgs);
-            foreach (Image img in images)
-            {
-                textures.Add(img.GetTexture());
-            }
+        for (int i = 0; i < numStrides; i++) {
+            res.Add(new Image(new Texture(bytes, i, numStrides)));
         }
 
-        /// <summary>
-        /// Create a List of images from an image stride file.
-        /// </summary>
-        /// <param name="numStrides">Total number of strides in the image</param>
-        /// <param name="imagePath">The relative path to the image</param>
-        /// <returns>A list of Image objects, each corresponding to a stride of the image.</returns>
-        public static List<Image> CreateStrides(int numStrides, string imagePath) {
-            var res = new List<Image>();
+        return res;
+    }
 
-            for (int i = 0; i < numStrides; i++) {
-                res.Add(new Image(new Texture(imagePath, i, numStrides)));
-            }
-            return res;
+    /// <summary>
+    /// Starts or restarts the animation of this <see cref="ImageStride"/> object.
+    /// </summary>
+    public void StartAnimation() {
+        animate = true;
+        lastTime = StaticTimer.GetElapsedMilliseconds();
+    }
+
+    /// <summary>
+    /// Stops the animation of this <see cref="ImageStride"/> object.
+    /// </summary>
+    public void StopAnimation() {
+        animate = false;
+    }
+
+    /// <summary>
+    /// Sets the animation frequency for this <see cref="ImageStride"/> object.
+    /// </summary>
+    /// <param name="milliseconds">
+    /// The new frequency of animation changes in milliseconds.
+    /// </param>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the provided milliseconds is less than 0.
+    /// </exception>
+    public void SetAnimationFrequency(int milliseconds) {
+        if (milliseconds < 0) {
+            throw new ArgumentException("milliseconds must be a positive integer");
+        }
+        animFrequency = milliseconds;
+    }
+
+    /// <summary>
+    /// Changes the animation frequency for this <see cref="ImageStride"/> object relatively.
+    /// </summary>
+    /// <param name="millisecondsChange">
+    /// The amount by which to change the animation frequency in milliseconds.
+    /// </param>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the resulting frequency is less than 0.
+    /// </exception>
+    public void ChangeAnimationFrequency(int millisecondsChange) {
+        animFrequency += millisecondsChange;
+        if (animFrequency < 0) {
+            animFrequency = 0;
+        }
+    }
+
+    /// <summary>
+    /// Renders the current frame of this <see cref="ImageStride"/> object in the specified window context.
+    /// </summary>
+    /// <param name="context">
+    /// The context of the window where the image will be rendered.
+    /// </param>
+    /// <param name="shape">
+    /// The shape that defines the position and dimensions of the image.
+    /// </param>
+    public void Render(WindowContext context, Shape shape) {
+        // Measure elapsed time
+        double elapsed = StaticTimer.GetElapsedMilliseconds() + timerOffset;
+
+        // Change texture stride if the desired number of milliseconds has passed
+        if (animFrequency > 0 && animate && elapsed - lastTime > animFrequency) {
+            lastTime = elapsed;
+            currentImageCount =
+                (currentImageCount >= maxImageCount) ? 0 : currentImageCount + 1;
         }
 
-        /// <summary>
-        /// Restart animation for this ImageStride object
-        /// </summary>
-        public void StartAnimation() {
-            animate = true;
-            lastTime = StaticTimer.GetElapsedMilliseconds();
-        }
-
-        /// <summary>
-        /// Halt animation for this ImageStride object
-        /// </summary>
-        public void StopAnimation() {
-            animate = false;
-        }
-
-        /// <summary>
-        /// Change the animation frequency for this ImageStride object
-        /// </summary>
-        /// <param name="milliseconds"></param>
-        /// <exception cref="ArgumentException">milliseconds must be a positive integer</exception>
-        public void SetAnimationFrequency(int milliseconds) {
-            if (milliseconds < 0) {
-                throw new ArgumentException("milliseconds must be a positive integer");
-            }
-            animFrequency = milliseconds;
-        }
-
-        /// <summary>
-        /// Relatively change the animation frequency for this ImageStride object
-        /// </summary>
-        /// <param name="millisecondsChange"></param>
-        /// <exception cref="ArgumentException">milliseconds must be a positive integer</exception>
-        public void ChangeAnimationFrequency(int millisecondsChange) {
-            animFrequency += millisecondsChange;
-            if (animFrequency < 0) {
-                animFrequency = 0;
-            }
-        }
-
-        /// <summary>
-        /// Render this ImageStride object onto the currently active drawing window
-        /// </summary>
-        /// <param name="shape">The Shape object for the rendered image</param>
-        public void Render(Shape shape) {
-            // measure elapsed time
-            double elapsed = StaticTimer.GetElapsedMilliseconds() + timerOffset;
-
-            // the desired number of milliseconds has passed, change texture stride
-            if (animFrequency > 0 && animate && elapsed - lastTime > animFrequency) {
-                lastTime = elapsed;
-
-                currentImageCount =
-                    (currentImageCount >= maxImageCount) ? 0 : currentImageCount + 1;
-            }
-
-            // render the current texture object
-            textures[currentImageCount].Render(shape);
-        }
-        public void Render(Shape shape, Camera camera) {
-            throw new NotImplementedException();
-            
-        }
+        // Render the current texture object
+        var extent = context.Camera.WindowExtent(shape);
+        var position = context.Camera.WindowPosition(shape, extent);
+        textures[currentImageCount].Render(
+            context,
+            (int) MathF.Round(position.X, MidpointRounding.AwayFromZero),
+            (int) MathF.Round(position.Y, MidpointRounding.AwayFromZero),
+            (int) MathF.Ceiling(extent.X) + 1,
+            (int) MathF.Ceiling(extent.Y) + 1
+        );
     }
 }

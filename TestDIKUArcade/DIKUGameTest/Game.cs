@@ -8,18 +8,17 @@ using DIKUArcade.Input;
 public class Game : DIKUGame {
     private bool f1Pressed = false;
     public Game(WindowArgs windowArgs) : base(windowArgs) {
-        window.SetKeyEventHandler(KeyHandler);
     }
 
-    private void KeyHandler(KeyboardAction action, KeyboardKey key) {
+    public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
         if (action != KeyboardAction.KeyPress) {
             return;
         }
         switch (key) {
-            case KeyboardKey.Num_1:
+            case KeyboardKey.Num1:
                 window.SetClearColor(128, 52, 43);
                 break;
-            case KeyboardKey.Num_2:
+            case KeyboardKey.Num2:
                 window.SetClearColor(28, 108, 218);
                 break;
             case KeyboardKey.F1:
@@ -31,7 +30,7 @@ public class Game : DIKUGame {
         }
     }
 
-    public override void Render() { 
+    public override void Render(WindowContext context) { 
         
     }
 

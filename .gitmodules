@@ -1,0 +1,3 @@
+[submodule "diku-canvas"]
+	path = diku-canvas
+	url = https://github.com/WilliamDue/diku-canvas.git
