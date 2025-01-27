@@ -86,13 +86,13 @@ public class CollisionDetection {
             {
                 entryDistanceY = staUpperRight.Y - dynLowerLeft.Y;
                 exitDistanceY = staLowerLeft.Y - dynUpperRight.Y;
-                data.CollisionDir = CollisionDirection.CollisionDirDown;
+                data.CollisionDir = CollisionDirection.CollisionDirUp;
             }
             else
             {
                 entryDistanceY = staLowerLeft.Y - dynUpperRight.Y;
                 exitDistanceY = staUpperRight.Y - dynLowerLeft.Y;
-                data.CollisionDir = CollisionDirection.CollisionDirUp;
+                data.CollisionDir = CollisionDirection.CollisionDirDown;
             }
 
             var entryTimeY = entryDistanceY / actor.Velocity.Y;
@@ -119,13 +119,13 @@ public class CollisionDetection {
             {
                 entryDistanceX = staUpperRight.X - dynLowerLeft.X;
                 exitDistanceX = staLowerLeft.X - dynUpperRight.X;
-                data.CollisionDir = CollisionDirection.CollisionDirLeft;
+                data.CollisionDir = CollisionDirection.CollisionDirRight;
             }
             else
             {
                 entryDistanceX = staLowerLeft.X - dynUpperRight.X;
                 exitDistanceX = staUpperRight.X - dynLowerLeft.X;
-                data.CollisionDir = CollisionDirection.CollisionDirRight;
+                data.CollisionDir = CollisionDirection.CollisionDirLeft;
             }
 
             float entryTimeX = entryDistanceX / actor.Velocity.X;
