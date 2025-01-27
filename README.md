@@ -9,39 +9,36 @@ course at DIKU (Department of Computer Science, University of Copenhagen) 2018, 
 
 ### Core Features ###
 
-* A comprehensible API, designed for students with minimal programming experience
-* An event-bus system, designed for issuing commands in parallel
-* 2D-rendering using OpenGL 2.0's fixed-function pipeline
-* A simple animation system
+* A comprehensible API, designed for students with minimal programming experience.
+* An event-bus system.
+* 2D-rendering using DIKUCanvas which is based on Six Labors and SDL 2.0.
+* A simple animation system.
 * Timer for direct control over game loop FPS and UPS.
 
 ### Requested Features ###
 
-* An audio engine for effects and music
-* Support for OpenGL 3.3 for a more optimized rendering pipeline
-* Newtonian force functions for artificial gravity
-* More throrough unit-testing
-* GUI Framework
+* An audio engine for effects and music.
+* Newtonian force functions for artificial gravity.
+* More throrough unit-testing.
+* GUI Framework.
 
 ### Development ###
 
 DIKUArcade has been running stable since 2018, providing students in SU with a framework
 on which to base their coding assignments.
 
-Latest features includes an update to dependencies (OpenTK 4.5.0, latest at day of writing),
-and .NET Core 5.0. DIKUArcade has been tested and trialed on all major desktop platforms,
-but if you do run into a problem, find a bug, or wish for a feature to be added: Please feel
-free to post an [issue](https://github.com/diku-dk/DIKUArcade/issues).
-Pull-requests are also welcome.
+DIKUArcade has been tested and trialed on all major desktop platforms, but if you do run
+into a problem, find a bug, or wish for a feature to be added: Please feel free to post
+an [issue](https://github.com/diku-dk/DIKUArcade/issues). Pull-requests are also welcome.
 
 ### Gettings Started ###
-
 If you wish to contribute to the engine's source code, the best way to get started is to
 download and build the engine, and run one of the test programs in `TestDIKUArcade/Programs.cs`:
 
 ```
 $ git clone git@github.com:diku-dk/DIKUArcade.git
 $ cd DIKUArcade/
+$ git submodule update --init --recursive
 $ dotnet build DIKUArcade/
 $ dotnet build TestDIKUArcade/
 $ dotnet run -p TestDIKUArcade/

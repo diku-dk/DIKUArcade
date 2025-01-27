@@ -1,300 +1,124 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Drawing.Text;
-using OpenTK.Graphics.OpenGL;
+﻿namespace DIKUArcade.Graphics;
+
+using System.Numerics;
+using DIKUArcade.GUI;
 using DIKUArcade.Entities;
-using DIKUArcade.Math;
-using OpenTK.Mathematics;
+using DIKUArcade.Font;
 
-namespace DIKUArcade.Graphics {
-    public class Text {
-        // TODO: Add method for centering text (vertically, horizontally) within its shape!
-        /// <summary>
-        /// OpenGL texture handle
-        /// </summary>
-        private int textureId;
+/// <summary>
+/// Represents a text object that can be rendered on the screen, with support for positioning,
+/// scaling, and custom font settings. This class wraps the <see cref="ImageText"/> class 
+/// to handle the rendering of text with a specified font and color.
+/// </summary>
+public class Text {
+    private readonly ImageText imageText;
+    private readonly StationaryShape shape = new StationaryShape(Vector2.Zero, Vector2.One);
 
-        /// <summary>
-        /// The string value for the text
-        /// </summary>
-        private string text;
+    /// <summary>
+    /// Gets or sets the scale of the text. This affects the size of the rendered text.
+    /// </summary>
+    public Vector2 Scale { get; set; } = Vector2.One;
 
-        /// <summary>
-        /// The font size for the text string
-        /// </summary>
-        private int fontSize;
+    /// <summary>
+    /// Gets or sets the position of the text on the screen.
+    /// </summary>
+    public Vector2 Position { get; set; } = Vector2.Zero;
 
-        /// <summary>
-        /// The position and size of the text
-        /// </summary>
-        private StationaryShape shape;
+    public Vector2 Extent { get => Scale * idealExtent; }
 
-        /// <summary>
-        /// The color for the text
-        /// </summary>
-        private System.Drawing.Color color;
+    
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Text"/> class with the specified text, position, scale, and font family.
+    /// </summary>
+    /// <param name="text">The text string to be rendered.</param>
+    /// <param name="position">The position of the text on the screen.</param>
+    /// <param name="scale">The scale factor for the text size.</param>
+    /// <param name="fontFamily">The font family to be used for rendering the text.</param>
+    public Text(string text, Vector2 position, float scale, FontFamily fontFamily) {
+        imageText = new ImageText(text, 100, fontFamily);
+        Position = position;
+        Scale = new Vector2(scale, scale);
+    }
 
-        /// <summary>
-        /// The font family of the text.
-        /// </summary>
-        private System.Drawing.Font font;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Text"/> class with the specified text, position, and scale.
+    /// Uses a default font family.
+    /// </summary>
+    /// <param name="text">The text string to be rendered.</param>
+    /// <param name="position">The position of the text on the screen.</param>
+    /// <param name="scale">The scale factor for the text size.</param>
+    public Text(string text, Vector2 position, float scale) {
+        imageText = new ImageText(text, 100);
+        Position = position;
+        Scale = new Vector2(scale, scale);
+    }
+    
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Text"/> class with the specified text and position.
+    /// Uses a default font family and scale.
+    /// </summary>
+    /// <param name="text">The text string to be rendered.</param>
+    /// <param name="position">The position of the text on the screen.</param>
+    public Text(string text, Vector2 position) {
+        imageText = new ImageText(text, 100);
+        Position = position;
+    }
 
-        public Text(string text, Vec2F pos, Vec2F extent) {
-            this.text = text;
-            shape = new StationaryShape(pos, extent);
-            color = System.Drawing.Color.Black;
-            fontSize = 50;
-            font = new Font("Arial", fontSize);
+    /// <summary>
+    /// Sets the text string for this <see cref="Text"/> object.
+    /// </summary>
+    /// <param name="text">The new text string to be displayed.</param>
+    public void SetText(string text) {
+        imageText.SetText(text);
+    }
 
-            // create a texture id
-            textureId = GL.GenTexture();
+    /// <summary>
+    /// Sets the font family for this <see cref="Text"/> object.
+    /// </summary>
+    /// <param name="fontFamily">The new font family to be used.</param>
+    public void SetFont(FontFamily fontFamily) {
+        imageText.SetFont(fontFamily);
+    }
 
-            // bind this new texture id
-            BindTexture();
+    /// <summary>
+    /// Changes the text color using RGB values.
+    /// </summary>
+    /// <param name="r">The red component of the color (0-255).</param>
+    /// <param name="g">The green component of the color (0-255).</param>
+    /// <param name="b">The blue component of the color (0-255).</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if any of the color values are not within the range of 0 to 255.</exception>
+    public void SetColor(byte r, byte g, byte b) {
+        imageText.SetColor(r, g, b);
+    }
 
-            // set texture properties, filters, blending functions, etc.
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
+    /// <summary>
+    /// Changes the text color using RGBA values.
+    /// </summary>
+    /// <param name="r">The red component of the color (0-255).</param>
+    /// <param name="g">The green component of the color (0-255).</param>
+    /// <param name="b">The blue component of the color (0-255).</param>
+    /// <param name="a">The alpha (opacity) component of the color (0-255).</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if any of the color values are not within the range of 0 to 255.</exception>
+    public void SetColor(byte r, byte g, byte b, byte a) {
+        imageText.SetColor(r, g, b, a);
+    }
 
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+    private int prevWidth = 0;
+    private int prevHeight = 0;
+    private Vector2 idealExtent = Vector2.Zero;
 
-            GL.Enable(EnableCap.DepthTest);
-            GL.DepthFunc(DepthFunction.Lequal);
-
-            GL.Enable(EnableCap.Texture2D);
-            GL.Enable(EnableCap.AlphaTest);
-
-            GL.AlphaFunc(AlphaFunction.Gequal, 0.5f);
-
-            // unbind this new texture
-            UnbindTexture();
-
-            // create a texture
-            CreateBitmapTexture();
+    /// <summary>
+    /// Renders the text onto the currently active drawing window using the provided <see cref="WindowContext"/>.
+    /// The position and scale of the text are taken into account when rendering.
+    /// </summary>
+    /// <param name="context">The <see cref="WindowContext"/> in which the text will be rendered.</param>
+    public void Render(WindowContext context) {
+        if (context.Window.Width != prevWidth || context.Window.Height != prevHeight) {
+            idealExtent = imageText.IdealExtent(context.Window.Width, context.Window.Height);
         }
 
-        // This method assumes that
-        private void CreateBitmapTexture() {
-            BindTexture();
-
-            System.Drawing.Bitmap textBmp = new System.Drawing.Bitmap(500, 500); // match window size
-
-            // just allocate memory, so we can update efficiently using TexSubImage2D
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, textBmp.Width, textBmp.Height, 0,
-                OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
-
-            using (System.Drawing.Graphics gfx = System.Drawing.Graphics.FromImage(textBmp))
-            {
-                gfx.Clear(System.Drawing.Color.Transparent);
-                // TODO: Could create an enumeration for choosing btw different font families!
-                Font drawFont = font;
-                SolidBrush drawBrush = new SolidBrush(color);
-
-                // TODO: Maybe we should not use shape.Position here, because different coordinate system !!?
-                System.Drawing.PointF drawPoint = new System.Drawing.PointF(shape.Position.X, shape.Position.Y);
-
-                gfx.DrawString(text, drawFont, drawBrush, drawPoint); // Draw as many strings as you need
-            }
-
-            BitmapData data = textBmp.LockBits(new System.Drawing.Rectangle(0, 0, textBmp.Width, textBmp.Height),
-                ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, textBmp.Width, textBmp.Height, 0,
-                OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
-            textBmp.UnlockBits(data);
-
-            UnbindTexture();
-        }
-
-        private void BindTexture() {
-            GL.BindTexture(TextureTarget.Texture2D, textureId);
-        }
-
-        private void UnbindTexture() {
-            GL.BindTexture(TextureTarget.Texture2D, 0); // 0 is invalid texture id
-        }
-
-        public StationaryShape GetShape() {
-            return shape;
-        }
-
-        #region ChangeTextProperties
-
-        /// <summary>
-        /// Set the text string for this Text object.
-        /// </summary>
-        /// <param name="newText">The new text string</param>
-        public void SetText(string newText) {
-            text = newText;
-            CreateBitmapTexture();
-        }
-
-        /// <summary>
-        /// Set the font size for this Text object.
-        /// </summary>
-        /// <param name="newSize">The new font size</param>
-        /// <exception cref="ArgumentOutOfRangeException">Font size must be a
-        /// positive integer.</exception>
-        public void SetFontSize(int newSize) {
-            if (newSize < 0) {
-                // ReSharper disable once NotResolvedInText
-                throw  new ArgumentOutOfRangeException("Font size must be a positive integer");
-            }
-            fontSize = newSize;
-            CreateBitmapTexture();
-        }
-
-        /// <summary>
-        /// Set the font for this Text object, if the font is installed.
-        /// If the font is not installed defaults to Arial.
-        /// </summary>
-        /// <param name="fontfamily">The name of the font family</param>
-        public void SetFont(string fontfamily) {
-            // The loop below checks if said font is installed, if not defaults to Arial.
-            var fontsCollection = new InstalledFontCollection();
-            foreach (var fontFamily in fontsCollection.Families) {
-                if (fontFamily.Name == fontfamily) {
-                    font = new Font(fontfamily, fontSize);
-                    break;
-                }
-            }
-
-            CreateBitmapTexture();
-        }
-
-        /// <summary>
-        /// Change text color
-        /// </summary>
-        /// <param name="vec">Vec3F containing the RGB color values.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Normalized color values must be
-        /// between 0 and 1.</exception>
-        public void SetColor(Vec3F vec) {
-            if (vec.X < 0.0f || vec.X > 1.0f ||
-                vec.Y < 0.0f || vec.Y > 1.0f ||
-                vec.Z < 0.0f || vec.Z > 1.0f) {
-                throw new ArgumentOutOfRangeException($"RGB Color values must be between 0 and 1: {vec}");
-            }
-            color = System.Drawing.Color.FromArgb((int)(vec.X * 255.0f), (int)(vec.Y * 255.0f), (int)(vec.Z * 255.0f));
-            CreateBitmapTexture();
-        }
-
-        /// <summary>
-        /// Change text color
-        /// </summary>
-        /// <param name="vec">Vec3I containing the RGB color values.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Color values must be
-        /// between 0 and 255.</exception>
-        public void SetColor(Vec3I vec) {
-            if (vec.X < 0 || vec.X > 255 ||
-                vec.Y < 0 || vec.Y > 255 ||
-                vec.Z < 0 || vec.Z > 255) {
-                throw new ArgumentOutOfRangeException($"RGB Color values must be between 0 and 255: {vec}");
-            }
-            color = System.Drawing.Color.FromArgb(vec.X, vec.Y, vec.Z);
-            CreateBitmapTexture();
-        }
-
-        /// <summary>
-        /// Change text color
-        /// </summary>
-        /// <param name="vec">Vec4I containing the ARGB color values.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Color values must be
-        /// between 0 and 255.</exception>
-        public void SetColor(int a, int r, int g, int b) {
-            if (a < 0 || a > 255 ||
-                r < 0 || r > 255 ||
-                g < 0 || g > 255 ||
-                b < 0 || b > 255) {
-                throw new ArgumentOutOfRangeException($"ARGB Color values must be between 0 and 255: {a} {r} {g} {b}");
-            }
-            color = System.Drawing.Color.FromArgb(a, r, g, b);
-            CreateBitmapTexture();
-        }
-
-        /// <summary>
-        /// Change text color
-        /// </summary>
-        /// <param name="vec">Vec4I containing the ARGB color values.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Color values must be
-        /// between 0 and 255.</exception>
-        public void SetColor(Vec4I vec) {
-            if (vec.X < 0 || vec.X > 255 ||
-                vec.Y < 0 || vec.Y > 255 ||
-                vec.Z < 0 || vec.Z > 255 ||
-                vec.W < 0 || vec.W > 255) {
-                throw new ArgumentOutOfRangeException($"ARGB Color values must be between 0 and 255: {vec}");
-            }
-            color = System.Drawing.Color.FromArgb(vec.X, vec.Y, vec.Z, vec.W);
-            CreateBitmapTexture();
-        }
-
-        /// <summary>
-        /// Change text color
-        /// </summary>
-        /// <param name="vec">Vec3F containing the RGB color values.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Normalized color values must be
-        /// between 0 and 1.</exception>
-        public void SetColor(Vec4F vec) {
-            if (vec.X < 0.0f || vec.X > 1.0f ||
-                vec.Y < 0.0f || vec.Y > 1.0f ||
-                vec.Z < 0.0f || vec.Z > 1.0f ||
-                vec.W < 0.0f || vec.W > 1.0f) {
-                throw new ArgumentOutOfRangeException($"ARGB Color values must be between 0 and 1: {vec}");
-            }
-            color = System.Drawing.Color.FromArgb((int)(vec.X * 255.0f), (int)(vec.Y * 255.0f), (int)(vec.Z * 255.0f), (int)(vec.W * 255.0f));
-            CreateBitmapTexture();
-        }
-
-        /// <summary>
-        /// Change text color
-        /// </summary>
-        /// <param name="newColor">System.Drawing.Color containing new color channel values.</param>
-        public void SetColor(System.Drawing.Color newColor) {
-            color = newColor;
-            CreateBitmapTexture();
-        }
-
-        #endregion
-
-        private Matrix4 CreateMatrix() {
-            // ensure that rotation is performed around the center of the shape
-            // instead of the bottom-left corner
-            var halfX = shape.Extent.X / 2.0f;
-            var halfY = shape.Extent.Y / 2.0f;
-
-            return Matrix4.CreateTranslation(-halfX, -halfY, 0.0f) *
-                   Matrix4.CreateRotationZ(shape.Rotation) *
-                   Matrix4.CreateTranslation(shape.Position.X + halfX, shape.Position.Y + halfY,
-                       0.0f);
-        }
-        
-        public void ScaleText(float scale) {
-            shape.Position *= scale;
-            shape.Scale(scale);
-        }
-        
-        public void RenderText() {
-            // bind this texture
-            BindTexture();
-
-            // render this texture
-            Matrix4 modelViewMatrix = CreateMatrix();
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref modelViewMatrix);
-
-            GL.Color4(1f,1f,1f,1f);
-            GL.Begin(PrimitiveType.Quads);
-
-            GL.TexCoord2(0, 1); GL.Vertex2(0.0f, 0.0f);                      // Top Left
-            GL.TexCoord2(0, 0); GL.Vertex2(0.0f, shape.Extent.Y);            // Bottom Left
-            GL.TexCoord2(1, 0); GL.Vertex2(shape.Extent.X, shape.Extent.Y);  // Bottom Right
-            GL.TexCoord2(1, 1); GL.Vertex2(shape.Extent.X, 0.0f);            // Top Right
-
-            GL.End();
-
-            // unbind this texture
-            UnbindTexture();
-        }
+        shape.Position = Position;
+        shape.Extent = Scale * idealExtent;
+        imageText.Render(context, shape);
     }
 }

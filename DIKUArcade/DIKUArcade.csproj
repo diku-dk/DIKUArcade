@@ -2,11 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenTK" Version="4.5.0" />
-    <PackageReference Include="System.Drawing.Common" Version="5.0.1" />
+    <ProjectReference Include="..\diku-canvas\canvas.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Fonts\**\*.ttf"/>
   </ItemGroup>
 
 </Project>
