@@ -99,8 +99,8 @@ public class TestAabbCollision {
     [TestCase( 0.01f)]
     [TestCase( 0.02f)]
     public void SweepUp(float dx) {
-        actor.Direction.X = dx;
-        actor.Direction.Y = 1;
+        actor.Velocity.X = dx;
+        actor.Velocity.Y = 1;
 
         var actual = CollisionDetection.Aabb(actor, solidBlockUp);
 
@@ -114,8 +114,8 @@ public class TestAabbCollision {
     [TestCase( 0.01f)]
     [TestCase( 0.02f)]
     public void SweepDown(float dx) {
-        actor.Direction.X = dx;
-        actor.Direction.Y = -1;
+        actor.Velocity.X = dx;
+        actor.Velocity.Y = -1;
 
         var actual = CollisionDetection.Aabb(actor, solidBlockDown);
 
@@ -129,8 +129,8 @@ public class TestAabbCollision {
     [TestCase( 0.01f)]
     [TestCase( 0.02f)]
     public void SweepLeft(float dy) {
-        actor.Direction.X = -1;
-        actor.Direction.Y = dy;
+        actor.Velocity.X = -1;
+        actor.Velocity.Y = dy;
 
         var actual = CollisionDetection.Aabb(actor, solidBlockLeft);
 
@@ -144,8 +144,8 @@ public class TestAabbCollision {
     [TestCase( 0.01f)]
     [TestCase( 0.02f)]
     public void SweepRight(float dy) {
-        actor.Direction.X = 1;
-        actor.Direction.Y = dy;
+        actor.Velocity.X = 1;
+        actor.Velocity.Y = dy;
 
         var actual = CollisionDetection.Aabb(actor, solidBlockRight);
 

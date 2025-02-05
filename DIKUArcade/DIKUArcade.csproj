@@ -5,13 +5,13 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <ProjectReference Include="..\diku-canvas\canvas.fsproj" />
+    <EmbeddedResource Include="Fonts\**\*.ttf" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Fonts\**\*.ttf"/>
+    <PackageReference Include="DIKU.BootlegCanvas" Version="2.1.0" />
   </ItemGroup>
 
 </Project>
