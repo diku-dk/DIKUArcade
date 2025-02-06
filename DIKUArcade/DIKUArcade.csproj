@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DIKU.BootlegCanvas" Version="2.1.0" />
+    <PackageReference Include="DIKU.Canvas" Version="2.1.0-alpha1" />
   </ItemGroup>
 
 </Project>
