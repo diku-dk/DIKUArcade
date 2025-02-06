@@ -38,9 +38,7 @@ download and build the engine, and run one of the test programs in `TestDIKUArca
 ```
 $ git clone git@github.com:diku-dk/DIKUArcade.git
 $ cd DIKUArcade/
-$ git submodule update --init --recursive
-$ dotnet build DIKUArcade/
-$ dotnet build TestDIKUArcade/
+$ dotnet restore
 $ dotnet run -p TestDIKUArcade/
 ```
 
