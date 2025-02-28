@@ -17,6 +17,8 @@ jobs:
         with:
           dotnet-version: |
             7.0.x
+      - run: dotnet build
+      
       - name: Style check
       - run: dotnet format --verify-no-changes 2> /dev/null 
       
