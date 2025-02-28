@@ -9,11 +9,12 @@ using DIKUArcade.GUI;
 /// <see cref="Render"/> method.
 /// </summary>
 public class NoImage : IBaseImage {
-    
+
     /// <summary>
     /// Initializes a new instance of the <see cref="NoImage"/> class.
     /// </summary>
-    public NoImage() {}
+    public NoImage() {
+    }
 
     /// <summary>
     /// A no-operation method for rendering. This method does nothing and is intended for use with
@@ -25,5 +26,6 @@ public class NoImage : IBaseImage {
     /// <param name="shape">
     /// The <see cref="Shape"/> to be rendered, though this method does not use it.
     /// </param>
-    public void Render(WindowContext context, Shape shape) {}
+    public void Render(WindowContext context, Shape shape) {
+    }
 }

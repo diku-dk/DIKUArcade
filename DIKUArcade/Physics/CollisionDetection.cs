@@ -1,8 +1,8 @@
 ﻿namespace DIKUArcade.Physics;
 
 using System;
-using DIKUArcade.Entities;
 using System.Numerics;
+using DIKUArcade.Entities;
 
 /// <summary>
 /// Provides methods for detecting collisions between various shapes.
@@ -74,22 +74,18 @@ public class CollisionDetection {
             shape.Position.Y + shape.Extent.Y);
 
         // inactive movement in both x- and y-direction
-        if(System.Math.Abs(actor.Velocity.X) < 1e-6f && System.Math.Abs(actor.Velocity.Y) < 1e-6f) {
+        if (System.Math.Abs(actor.Velocity.X) < 1e-6f && System.Math.Abs(actor.Velocity.Y) < 1e-6f) {
             return data;
         }
 
         // inactive movement in x-direction
-        else if(System.Math.Abs(actor.Velocity.X) < 1e-6f)
-        {
+        else if (System.Math.Abs(actor.Velocity.X) < 1e-6f) {
             float entryDistanceY, exitDistanceY;
-            if(actor.Velocity.Y < 0.0f)
-            {
+            if (actor.Velocity.Y < 0.0f) {
                 entryDistanceY = staUpperRight.Y - dynLowerLeft.Y;
                 exitDistanceY = staLowerLeft.Y - dynUpperRight.Y;
                 data.CollisionDir = CollisionDirection.CollisionDirUp;
-            }
-            else
-            {
+            } else {
                 entryDistanceY = staLowerLeft.Y - dynUpperRight.Y;
                 exitDistanceY = staUpperRight.Y - dynLowerLeft.Y;
                 data.CollisionDir = CollisionDirection.CollisionDirDown;
@@ -100,29 +96,22 @@ public class CollisionDetection {
 
             bool xOverlaps = staUpperRight.X > dynLowerLeft.X && staLowerLeft.X < dynUpperRight.X;
 
-            if(entryTimeY < exitTimeY && entryTimeY >= 0.0f && entryTimeY < 1.0f && xOverlaps)
-            {
+            if (entryTimeY < exitTimeY && entryTimeY >= 0.0f && entryTimeY < 1.0f && xOverlaps) {
                 data.VelocityFactor = new Vector2(data.VelocityFactor.X, entryTimeY);
                 data.Collision = true;
                 return data;
-            }
-            else
-            {
+            } else {
                 return data;
             }
         }
         // inactive movement in y-direction
-        else if(System.Math.Abs(actor.Velocity.Y) < 1e-6f)
-        {
+        else if (System.Math.Abs(actor.Velocity.Y) < 1e-6f) {
             float entryDistanceX, exitDistanceX;
-            if(actor.Velocity.X < 0.0f)
-            {
+            if (actor.Velocity.X < 0.0f) {
                 entryDistanceX = staUpperRight.X - dynLowerLeft.X;
                 exitDistanceX = staLowerLeft.X - dynUpperRight.X;
                 data.CollisionDir = CollisionDirection.CollisionDirRight;
-            }
-            else
-            {
+            } else {
                 entryDistanceX = staLowerLeft.X - dynUpperRight.X;
                 exitDistanceX = staUpperRight.X - dynLowerLeft.X;
                 data.CollisionDir = CollisionDirection.CollisionDirLeft;
@@ -133,36 +122,28 @@ public class CollisionDetection {
 
             bool yOverlaps = staUpperRight.Y > dynLowerLeft.Y && staLowerLeft.Y < dynUpperRight.Y;
 
-            if(entryTimeX < exitTimeX && entryTimeX >= 0.0f && entryTimeX < 1.0f && yOverlaps)
-            {
+            if (entryTimeX < exitTimeX && entryTimeX >= 0.0f && entryTimeX < 1.0f && yOverlaps) {
                 data.VelocityFactor = new Vector2(entryTimeX, data.VelocityFactor.Y);
                 data.Collision = true;
             }
             return data;
         }
         // active movement in both x- and y-direction
-        else
-        {
+        else {
             var entryDistance = new Vector2();
             var exitDistance = new Vector2();
 
-            if(actor.Velocity.X < 0.0f)
-            {
+            if (actor.Velocity.X < 0.0f) {
                 entryDistance.X = staUpperRight.X - dynLowerLeft.X;
                 exitDistance.X = staLowerLeft.X - dynUpperRight.X;
-            }
-            else
-            {
+            } else {
                 entryDistance.X = staLowerLeft.X - dynUpperRight.X;
                 exitDistance.X = staUpperRight.X - dynLowerLeft.X;
             }
-            if(actor.Velocity.Y < 0.0f)
-            {
+            if (actor.Velocity.Y < 0.0f) {
                 entryDistance.Y = staUpperRight.Y - dynLowerLeft.Y;
                 exitDistance.Y = staLowerLeft.Y - dynUpperRight.Y;
-            }
-            else
-            {
+            } else {
                 entryDistance.Y = staLowerLeft.Y - dynUpperRight.Y;
                 exitDistance.Y = staUpperRight.Y - dynLowerLeft.Y;
             }
@@ -173,20 +154,16 @@ public class CollisionDetection {
             float entryTimeMax = System.Math.Max(entryTime.X, entryTime.Y);
             float exitTimeMin = System.Math.Min(exitTime.X, exitTime.Y);
 
-            if(entryTimeMax < exitTimeMin && (entryTime.X >= 0.0f || entryTime.Y >= 0.0f) &&
-                entryTime.X < 1.0f && entryTime.Y < 1.0f)
-            {
-                if (entryTime.X > entryTime.Y)
-                {
+            if (entryTimeMax < exitTimeMin && (entryTime.X >= 0.0f || entryTime.Y >= 0.0f) &&
+                entryTime.X < 1.0f && entryTime.Y < 1.0f) {
+                if (entryTime.X > entryTime.Y) {
                     data.VelocityFactor = new Vector2(entryTimeMax, data.VelocityFactor.Y);
                     if (actor.Velocity.X < 0.0f) {
                         data.CollisionDir = CollisionDirection.CollisionDirRight;
                     } else {
                         data.CollisionDir = CollisionDirection.CollisionDirLeft;
                     }
-                }
-                else
-                {
+                } else {
                     data.VelocityFactor = new Vector2(data.VelocityFactor.X, entryTimeMax);
                     if (actor.Velocity.Y < 0.0f) {
                         data.CollisionDir = CollisionDirection.CollisionDirUp;
@@ -197,9 +174,7 @@ public class CollisionDetection {
 
                 data.Collision = true;
                 return data;
-            }
-            else
-            {
+            } else {
                 return data;
             }
         }

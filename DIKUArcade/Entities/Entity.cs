@@ -13,13 +13,17 @@ public class Entity {
     /// Gets or sets the shape of the entity, which defines its position, size, 
     /// and possibly other geometric properties.
     /// </summary>
-    public Shape Shape { get; set; }
+    public Shape Shape {
+        get; set;
+    }
 
     /// <summary>
     /// Gets or sets the image associated with the entity, which defines 
     /// how the entity is visually represented on the screen.
     /// </summary>
-    public IBaseImage Image { get; set; }
+    public IBaseImage Image {
+        get; set;
+    }
 
     /// <summary>
     /// A private field that indicates whether the entity has been marked 

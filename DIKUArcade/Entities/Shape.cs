@@ -13,17 +13,23 @@ public class Shape {
     /// <summary>
     /// Gets or sets the shape's rotational angle measured in radians.
     /// </summary>
-    public float Rotation { get; set; }
-    
+    public float Rotation {
+        get; set;
+    }
+
     /// <summary>
     /// Gets or sets the position of the shape as a 2D vector (X, Y).
     /// </summary>
-    public Vector2 Position { get; set; }
+    public Vector2 Position {
+        get; set;
+    }
 
     /// <summary>
     /// Gets or sets the extent (width and height) of the shape as a 2D vector.
     /// </summary>
-    public Vector2 Extent { get; set; }
+    public Vector2 Extent {
+        get; set;
+    }
 
     /// <summary>
     /// Attempts to cast this Shape instance to a DynamicShape. 
@@ -64,7 +70,7 @@ public class Shape {
     public void Scale(Vector2 scalar) {
         Extent *= scalar;
     }
-    
+
     /// <summary>
     /// Scales the width of the shape by the specified factor.
     /// </summary>
@@ -87,7 +93,7 @@ public class Shape {
     /// </summary>
     /// <param name="scale">The scaling factor to apply to the width.</param>
     public void ScaleXFromCenter(float scale) {
-        var posX = Position.X + Extent.X / 2.0f - (Extent.X / 2.0f * scale);
+        var posX = Position.X + Extent.X / 2.0f - Extent.X / 2.0f * scale;
         Position = new Vector2(posX, Position.Y);
         Extent = new Vector2(Extent.X * scale, Extent.Y);
     }
@@ -98,7 +104,7 @@ public class Shape {
     /// </summary>
     /// <param name="scale">The scaling factor to apply to the height.</param>
     public void ScaleYFromCenter(float scale) {
-        var posY = Position.Y + Extent.Y / 2.0f - (Extent.Y / 2.0f * scale);
+        var posY = Position.Y + Extent.Y / 2.0f - Extent.Y / 2.0f * scale;
         Position = new Vector2(Position.X, posY);
         Extent = new Vector2(Extent.X, Extent.Y * scale);
     }
@@ -108,10 +114,10 @@ public class Shape {
     /// </summary>
     /// <param name="scaling">A vector containing the scaling factors for each dimension.</param>
     public void ScaleFromCenter(Vector2 scaling) {
-        Position = Position + Extent / 2.0f - (Extent / 2.0f * scaling);
-        Extent *= scaling; 
+        Position = Position + Extent / 2.0f - Extent / 2.0f * scaling;
+        Extent *= scaling;
     }
-    
+
     /// <summary>
     /// Scales the shape uniformly in both dimensions, keeping the center of the shape fixed.
     /// </summary>
@@ -124,7 +130,8 @@ public class Shape {
     /// Moves the shape by the specified vector. This method can be overridden 
     /// by derived classes to implement custom movement behavior.
     /// </summary>
-    public virtual void Move() {}
+    public virtual void Move() {
+    }
 
     /// <summary>
     /// Moves the shape by the specified vector.

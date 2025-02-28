@@ -2,8 +2,8 @@
 
 using System;
 using System.Collections.Generic;
-using DIKUArcade.Entities;
 using System.Numerics;
+using DIKUArcade.Entities;
 using DIKUArcade.Physics;
 using NUnit.Framework;
 
@@ -31,7 +31,7 @@ public class TestMovementCollision {
                                         $"obstacle pos: {obstacle.Position}\n" +
                                         $"obstacle extent: {obstacle.Extent}"
                     );
-                                        //actor.pos: {actor.Position}, obstacle.pos: {obstacle.Position}");
+                    //actor.pos: {actor.Position}, obstacle.pos: {obstacle.Position}");
                     return true;
                 }
             }
@@ -46,7 +46,7 @@ public class TestMovementCollision {
     public void TestMoveUp() {
         var obstacleLeft = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(0.4f, 1.0f));
         var obstacleRight = new StationaryShape(new Vector2(0.6f, 0.0f), new Vector2(0.4f, 1.0f));
-        var obstacles = new List<StationaryShape>() {obstacleLeft, obstacleRight};
+        var obstacles = new List<StationaryShape>() { obstacleLeft, obstacleRight };
 
         var actor = new DynamicShape(new Vector2(0.45f, 0.0f), new Vector2(0.1f, 0.1f));
         actor.Velocity.X = 0.0f;
@@ -62,7 +62,7 @@ public class TestMovementCollision {
     public void TestMoveDown() {
         var obstacleLeft = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(0.4f, 1.0f));
         var obstacleRight = new StationaryShape(new Vector2(0.6f, 0.0f), new Vector2(0.4f, 1.0f));
-        var obstacles = new List<StationaryShape>() {obstacleLeft, obstacleRight};
+        var obstacles = new List<StationaryShape>() { obstacleLeft, obstacleRight };
 
         var actor = new DynamicShape(new Vector2(0.45f, 1.0f), new Vector2(0.1f, 0.1f));
         actor.Velocity.X = 0.0f;
@@ -78,7 +78,7 @@ public class TestMovementCollision {
     public void TestMoveLeft() {
         var obstacleLeft = new StationaryShape(new Vector2(0.0f, 0.6f), new Vector2(1.0f, 0.4f));
         var obstacleRight = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(1.0f, 0.4f));
-        var obstacles = new List<StationaryShape>() {obstacleLeft, obstacleRight};
+        var obstacles = new List<StationaryShape>() { obstacleLeft, obstacleRight };
 
         var actor = new DynamicShape(new Vector2(0.0f, 0.45f), new Vector2(0.1f, 0.1f));
         actor.Velocity.X = 0.001f;
@@ -94,7 +94,7 @@ public class TestMovementCollision {
     public void TestMoveRight() {
         var obstacleLeft = new StationaryShape(new Vector2(0.0f, 0.6f), new Vector2(1.0f, 0.4f));
         var obstacleRight = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(1.0f, 0.4f));
-        var obstacles = new List<StationaryShape>() {obstacleLeft, obstacleRight};
+        var obstacles = new List<StationaryShape>() { obstacleLeft, obstacleRight };
 
         var actor = new DynamicShape(new Vector2(0.9f, 0.45f), new Vector2(0.1f, 0.1f));
         actor.Velocity.X = -0.001f;

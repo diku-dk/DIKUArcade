@@ -14,7 +14,7 @@ public class SimpleEntityRenderingTest : ITestable {
     }
 
     public void Help() {
-        var help = "Press 'Left' and 'Right' to move side to side. " + 
+        var help = "Press 'Left' and 'Right' to move side to side. " +
                    "'-' and '+' on the KeyPad will scale them up and down. " +
                    "'U' and 'I' will stretch the image on the X axis.";
         Console.WriteLine(help);

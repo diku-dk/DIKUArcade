@@ -1,17 +1,17 @@
 namespace TestDIKUArcade.GameTimerTest;
 
 using System;
-using DIKUArcade.GUI;
-using DIKUArcade.Graphics;
-using DIKUArcade.Timers;
-using System.Numerics;
 using System.Drawing;
+using System.Numerics;
 using DIKUArcade.Entities;
+using DIKUArcade.Graphics;
+using DIKUArcade.GUI;
+using DIKUArcade.Timers;
 
 public class GameTimerTest : ITestable {
     public void RunTest() {
         var winArgs = new WindowArgs() {
-            Title="GameTimerTest"
+            Title = "GameTimerTest"
         };
         var win = new Window(winArgs);
         var timer = new GameTimer();
@@ -21,13 +21,14 @@ public class GameTimerTest : ITestable {
             fps.Render(ctx);
             ups.Render(ctx);
         };
-        foreach (var text in new []{fps, ups}) {
+        foreach (var text in new[] { fps, ups }) {
             text.SetColor(255, 255, 255);
         }
         while (win.IsRunning()) {
             win.PollEvents();
             timer.MeasureTime();
-            while (timer.ShouldUpdate()) { }
+            while (timer.ShouldUpdate()) {
+            }
             if (timer.ShouldRender()) {
                 // render game objects
                 win.Render(render);

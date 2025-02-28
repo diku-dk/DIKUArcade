@@ -1,12 +1,12 @@
 namespace TestDIKUArcade.RenderTextTest;
 
-using DIKUArcade;
-using DIKUArcade.GUI;
-using DIKUArcade.Graphics;
-using DIKUArcade.Input;
-using DIKUArcade.Entities;
-using System.Numerics;
 using System;
+using System.Numerics;
+using DIKUArcade;
+using DIKUArcade.Entities;
+using DIKUArcade.Graphics;
+using DIKUArcade.GUI;
+using DIKUArcade.Input;
 
 public class Game : DIKUGame {
 
@@ -16,7 +16,7 @@ public class Game : DIKUGame {
         text.SetColor(0, 255, 0, 255);
         text.Scale *= new Vector2(1, 2.5f);
     }
-    
+
     public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
     }
 
@@ -24,5 +24,6 @@ public class Game : DIKUGame {
         text.Render(context);
     }
 
-    public override void Update() { }
+    public override void Update() {
+    }
 }

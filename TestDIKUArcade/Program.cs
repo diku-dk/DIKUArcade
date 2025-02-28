@@ -22,14 +22,14 @@ internal class Program {
         var tests = types.Where(isTestable).ToList();
         tests.Sort((x, y) => x.Name.CompareTo(y.Name));
 
-        
+
         for (int i = 0; i < tests.Count(); i++) {
             Console.WriteLine($"{i}: {tests[i].Name}");
         }
 
         Console.Write("Give the index of the test you want to run: ");
         var index = Convert.ToInt32(Console.ReadLine());
-        
+
         // Creates an instance of the test.
         var instance = (ITestable) Activator.CreateInstance(tests[index]);
         instance.Help();

@@ -170,7 +170,8 @@ public sealed class EntityContainer<T> : IEnumerable where T : Entity {
         /// Disposes of the enumerator. This method is required by the 
         /// `IEnumerator` interface but does not need to perform any action.
         /// </summary>
-        void IDisposable.Dispose() { }
+        void IDisposable.Dispose() {
+        }
 
         /// <summary>
         /// Gets the current element in the collection.

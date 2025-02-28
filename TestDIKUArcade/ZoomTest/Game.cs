@@ -1,14 +1,14 @@
 namespace TestDIKUArcade.ZoomTest;
 
 using System;
-using DIKUArcade;
-using DIKUArcade.GUI;
-using DIKUArcade.Input;
 using System.Numerics;
+using System.Reflection;
+using DIKUArcade;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
+using DIKUArcade.GUI;
+using DIKUArcade.Input;
 using DIKUArcade.Physics;
-using System.Reflection;
 
 public class Game : DIKUGame {
     private Entity player;
@@ -21,10 +21,10 @@ public class Game : DIKUGame {
     }
 
     public override void KeyHandler(KeyboardAction action, KeyboardKey key) {
-        
+
     }
 
-    public override void Render(WindowContext context) { 
+    public override void Render(WindowContext context) {
         player.RenderEntity(context);
         wall.RenderEntity(context);
     }

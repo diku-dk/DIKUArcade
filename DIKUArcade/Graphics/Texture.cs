@@ -66,7 +66,7 @@ public class Texture {
         originalHeight = height;
         originalExtent = new Vector2(originalWidth, originalHeight);
     }
-    
+
     /// <summary>
     /// Renders the texture onto the specified graphical context at the given position and size.
     /// </summary>

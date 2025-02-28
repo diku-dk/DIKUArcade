@@ -14,7 +14,7 @@ public class DIKUGameTest : ITestable {
     }
 
     public void Help() {
-        var help = "Press '1' and '2' to change the background color and press 'F1' to" + 
+        var help = "Press '1' and '2' to change the background color and press 'F1' to" +
                    "crash.";
         Console.WriteLine(help);
     }

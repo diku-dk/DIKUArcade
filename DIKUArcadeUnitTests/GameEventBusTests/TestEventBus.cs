@@ -10,19 +10,19 @@ using NUnit.Framework;
 public class TestsEventBus {
 
     private GameEventBus eventBus;
-    private SomeGameEvent SomeGameEvent;
-    private OtherGameEvent OtherGameEvent;
-    private int SomeGameEventCount;
-    private int OtherGameEventCount;
+    private SomeGameEvent someGameEvent;
+    private OtherGameEvent otherGameEvent;
+    private int someGameEventCount;
+    private int otherGameEventCount;
 
     private void SomeEventListener(SomeGameEvent gameEvent) {
-        SomeGameEvent = gameEvent;
-        SomeGameEventCount++;
+        someGameEvent = gameEvent;
+        someGameEventCount++;
     }
 
     private void OtherEventListener(OtherGameEvent gameEvent) {
-        OtherGameEvent = gameEvent;
-        OtherGameEventCount++;
+        otherGameEvent = gameEvent;
+        otherGameEventCount++;
     }
 
     /// <summary>
@@ -32,51 +32,78 @@ public class TestsEventBus {
     public void Setup() {
         eventBus = new GameEventBus();
 
-        SomeGameEvent = new SomeGameEvent(1729);
-        OtherGameEvent = new OtherGameEvent(5040);
+        someGameEvent = new SomeGameEvent(1729);
+        otherGameEvent = new OtherGameEvent(5040);
 
-        SomeGameEventCount = 0;
-        OtherGameEventCount = 0;
+        someGameEventCount = 0;
+        otherGameEventCount = 0;
     }
 
     /// <summary>
-    /// Generate five events and process them in parallel. Afterwards check the counts of events.
+    /// Generate five events and process them. Afterwards check the counts of events.
     /// </summary>
+    [Test]
     public void TestEventBusSimpleCount5Test() {
         eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
         eventBus.Subscribe<OtherGameEvent>(OtherEventListener);
 
-        eventBus.RegisterEvent(SomeGameEvent);
-        eventBus.RegisterEvent(OtherGameEvent);
-        eventBus.RegisterEvent(SomeGameEvent);
-        eventBus.RegisterEvent(SomeGameEvent);
-        eventBus.RegisterEvent(OtherGameEvent);
+        eventBus.RegisterEvent(someGameEvent);
+        eventBus.RegisterEvent(otherGameEvent);
+        eventBus.RegisterEvent(someGameEvent);
+        eventBus.RegisterEvent(someGameEvent);
+        eventBus.RegisterEvent(otherGameEvent);
 
         eventBus.ProcessEvents();
 
-        Assert.That(SomeGameEventCount == 3);
-        Assert.That(OtherGameEventCount == 2);
+        Assert.That(someGameEventCount == 3);
+        Assert.That(otherGameEventCount == 2);
     }
 
     /// <summary>
-    /// Generate three events and process them in parallel. Afterwards check the counts of events.
+    /// Generate three events and process them. Afterwards check the counts of events.
     /// </summary>
+    [Test]
     public void TestEventBusSimpleCount3Test() {
         eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
         eventBus.Subscribe<OtherGameEvent>(OtherEventListener);
 
-        eventBus.RegisterEvent(SomeGameEvent);
-        eventBus.RegisterEvent(OtherGameEvent);
-        eventBus.RegisterEvent(SomeGameEvent);
-        
+        eventBus.RegisterEvent(someGameEvent);
+        eventBus.RegisterEvent(otherGameEvent);
+        eventBus.RegisterEvent(someGameEvent);
+
         eventBus.ProcessEvents();
 
-        Assert.That(SomeGameEventCount == 2);
-        Assert.That(OtherGameEventCount == 1);
+        Assert.That(someGameEventCount == 2);
+        Assert.That(otherGameEventCount == 1);
     }
 
     /// <summary>
-    /// Generate numEventGroups groups of three events and process them in parallel. Afterwards 
+    /// This test asserts that it is possible to unsubscribe a listener from
+    /// an event during the event happening.
+    /// </summary>
+    [Test]
+    public void TestCanUnsubscribeOnEvent() {
+
+        var count = 0;
+        Action<SomeGameEvent> eventListener = (e) => { };
+        eventListener = (e) => {
+            eventBus.Unsubscribe<SomeGameEvent>(eventListener);
+            count++;
+        };
+
+        eventBus.Subscribe<SomeGameEvent>(eventListener);
+
+        eventBus.RegisterEvent(someGameEvent);
+        eventBus.ProcessEvents();
+        Assert.That(count == 1);
+
+        eventBus.RegisterEvent(someGameEvent);
+        eventBus.ProcessEvents();
+        Assert.That(count == 1);
+    }
+
+    /// <summary>
+    /// Generate numEventGroups groups of three events and process them. Afterwards 
     /// check the counts of events.
     /// </summary>
     /// <param name="numEventGroups">Number of event groups used for the test case.</param>
@@ -97,15 +124,15 @@ public class TestsEventBus {
         eventBus.Subscribe<OtherGameEvent>(OtherEventListener);
 
         for (int iter = 0; iter < numEventGroups; iter++) {
-            eventBus.RegisterEvent(SomeGameEvent);
-            eventBus.RegisterEvent(OtherGameEvent);
-            eventBus.RegisterEvent(SomeGameEvent);
+            eventBus.RegisterEvent(someGameEvent);
+            eventBus.RegisterEvent(otherGameEvent);
+            eventBus.RegisterEvent(someGameEvent);
         }
 
         eventBus.ProcessEvents();
 
-        Assert.That(SomeGameEventCount == 2*numEventGroups);
-        Assert.That(OtherGameEventCount == 1*numEventGroups);
+        Assert.That(someGameEventCount == 2 * numEventGroups);
+        Assert.That(otherGameEventCount == 1 * numEventGroups);
     }
 
     /// <summary>
@@ -123,9 +150,9 @@ public class TestsEventBus {
     [TestCase(256)]
     public void TestConcurrentListenersSequentially(int numListeners) {
 
-        eventBus.RegisterEvent(SomeGameEvent);
-        eventBus.RegisterEvent(OtherGameEvent);
-        eventBus.RegisterEvent(SomeGameEvent);
+        eventBus.RegisterEvent(someGameEvent);
+        eventBus.RegisterEvent(otherGameEvent);
+        eventBus.RegisterEvent(someGameEvent);
 
         eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
         eventBus.Subscribe<OtherGameEvent>(OtherEventListener);
@@ -140,8 +167,8 @@ public class TestsEventBus {
 
         eventBus.ProcessEvents();
 
-        Assert.That(SomeGameEventCount == 2);
-        Assert.That(OtherGameEventCount == 1);
+        Assert.That(someGameEventCount == 2);
+        Assert.That(otherGameEventCount == 1);
 
         foreach (var listener in listeners) {
             Assert.That(listener.SomeCount == 2);
@@ -184,12 +211,12 @@ public class TestsEventBus {
         Assert.Throws<ArgumentException>(() => {
             eventBus.Unsubscribe<SomeGameEvent>(dummyListener);
         });
-        
-        eventBus.RegisterEvent(SomeGameEvent);
+
+        eventBus.RegisterEvent(someGameEvent);
 
         eventBus.ProcessEvents();
 
-        Assert.AreEqual(1, SomeGameEventCount);
+        Assert.AreEqual(1, someGameEventCount);
     }
 
     /// <summary>
@@ -216,12 +243,12 @@ public class TestsEventBus {
         eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
         eventBus.Subscribe<SomeGameEvent>(dummyListener);
         eventBus.Unsubscribe<SomeGameEvent>(dummyListener);
-        
-        eventBus.RegisterEvent(SomeGameEvent);
+
+        eventBus.RegisterEvent(someGameEvent);
 
         eventBus.ProcessEvents();
 
-        Assert.AreEqual(1, SomeGameEventCount);
+        Assert.AreEqual(1, someGameEventCount);
         Assert.AreEqual(0, dummyCount);
     }
 
@@ -231,9 +258,9 @@ public class TestsEventBus {
     [Test]
     public void TestFlush() {
         eventBus.Subscribe<SomeGameEvent>(SomeEventListener);
-        eventBus.RegisterEvent(SomeGameEvent);
+        eventBus.RegisterEvent(someGameEvent);
         eventBus.Flush();
         eventBus.ProcessEvents();
-        Assert.AreEqual(0, SomeGameEventCount);
+        Assert.AreEqual(0, someGameEventCount);
     }
 }

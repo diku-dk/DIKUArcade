@@ -15,11 +15,15 @@ public class GameTimer {
     /// <summary>
     /// Get the last observed UPS count
     /// </summary>
-    public int CapturedUpdates { get; private set; }
+    public int CapturedUpdates {
+        get; private set;
+    }
     /// <summary>
     /// Get the last observed FPS count
     /// </summary>
-    public int CapturedFrames { get; private set; }
+    public int CapturedFrames {
+        get; private set;
+    }
 
     private int updates;
     private int frames;
@@ -28,7 +32,7 @@ public class GameTimer {
 
     private Stopwatch stopwatch;
 
-    public GameTimer() : this(30, 30) {}
+    public GameTimer() : this(30, 30) { }
 
     public GameTimer(int ups, int fps = 0) {
         if (ups < 0 || fps < 0) {
@@ -87,7 +91,7 @@ public class GameTimer {
     /// This information can be used to update game logic in any way desireable.
     /// </summary>
     public bool ShouldReset() {
-        var ret = (stopwatch.ElapsedMilliseconds / 1000.0) - timer > 1.0;
+        var ret = stopwatch.ElapsedMilliseconds / 1000.0 - timer > 1.0;
         if (ret) {
             timer += 1.0;
             CapturedUpdates = updates;

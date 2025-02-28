@@ -112,13 +112,12 @@ public class EntityContainer : IEnumerable {
     public int CountEntities() {
         return entities.Count;
     }
-    
+
     /// <summary>
     /// Returns an enumerator that iterates through the `EntityContainer`.
     /// </summary>
     /// <returns>An enumerator for the `EntityContainer`.</returns>
-    IEnumerator IEnumerable.GetEnumerator()
-    {
+    IEnumerator IEnumerable.GetEnumerator() {
         return GetEnumerator();
     }
 

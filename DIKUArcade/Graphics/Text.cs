@@ -1,9 +1,9 @@
 ﻿namespace DIKUArcade.Graphics;
 
 using System.Numerics;
-using DIKUArcade.GUI;
 using DIKUArcade.Entities;
 using DIKUArcade.Font;
+using DIKUArcade.GUI;
 
 /// <summary>
 /// Represents a text object that can be rendered on the screen, with support for positioning,
@@ -24,9 +24,11 @@ public class Text {
     /// </summary>
     public Vector2 Position { get; set; } = Vector2.Zero;
 
-    public Vector2 Extent { get => Scale * idealExtent; }
+    public Vector2 Extent {
+        get => Scale * idealExtent;
+    }
 
-    
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Text"/> class with the specified text, position, scale, and font family.
     /// </summary>
@@ -52,7 +54,7 @@ public class Text {
         Position = position;
         Scale = new Vector2(scale, scale);
     }
-    
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Text"/> class with the specified text and position.
     /// Uses a default font family and scale.

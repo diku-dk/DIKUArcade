@@ -112,7 +112,7 @@ public class Camera {
     /// <param name="windowExtent">The size of the object in window coordinates.</param>
     /// <returns>The position in window coordinates.</returns>
     public Vector2 WindowPosition(Vector2 position, Vector2 windowExtent) {
-        var newPosition = position * windowScalePlusOne - windowHalfScaleMinusOffset; 
+        var newPosition = position * windowScalePlusOne - windowHalfScaleMinusOffset;
         return new Vector2(newPosition.X, Height - (newPosition.Y + windowExtent.Y));
     }
 
@@ -135,7 +135,7 @@ public class Camera {
         var v = extent * windowScalePlusOne;
         var x = (int) v.X;
         var y = (int) v.Y;
-        return new Vector2(x + x % 2, y + y % 2); 
+        return new Vector2(x + x % 2, y + y % 2);
     }
 
     /// <summary>

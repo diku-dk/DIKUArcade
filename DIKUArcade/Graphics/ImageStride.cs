@@ -1,12 +1,12 @@
 ﻿namespace DIKUArcade.Graphics;
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Collections.Generic;
-using DIKUArcade.Timers;
 using DIKUArcade.Entities;
 using DIKUArcade.GUI;
+using DIKUArcade.Timers;
 
 /// <summary>
 /// Represents an animated image based on a sequence of textures, displaying a different texture
@@ -108,7 +108,7 @@ public class ImageStride : IBaseImage {
     public static List<Image> CreateStrides(int numStrides, string manifestResourceName) {
         var res = new List<Image>();
         var stream = Assembly.GetCallingAssembly().GetManifestResourceStream(manifestResourceName);
-        
+
         if (stream is null) {
             throw new Exception($"Resouce with name {manifestResourceName} does not exists. " +
              "Make sure the name is correct or you have remebered to embed the file using the " +

@@ -14,7 +14,7 @@ public class KeyEventsTest : ITestable {
     }
 
     public void Help() {
-        var help = "Press '1' and '2' to change background color and 'I' to add an element to " + 
+        var help = "Press '1' and '2' to change background color and 'I' to add an element to " +
                    "the dictionary.";
         Console.WriteLine(help);
     }
