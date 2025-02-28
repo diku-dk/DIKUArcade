@@ -13,19 +13,25 @@ public class Animation {
     /// <summary>
     /// Gets or sets the total duration of the animation in milliseconds.
     /// </summary>
-    public int Duration { get; set; }
+    public int Duration {
+        get; set;
+    }
 
     /// <summary>
     /// Gets or sets the shape defining the position and extent of the animation on the screen.
     /// This should be a <see cref="StationaryShape"/> that defines where the animation appears.
     /// </summary>
-    public StationaryShape? Shape { get; set; }
+    public StationaryShape? Shape {
+        get; set;
+    }
 
     /// <summary>
     /// Gets or sets the <see cref="ImageStride"/> used for animating. This contains the sequence
     /// of images that are displayed as part of the animation.
     /// </summary>
-    public ImageStride? Stride { get; set; }
+    public ImageStride? Stride {
+        get; set;
+    }
 
     private double timeOfCreation;
 

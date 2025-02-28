@@ -8,8 +8,9 @@ public struct WindowArgs {
     /// <summary>
     /// Initializes a new instance of the <see cref="WindowArgs"/> struct with default values.
     /// </summary>
-    public WindowArgs() { }
-    
+    public WindowArgs() {
+    }
+
     /// <summary>
     /// Gets or sets the title of the window.
     /// </summary>

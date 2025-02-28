@@ -1,12 +1,12 @@
 namespace TestDIKUArcade.ImageStrideFormationTest;
 
-using DIKUArcade;
-using DIKUArcade.GUI;
-using DIKUArcade.Input;
-using DIKUArcade.Graphics;
-using DIKUArcade.Entities;
 using System.Numerics;
 using System.Reflection;
+using DIKUArcade;
+using DIKUArcade.Entities;
+using DIKUArcade.Graphics;
+using DIKUArcade.GUI;
+using DIKUArcade.Input;
 
 public class Game : DIKUGame {
     private EntityContainer entities;
@@ -48,9 +48,10 @@ public class Game : DIKUGame {
         }
     }
 
-    public override void Render(WindowContext context) { 
+    public override void Render(WindowContext context) {
         entities.RenderEntities(context);
     }
 
-    public override void Update() { }
+    public override void Update() {
+    }
 }

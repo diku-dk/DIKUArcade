@@ -10,7 +10,7 @@ using DIKUArcade.GUI;
 /// clear the container, and render all active animations.
 /// </summary>
 public class AnimationContainer {
-    
+
     /// <summary>
     /// Represents a slot in the container that can either be occupied or empty. 
     /// It holds an animation and a flag indicating whether it is in use.
@@ -19,7 +19,9 @@ public class AnimationContainer {
         /// <summary>
         /// Gets or sets a value indicating whether the slot is occupied by an animation.
         /// </summary>
-        public bool Occupied { get; set; }
+        public bool Occupied {
+            get; set;
+        }
 
         /// <summary>
         /// The animation stored in the slot. Null if the slot is not occupied.
@@ -55,10 +57,13 @@ public class AnimationContainer {
     /// </summary>
     public void ResetContainer() {
         for (int i = 0; i < size; i++) {
-            container[i] = new OccupyValue<Animation>()
-                {Occupied = false, Value = new Animation() {
-                    Duration = 0, Shape = new StationaryShape(0.0f, 0.0f, 0.0f, 0.0f)
-                }};
+            container[i] = new OccupyValue<Animation>() {
+                Occupied = false,
+                Value = new Animation() {
+                    Duration = 0,
+                    Shape = new StationaryShape(0.0f, 0.0f, 0.0f, 0.0f)
+                }
+            };
         }
     }
 

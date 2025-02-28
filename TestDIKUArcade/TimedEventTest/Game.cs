@@ -1,12 +1,12 @@
 namespace TestDIKUArcade.TimedEventTest;
 
-using DIKUArcade;
-using DIKUArcade.GUI;
-using DIKUArcade.Input;
-using DIKUArcade.Events;
-using DIKUArcade.Timers;
 using System;
 using System.Collections.Generic;
+using DIKUArcade;
+using DIKUArcade.Events;
+using DIKUArcade.GUI;
+using DIKUArcade.Input;
+using DIKUArcade.Timers;
 
 public class Game : DIKUGame {
 
@@ -47,7 +47,8 @@ public class Game : DIKUGame {
         }
     }
 
-    public override void Render(WindowContext context) { }
+    public override void Render(WindowContext context) {
+    }
 
     public override void Update() {
         eventBus.ProcessEvents();

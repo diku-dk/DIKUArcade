@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  pull_request:
+
+  push:
+    branches: [ master ]
+
+jobs:
+  haskell-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            7.0.x
+      - name: Style check
+      - run: dotnet format --verify-no-changes 2> /dev/null 
+      
+      - name: Run tests
+        run: dotnet test

@@ -1,11 +1,11 @@
 namespace DIKUArcade.Events;
 
-using DIKUArcade.Timers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DIKUArcade.GUI;
 using DIKUArcade.Input;
-using System.Linq;
+using DIKUArcade.Timers;
 
 /// <summary>
 /// A GameEventBus that uses Action delegates for handling events. This implementation
@@ -28,7 +28,8 @@ public class GameEventBus {
     /// <summary>
     /// Initializes a new instance of the GameEventBus class.
     /// </summary>
-    public GameEventBus() { }
+    public GameEventBus() {
+    }
 
     /// <summary>
     /// Initializes a new instance of the GameEventBus class with a specified window. 
@@ -57,7 +58,7 @@ public class GameEventBus {
             subscribers[typeof(Arg)] = temp;
             return;
         }
-        
+
         subscribers.Add(typeof(Arg), action);
     }
 
@@ -106,12 +107,16 @@ public class GameEventBus {
         while (gameEventQueue.Count != 0) {
             var gameEvent = gameEventQueue.Dequeue();
 
-            if (subscribers?[gameEvent.GetType()] is null) {
+            object? listener;
+            if (!subscribers.TryGetValue(gameEvent.GetType(), out listener)) {
+                continue;
+            } else if (listener is null) {
                 continue;
             }
 
-            var action = subscribers[gameEvent.GetType()].GetType().GetMethod("Invoke");
-            action?.Invoke(subscribers[gameEvent.GetType()], new object[] {gameEvent});
+
+            var action = listener.GetType().GetMethod("Invoke");
+            action?.Invoke(listener, new object[] { gameEvent });
         }
     }
 

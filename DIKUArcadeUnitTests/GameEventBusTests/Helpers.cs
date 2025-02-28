@@ -1,7 +1,9 @@
 namespace DIKUArcadeUnitTests.GameEventBusTests;
 
 public struct SomeGameEvent {
-    public int Value { get; set; }
+    public int Value {
+        get; set;
+    }
 
     public SomeGameEvent(int value) {
         Value = value;
@@ -9,7 +11,9 @@ public struct SomeGameEvent {
 }
 
 public struct OtherGameEvent {
-    public int Value { get; set; }
+    public int Value {
+        get; set;
+    }
 
     public OtherGameEvent(int value) {
         Value = value;

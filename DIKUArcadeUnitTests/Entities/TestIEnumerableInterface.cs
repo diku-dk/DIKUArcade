@@ -1,7 +1,7 @@
 ﻿namespace DIKUArcadeUnitTests.Entities;
 
-using NUnit.Framework;
 using DIKUArcade.Entities;
+using NUnit.Framework;
 
 [TestFixture]
 public class TestIEnumerableInterface {
@@ -16,7 +16,7 @@ public class TestIEnumerableInterface {
         var ent5 = new StationaryShape(5.0f, 5.0f, 5.0f, 5.0f);
         var ents = new EntityContainer();
 
-        foreach (var shp in new[] {ent0, ent1, ent2, ent3, ent4, ent5}) {
+        foreach (var shp in new[] { ent0, ent1, ent2, ent3, ent4, ent5 }) {
             ents.AddStationaryEntity(shp, null);
         }
 
@@ -41,7 +41,7 @@ public class TestIEnumerableInterface {
         var ent5 = new StationaryShape(5.0f, 5.0f, 5.0f, 5.0f);
         var ents = new EntityContainer();
 
-        foreach (var shp in new[] {ent0, ent1, ent2, ent3, ent4, ent5}) {
+        foreach (var shp in new[] { ent0, ent1, ent2, ent3, ent4, ent5 }) {
             ents.AddStationaryEntity(shp, null);
         }
 

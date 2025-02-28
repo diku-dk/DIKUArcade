@@ -1,12 +1,12 @@
 namespace TestDIKUArcade.SimpleEntityRenderingTest;
 
-using DIKUArcade;
-using DIKUArcade.GUI;
-using DIKUArcade.Graphics;
-using DIKUArcade.Entities;
-using DIKUArcade.Input;
 using System.Numerics;
 using System.Reflection;
+using DIKUArcade;
+using DIKUArcade.Entities;
+using DIKUArcade.Graphics;
+using DIKUArcade.GUI;
+using DIKUArcade.Input;
 
 public class Game : DIKUGame {
 
@@ -67,5 +67,6 @@ public class Game : DIKUGame {
         actor1.RenderEntity(context);
     }
 
-    public override void Update() { }
+    public override void Update() {
+    }
 }

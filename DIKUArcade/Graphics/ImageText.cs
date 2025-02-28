@@ -1,11 +1,11 @@
 ﻿namespace DIKUArcade.Graphics;
 
 using System;
-using System.Text;
 using System.Numerics;
-using DIKUArcade.GUI;
+using System.Text;
 using DIKUArcade.Entities;
 using DIKUArcade.Font;
+using DIKUArcade.GUI;
 
 /// <summary>
 /// Represents a text object that can be rendered on the screen. 
@@ -17,7 +17,9 @@ public class ImageText : IBaseImage {
     private Lowlevel.FontFamily fontFamily = FontFamily.DefaultFontFamilies[2].fontFamily;
     private Lowlevel.Font font;
     private string text;
-    internal Vector2 LowlevelMeasurements { get; private set; }
+    internal Vector2 LowlevelMeasurements {
+        get; private set;
+    }
     private Lowlevel.Color color = Lowlevel.Color.White;
     /// <summary>
     /// Initializes a new instance of the <see cref="Text"/> class with the specified text, font size, and font family.
@@ -79,7 +81,7 @@ public class ImageText : IBaseImage {
     public Vector2 IdealExtent(int width, int height) {
         return LowlevelMeasurements / new Vector2(width, height);
     }
-    
+
     // Very hacky but it works for most cases, for some reason spaces ruins the text measurements.
     private string Replacer(string input) {
         StringBuilder result = new StringBuilder();
@@ -87,11 +89,9 @@ public class ImageText : IBaseImage {
         foreach (char c in input) {
             if (c == ' ') {
                 result.Append('M');
-            }
-            else if (c == '\t') {
+            } else if (c == '\t') {
                 result.Append("MM");
-            }
-            else {
+            } else {
                 result.Append(c);
             }
         }

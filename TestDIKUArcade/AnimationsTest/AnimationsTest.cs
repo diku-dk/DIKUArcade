@@ -1,7 +1,7 @@
 ﻿namespace TestDIKUArcade.AnimationsTest;
 
-using DIKUArcade.GUI;
 using System;
+using DIKUArcade.GUI;
 
 public class AnimationsTest : ITestable {
 

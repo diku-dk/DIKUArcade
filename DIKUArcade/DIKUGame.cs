@@ -2,8 +2,8 @@ namespace DIKUArcade;
 
 using System;
 using DIKUArcade.GUI;
-using DIKUArcade.Timers;
 using DIKUArcade.Input;
+using DIKUArcade.Timers;
 
 /// <summary>
 /// Abstract base class for any DIKUArcade game.
@@ -21,7 +21,9 @@ public abstract class DIKUGame {
     /// The exact amount of captured updates in the last second.
     /// This can be used for frame-rate independent calculations.
     /// </summary>
-    public static int Timestep { get; private set; }
+    public static int Timestep {
+        get; private set;
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DIKUGame"/> class.
@@ -87,8 +89,7 @@ public abstract class DIKUGame {
                 }
             }
             window.CloseWindow();
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             Console.WriteLine("DIKUArcade.DIKUGame caught an exception. See message below:" + Environment.NewLine);
             Console.WriteLine(ex);
 

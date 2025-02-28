@@ -1,4 +1,4 @@
-namespace DIKUArcade.Input {
+namespace DIKUArcade.Input;
 
 /// <summary>
 /// Defines the possible actions associated with keyboard inputs.
@@ -13,5 +13,4 @@ public enum KeyboardAction {
     /// Represents the action of releasing a key.
     /// </summary>
     KeyRelease
-}
 }

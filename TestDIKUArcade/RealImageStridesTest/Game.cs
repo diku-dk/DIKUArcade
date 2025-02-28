@@ -1,12 +1,12 @@
 namespace TestDIKUArcade.RealImageStridesTest;
 
-using DIKUArcade;
-using DIKUArcade.GUI;
-using DIKUArcade.Input;
-using DIKUArcade.Graphics;
-using DIKUArcade.Entities;
 using System.Numerics;
 using System.Reflection;
+using DIKUArcade;
+using DIKUArcade.Entities;
+using DIKUArcade.Graphics;
+using DIKUArcade.GUI;
+using DIKUArcade.Input;
 
 public class Game : DIKUGame {
 
@@ -29,16 +29,16 @@ public class Game : DIKUGame {
 
         switch (key) {
             case KeyboardKey.Left:
-                entities.Iterate(entity  => entity.Shape.MoveX(-0.05f));
+                entities.Iterate(entity => entity.Shape.MoveX(-0.05f));
                 break;
             case KeyboardKey.Right:
-                entities.Iterate(entity  => entity.Shape.MoveX(0.05f));
+                entities.Iterate(entity => entity.Shape.MoveX(0.05f));
                 break;
             case KeyboardKey.Up:
-                entities.Iterate(entity  => entity.Shape.MoveY(0.05f));
+                entities.Iterate(entity => entity.Shape.MoveY(0.05f));
                 break;
             case KeyboardKey.Down:
-                entities.Iterate(entity  => entity.Shape.MoveY(-0.05f));
+                entities.Iterate(entity => entity.Shape.MoveY(-0.05f));
                 break;
             case KeyboardKey.Escape:
                 window.CloseWindow();
@@ -50,5 +50,6 @@ public class Game : DIKUGame {
         entities.RenderEntities(context);
     }
 
-    public override void Update() { }
+    public override void Update() {
+    }
 }

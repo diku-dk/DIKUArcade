@@ -1,12 +1,12 @@
 namespace TestDIKUArcade.AnimationContainerTest;
 
 using System.Collections.Generic;
+using System.Reflection;
 using DIKUArcade;
 using DIKUArcade.Entities;
+using DIKUArcade.Graphics;
 using DIKUArcade.GUI;
 using DIKUArcade.Input;
-using DIKUArcade.Graphics;
-using System.Reflection;
 
 public class Game : DIKUGame {
     private AnimationContainer container;
@@ -43,9 +43,10 @@ public class Game : DIKUGame {
         }
     }
 
-    public override void Render(WindowContext context) { 
+    public override void Render(WindowContext context) {
         container.RenderAnimations(context);
     }
 
-    public override void Update() { }
+    public override void Update() {
+    }
 }

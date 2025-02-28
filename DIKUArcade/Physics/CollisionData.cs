@@ -9,7 +9,9 @@ public class CollisionData {
     /// <value>
     /// <c>true</c> if a collision has occurred; otherwise, <c>false</c>.
     /// </value>
-    public bool Collision { get; set; }
+    public bool Collision {
+        get; set;
+    }
 
     /// <summary>
     /// Gets or sets the factor that should be multiplied onto the actor shape's
@@ -19,7 +21,9 @@ public class CollisionData {
     /// <value>
     /// A <see cref="Vector2"/> representing the factor to adjust the velocity vector.
     /// </value>
-    public Vector2 VelocityFactor { get; set; }
+    public Vector2 VelocityFactor {
+        get; set;
+    }
 
     /// <summary>
     /// Gets or sets the surface normal of the incident object, indicating
@@ -29,5 +33,7 @@ public class CollisionData {
     /// <value>
     /// A <see cref="CollisionDirection"/> representing the direction of the collision.
     /// </value>
-    public CollisionDirection CollisionDir { get; set; } // might sometimes be useful!
+    public CollisionDirection CollisionDir {
+        get; set;
+    } // might sometimes be useful!
 }

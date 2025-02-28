@@ -1,7 +1,7 @@
 ﻿namespace DIKUArcadeUnitTests.Physics;
 
-using DIKUArcade.Entities;
 using System.Numerics;
+using DIKUArcade.Entities;
 using DIKUArcade.Physics;
 using NUnit.Framework;
 
@@ -15,10 +15,10 @@ public class TestAabbCollision {
     private StationaryShape solidBlockDown;
 
     public TestAabbCollision() {
-        solidBlockLeft  = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(0.1f, 1.0f));
+        solidBlockLeft = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(0.1f, 1.0f));
         solidBlockRight = new StationaryShape(new Vector2(1.0f, 0.0f), new Vector2(0.1f, 1.0f));
-        solidBlockUp    = new StationaryShape(new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.1f));
-        solidBlockDown  = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(1.0f, 0.1f));
+        solidBlockUp = new StationaryShape(new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.1f));
+        solidBlockDown = new StationaryShape(new Vector2(0.0f, 0.0f), new Vector2(1.0f, 0.1f));
         actorVelocity = 0.05f;
     }
 
@@ -95,9 +95,9 @@ public class TestAabbCollision {
 
     [TestCase(-0.02f)]
     [TestCase(-0.01f)]
-    [TestCase( 0.00f)]
-    [TestCase( 0.01f)]
-    [TestCase( 0.02f)]
+    [TestCase(0.00f)]
+    [TestCase(0.01f)]
+    [TestCase(0.02f)]
     public void SweepUp(float dx) {
         actor.Velocity.X = dx;
         actor.Velocity.Y = 1;
@@ -110,9 +110,9 @@ public class TestAabbCollision {
 
     [TestCase(-0.02f)]
     [TestCase(-0.01f)]
-    [TestCase( 0.00f)]
-    [TestCase( 0.01f)]
-    [TestCase( 0.02f)]
+    [TestCase(0.00f)]
+    [TestCase(0.01f)]
+    [TestCase(0.02f)]
     public void SweepDown(float dx) {
         actor.Velocity.X = dx;
         actor.Velocity.Y = -1;
@@ -125,9 +125,9 @@ public class TestAabbCollision {
 
     [TestCase(-0.02f)]
     [TestCase(-0.01f)]
-    [TestCase( 0.00f)]
-    [TestCase( 0.01f)]
-    [TestCase( 0.02f)]
+    [TestCase(0.00f)]
+    [TestCase(0.01f)]
+    [TestCase(0.02f)]
     public void SweepLeft(float dy) {
         actor.Velocity.X = -1;
         actor.Velocity.Y = dy;
@@ -140,9 +140,9 @@ public class TestAabbCollision {
 
     [TestCase(-0.02f)]
     [TestCase(-0.01f)]
-    [TestCase( 0.00f)]
-    [TestCase( 0.01f)]
-    [TestCase( 0.02f)]
+    [TestCase(0.00f)]
+    [TestCase(0.01f)]
+    [TestCase(0.02f)]
     public void SweepRight(float dy) {
         actor.Velocity.X = 1;
         actor.Velocity.Y = dy;

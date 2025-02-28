@@ -11,7 +11,9 @@ internal class TimedGameEvent {
     /// <summary>
     /// The game event that this object encapsulates and will be triggered when the event expires.
     /// </summary>
-    internal object GameEvent { get; private set; }
+    internal object GameEvent {
+        get; private set;
+    }
 
     private readonly TimePeriod timeSpan;
     private long timeOfCreation;
@@ -30,7 +32,7 @@ internal class TimedGameEvent {
         GameEvent = arg;
         timeOfCreation = StaticTimer.GetElapsedMilliseconds();
     }
-    
+
     /// <summary>
     /// Determines if the event has expired based on the provided current time.
     /// </summary>
@@ -41,7 +43,7 @@ internal class TimedGameEvent {
     /// True if the event has expired; otherwise, false.
     /// </returns>
     internal bool HasExpired(long currentTimeMs) {
-        return (currentTimeMs - timeOfCreation) > timeSpan.ToMilliseconds();
+        return currentTimeMs - timeOfCreation > timeSpan.ToMilliseconds();
     }
 
     /// <summary>

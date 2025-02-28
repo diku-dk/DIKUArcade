@@ -18,17 +18,23 @@ public class Window : IDisposable {
     /// <summary>
     /// Gets the width of the window.
     /// </summary>
-    public int Width { get => window.Width; }
+    public int Width {
+        get => window.Width;
+    }
 
     /// <summary>
     /// Gets the height of the window.
     /// </summary>
-    public int Height { get => window.Height; }
+    public int Height {
+        get => window.Height;
+    }
 
     /// <summary>
     /// Gets or sets the camera associated with this window.
     /// </summary>
-    public Camera Camera { get; set; }
+    public Camera Camera {
+        get; set;
+    }
 
     /// <summary>
     /// Gets the size of the window as a <see cref="Vector2"/>.
@@ -100,7 +106,7 @@ public class Window : IDisposable {
     /// <summary>
     /// Releases the resources used by the <see cref="Window"/> class.
     /// </summary>
-    public void Dispose () {
+    public void Dispose() {
         Cleanup();
     }
 
