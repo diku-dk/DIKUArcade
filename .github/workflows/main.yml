@@ -12,15 +12,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Setup dotnet and build project
+
+      - name: Setup dotnet
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
             7.0.x
-      - run: dotnet build
+      
+      - name: Build project
+        run: dotnet build
       
       - name: Style check
-      - run: dotnet format --verify-no-changes 2> /dev/null 
+        run: dotnet format --verify-no-changes 2> /dev/null 
       
       - name: Run tests
         run: dotnet test
