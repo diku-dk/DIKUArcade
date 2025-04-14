@@ -21,13 +21,7 @@ public class ImageStride : IBaseImage {
     private bool animate;
     private List<Texture> textures = new List<Texture>();
     private int maxImageCount;
-    private int currentImageCount;
-
-    /// <summary>
-    /// This value is used for adding a random offset to the animation timer to ensure that
-    /// multiple objects with the same animation frequency do not change textures at the same time.
-    /// </summary>
-    private double timerOffset;
+    private int currentImageCount = 0;
 
     private void Init(int milliseconds, IEnumerable<Image> images) {
         if (milliseconds < 0) {
@@ -47,8 +41,7 @@ public class ImageStride : IBaseImage {
             throw new ArgumentNullException("at least one image file must be specified");
         }
 
-        currentImageCount = generator.Next(count);
-        timerOffset = generator.Next(100);
+        lastTime = StaticTimer.GetElapsedMilliseconds() + generator.Next(milliseconds); // staggers animations that has the same frequency
     }
 
     /// <summary>
@@ -205,7 +198,7 @@ public class ImageStride : IBaseImage {
     /// </param>
     public void Render(WindowContext context, Shape shape) {
         // Measure elapsed time
-        double elapsed = StaticTimer.GetElapsedMilliseconds() + timerOffset;
+        double elapsed = StaticTimer.GetElapsedMilliseconds();
 
         // Change texture stride if the desired number of milliseconds has passed
         if (animFrequency > 0 && animate && elapsed - lastTime > animFrequency) {
