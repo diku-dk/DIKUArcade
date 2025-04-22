@@ -69,6 +69,8 @@ public abstract class DIKUGame {
     /// The method will not return until the game is closed.
     /// </summary>
     public void Run() {
+        AppDomain.CurrentDomain.ProcessExit += HandleForcedExit;
+        Console.CancelKeyPress += HandleForcedExit;
         gameTimer = new GameTimer(30, 30);
 
         try {
@@ -89,14 +91,21 @@ public abstract class DIKUGame {
                 }
             }
             window.CloseWindow();
+            window.Dispose();
         } catch (Exception ex) {
             Console.WriteLine("DIKUArcade.DIKUGame caught an exception. See message below:" + Environment.NewLine);
             Console.WriteLine(ex);
 
             Console.WriteLine(Environment.NewLine + "Terminating program...");
+            window.Dispose();
             Environment.Exit(1);
         }
 
+        gameTimer = null;
+    }
+
+    private void HandleForcedExit(object? sender, EventArgs e) {
+        window.Dispose();
         gameTimer = null;
     }
 }

@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="DIKU.Canvas" Version="2.1.0-alpha1" />
+    <PackageReference Include="Raylib-cs" Version="7.0.1" />
   </ItemGroup>
 
 </Project>
