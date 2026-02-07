@@ -73,10 +73,9 @@ public abstract class DIKUGame {
 
         try {
             while (window.IsRunning()) {
-                gameTimer.MeasureTime();
                 window.PollEvents();
 
-                while (gameTimer.ShouldUpdate()) {
+                if (gameTimer.ShouldUpdate()) {
                     Update();
                 }
 
@@ -87,6 +86,8 @@ public abstract class DIKUGame {
                 if (gameTimer.ShouldReset()) {
                     Timestep = gameTimer.CapturedUpdates;
                 }
+
+                gameTimer.Yield();
             }
             window.CloseWindow();
         } catch (Exception ex) {
