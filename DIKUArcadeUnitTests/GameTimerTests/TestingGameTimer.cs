@@ -13,15 +13,15 @@ public class TestingGameTimer {
     [TestCase(10)]
     [TestCase(30)]
     [TestCase(60)]
-    public void TestCapturedUpdates(int ups) {
+    public void TestCapturedUpdates(uint ups) {
         var timer = new GameTimer(ups);
         var updates = 0;
 
         while (!timer.ShouldReset()) {
-            timer.MeasureTime();
             if (timer.ShouldUpdate()) {
                 updates++;
             }
+            timer.Yield();
         }
         // can we count the number of updates
         Assert.AreEqual(updates, timer.CapturedUpdates);
@@ -38,15 +38,15 @@ public class TestingGameTimer {
     [TestCase(10)]
     [TestCase(30)]
     [TestCase(60)]
-    public void TestCapturedFrames(int fps) {
+    public void TestCapturedFrames(uint fps) {
         var timer = new GameTimer(30, fps);
         var frames = 0;
 
         while (!timer.ShouldReset()) {
-            timer.MeasureTime();
             if (timer.ShouldRender() && fps > 0) { // fps 0 will try to render unlimited!
                 frames++;
             }
+            timer.Yield();
         }
         // can we count the number of updates
         Assert.AreEqual(frames, timer.CapturedFrames);
