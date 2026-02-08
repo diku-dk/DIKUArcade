@@ -7,12 +7,12 @@ using NUnit.Framework;
 public class TestingGameTimer {
 
     [Repeat(3)]
-    [TestCase(0)]
-    [TestCase(1)]
-    [TestCase(5)]
-    [TestCase(10)]
-    [TestCase(30)]
-    [TestCase(60)]
+    [TestCase(0u)]
+    [TestCase(1u)]
+    [TestCase(5u)]
+    [TestCase(10u)]
+    [TestCase(30u)]
+    [TestCase(60u)]
     public void TestCapturedUpdates(uint ups) {
         var timer = new GameTimer(ups);
         var updates = 0;
@@ -32,12 +32,12 @@ public class TestingGameTimer {
     }
 
     [Repeat(3)]
-    [TestCase(0)]
-    [TestCase(1)]
-    [TestCase(5)]
-    [TestCase(10)]
-    [TestCase(30)]
-    [TestCase(60)]
+    [TestCase(0u)]
+    [TestCase(1u)]
+    [TestCase(5u)]
+    [TestCase(10u)]
+    [TestCase(30u)]
+    [TestCase(60u)]
     public void TestCapturedFrames(uint fps) {
         var timer = new GameTimer(30, fps);
         var frames = 0;
