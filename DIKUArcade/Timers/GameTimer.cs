@@ -45,10 +45,15 @@ public class GameTimer {
     public GameTimer() : this(30, 30) { }
 
     public GameTimer(uint ups, uint fps = 0) {
+        if (ups == 0) {
+            throw new ArgumentOutOfRangeException(nameof(ups), 
+                "Updates per second must be greater than 0");
+        }
+
         desiredMaxFPS = fps;
 
-        updatePeriod = (long) (1000f / ups);
-        renderPeriod = (long) (1000f / fps);
+        updatePeriod = ups > 0 ? (long) (1000f / ups) : 0;
+        renderPeriod = fps > 0 ? (long) (1000f / fps) : 0;
         resetPeriod = 1000; // reset is always once per second
 
         stopwatch = new Stopwatch();
