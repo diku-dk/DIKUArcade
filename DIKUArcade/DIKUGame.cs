@@ -75,17 +75,20 @@ public abstract class DIKUGame {
             while (window.IsRunning()) {
                 gameTimer.MeasureTime();
                 window.PollEvents();
+                bool didWork = false;
 
                 while (gameTimer.ShouldUpdate()) {
+                    didWork = true; 
                     Update();
                 }
 
                 if (gameTimer.ShouldRender()) {
+                    didWork = true; 
                     window.Render(Render);
                 }
 
-                if (gameTimer.ShouldReset()) {
-                    Timestep = gameTimer.CapturedUpdates;
+                if (!didWork) {
+                    window.WaitEventTimeout(1);
                 }
             }
             window.CloseWindow();
