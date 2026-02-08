@@ -1,4 +1,5 @@
 ﻿namespace DIKUArcadeUnitTests;
+
 using NUnit.Framework;
 
 [TestFixture]
