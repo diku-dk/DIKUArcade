@@ -7,55 +7,52 @@ using NUnit.Framework;
 public class TestingGameTimer {
 
     [Repeat(3)]
-    [TestCase(1u)]
-    [TestCase(5u)]
-    [TestCase(10u)]
-    [TestCase(30u)]
-    [TestCase(60u)]
-    public void TestCapturedUpdates(uint ups) {
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(5)]
+    [TestCase(10)]
+    [TestCase(30)]
+    [TestCase(60)]
+    public void TestCapturedUpdates(int ups) {
         var timer = new GameTimer(ups);
         var updates = 0;
 
         while (!timer.ShouldReset()) {
+            timer.MeasureTime();
             if (timer.ShouldUpdate()) {
                 updates++;
             }
-            timer.Yield();
         }
         // can we count the number of updates
         Assert.AreEqual(updates, timer.CapturedUpdates);
 
-        // Allow some tolerance for timing imprecision
-        // Target is ups, but we might get a bit more or less
+        // if e.g. target ups is 60, then sometimes reaching 59 is okay!
+        Assert.LessOrEqual(timer.CapturedUpdates, ups);
         Assert.GreaterOrEqual(timer.CapturedUpdates, ups - 1);
-        Assert.LessOrEqual(timer.CapturedUpdates, ups + 5);
     }
 
     [Repeat(3)]
-    [TestCase(0u)]
-    [TestCase(1u)]
-    [TestCase(5u)]
-    [TestCase(10u)]
-    [TestCase(30u)]
-    [TestCase(60u)]
-    public void TestCapturedFrames(uint fps) {
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(5)]
+    [TestCase(10)]
+    [TestCase(30)]
+    [TestCase(60)]
+    public void TestCapturedFrames(int fps) {
         var timer = new GameTimer(30, fps);
         var frames = 0;
 
         while (!timer.ShouldReset()) {
+            timer.MeasureTime();
             if (timer.ShouldRender() && fps > 0) { // fps 0 will try to render unlimited!
                 frames++;
             }
-            timer.Yield();
         }
-        // can we count the number of frames
+        // can we count the number of updates
         Assert.AreEqual(frames, timer.CapturedFrames);
 
-        // Allow some tolerance for timing imprecision
-        // Only check bounds for non-zero fps (fps=0 means unlimited rendering)
-        if (fps > 0) {
-            Assert.GreaterOrEqual(timer.CapturedFrames, fps - 1);
-            Assert.LessOrEqual(timer.CapturedFrames, fps + 5);
-        }
+        // if e.g. target fps is 60, then sometimes reaching 59 is okay!
+        Assert.LessOrEqual(timer.CapturedFrames, fps);
+        Assert.GreaterOrEqual(timer.CapturedFrames, fps - 1);
     }
 }

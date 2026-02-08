@@ -1,5 +1,4 @@
 namespace TestDIKUArcade.TimedEventTest;
-
 using System;
 
 public struct GameEvent {

@@ -6,6 +6,7 @@ mkShell {
     with buildPackages; [
       (with dotnetCorePackages; combinePackages [
         sdk_7_0
+        sdk_8_0
       ])
       fsautocomplete
       stdenv

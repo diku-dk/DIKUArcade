@@ -26,22 +26,18 @@ public class GameTimerTest : ITestable {
         }
         while (win.IsRunning()) {
             win.PollEvents();
-            if (timer.ShouldUpdate()) {
-
+            timer.MeasureTime();
+            while (timer.ShouldUpdate()) {
             }
-
             if (timer.ShouldRender()) {
                 // render game objects
                 win.Render(render);
             }
-
             if (timer.ShouldReset()) {
                 fps.SetText($"FPS: {timer.CapturedFrames}");
                 ups.SetText($"UPS: {timer.CapturedUpdates}");
                 // win.Title = "TestGameTimer | " + timer.CapturedFrames;
             }
-
-            timer.Yield();
         }
     }
 

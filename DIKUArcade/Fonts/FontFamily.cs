@@ -8,10 +8,10 @@ using System.Reflection;
 public struct FontFamily {
     private static readonly Assembly assembly = Assembly.GetExecutingAssembly();
     private static readonly string[] fonts = {
-        "DIKUArcade.Font.Pixeldroid.Botic.PixeldroidBoticRegular.ttf",
-        "DIKUArcade.Font.Pixeldroid.Console.PixeldroidConsoleRegular.ttf",
-        "DIKUArcade.Font.Pixeldroid.Console.PixeldroidConsoleRegularMono.ttf",
-        "DIKUArcade.Font.Pixeldroid.Menu.PixeldroidMenuRegular.ttf"
+        "DIKUArcade.Fonts.Pixeldroid.Botic.PixeldroidBoticRegular.ttf",
+        "DIKUArcade.Fonts.Pixeldroid.Console.PixeldroidConsoleRegular.ttf",
+        "DIKUArcade.Fonts.Pixeldroid.Console.PixeldroidConsoleRegularMono.ttf",
+        "DIKUArcade.Fonts.Pixeldroid.Menu.PixeldroidMenuRegular.ttf"
     };
 
     public static FontFamily[] DefaultFontFamilies {
