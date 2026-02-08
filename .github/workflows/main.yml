@@ -23,7 +23,7 @@ jobs:
         run: dotnet build
       
       - name: Style check
-        run: dotnet format --verify-no-changes
+        run: dotnet format ./DIKUArcade.sln --verify-no-changes
       
       - name: Run tests
         run: dotnet test

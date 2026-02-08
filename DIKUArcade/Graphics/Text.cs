@@ -2,7 +2,7 @@
 
 using System.Numerics;
 using DIKUArcade.Entities;
-using DIKUArcade.Font;
+using DIKUArcade.Fonts;
 using DIKUArcade.GUI;
 
 /// <summary>

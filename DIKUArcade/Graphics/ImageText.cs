@@ -4,7 +4,7 @@ using System;
 using System.Numerics;
 using System.Text;
 using DIKUArcade.Entities;
-using DIKUArcade.Font;
+using DIKUArcade.Fonts;
 using DIKUArcade.GUI;
 
 /// <summary>

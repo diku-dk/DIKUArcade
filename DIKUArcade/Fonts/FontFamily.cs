@@ -1,4 +1,4 @@
-namespace DIKUArcade.Font;
+namespace DIKUArcade.Fonts;
 
 using System.Collections.Generic;
 using System.IO;
