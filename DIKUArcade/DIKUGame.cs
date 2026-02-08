@@ -78,19 +78,19 @@ public abstract class DIKUGame {
                 bool didWork = false;
 
                 while (gameTimer.ShouldUpdate()) {
-                    didWork = true; 
+                    didWork = true;
                     Update();
                 }
 
                 if (gameTimer.ShouldRender()) {
-                    didWork = true; 
+                    didWork = true;
                     window.Render(Render);
                 }
 
                 if (gameTimer.ShouldReset()) {
                     Timestep = gameTimer.CapturedUpdates;
                 }
-                
+
                 if (!didWork) {
                     window.WaitEventTimeout(1);
                 }

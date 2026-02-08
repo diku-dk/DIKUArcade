@@ -98,7 +98,7 @@ public class Window : IDisposable {
     public void PollEvents() {
         window.PollEvents(InternalKeyHandler);
     }
-    
+
     /// <summary>
     /// Waits for an event to occur or until the specified timeout elapses, and processes the event using the internal key handler.
     /// </summary>
