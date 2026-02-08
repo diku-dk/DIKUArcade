@@ -2,6 +2,7 @@
 
 using System;
 using System.Numerics;
+using DIKUArcade.Audio;
 using DIKUArcade.Graphics;
 using DIKUArcade.Input;
 
@@ -100,6 +101,7 @@ public class Window : IDisposable {
     }
 
     private void Cleanup() {
+        AudioManager.CleanUp();
         window.Cleanup();
     }
 
