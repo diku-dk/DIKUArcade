@@ -119,7 +119,9 @@ public class GameTimer {
     public void Yield() {
         var nextAction = Math.Min(Math.Min(nextRender, nextUpdate), nextReset);
         // return immediately if we have pending actions
-        if (stopwatch.ElapsedMilliseconds >= nextAction) { return; }
+        if (stopwatch.ElapsedMilliseconds >= nextAction) {
+            return;
+        }
 
         int timeDelta = (int) (nextAction - stopwatch.ElapsedMilliseconds);
         Thread.Sleep(timeDelta);
