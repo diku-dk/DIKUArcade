@@ -87,6 +87,10 @@ public abstract class DIKUGame {
                     window.Render(Render);
                 }
 
+                if (gameTimer.ShouldReset()) {
+                    Timestep = gameTimer.CapturedUpdates;
+                }
+                
                 if (!didWork) {
                     window.WaitEventTimeout(1);
                 }
