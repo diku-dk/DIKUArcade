@@ -46,7 +46,7 @@ public class GameTimer {
 
     public GameTimer(uint ups, uint fps = 0) {
         if (ups == 0) {
-            throw new ArgumentOutOfRangeException(nameof(ups), 
+            throw new ArgumentOutOfRangeException(nameof(ups),
                 "Updates per second must be greater than 0");
         }
 
