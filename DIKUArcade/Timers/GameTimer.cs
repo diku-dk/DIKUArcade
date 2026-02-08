@@ -20,6 +20,7 @@ public class GameTimer {
     private long nextReset;
     private long updatePeriod; // milliseconds
     private long renderPeriod; // milliseconds
+    private long resetPeriod; // milliseconds
 
     /// <summary>
     /// Get the last observed UPS count
@@ -48,6 +49,7 @@ public class GameTimer {
 
         updatePeriod = (long) (1000f / ups);
         renderPeriod = (long) (1000f / fps);
+        resetPeriod = 1000; // reset is always once per second
 
         stopwatch = new Stopwatch();
         stopwatch.Start();
@@ -55,7 +57,7 @@ public class GameTimer {
         long elapsed = stopwatch.ElapsedMilliseconds;
         nextUpdate = elapsed + updatePeriod;
         nextRender = elapsed + renderPeriod;
-        nextReset = elapsed + 1000; // reset is always once per second
+        nextReset = elapsed + resetPeriod;
 
         frames = 0;
         updates = 0;
@@ -97,11 +99,10 @@ public class GameTimer {
         var now = stopwatch.ElapsedMilliseconds;
         var reset = now >= nextReset;
         if (reset) {
-            // while (now >= nextRender) {
-            //     // skip missed resets, as we want this to run as close to every second as possible
-            //     nextRender += 1000;
-            // }
-            nextReset += 1000;
+            while (now >= nextReset) {
+                // skip missed resets, as we want this to run as close to every second as possible
+                nextReset += resetPeriod;
+            }
             CapturedUpdates = updates;
             CapturedFrames = frames;
             updates = 0;
